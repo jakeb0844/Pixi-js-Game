@@ -1,0 +1,111 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "#Castle": {
+            "scaleInDock": 1
+        },
+        "key.tmj": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 327,
+                "y": 203
+            }
+        },
+        "key.tmj#all_assets": {
+            "scaleInDock": 1
+        },
+        "map..tmj": {
+            "scale": 2.5551041666666663,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 240.10762770598072,
+                "y": 160.26743854213385
+            }
+        },
+        "map.json": {
+            "scale": 2.5551041666666663,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 240.10762770598072,
+                "y": 160.6588120184272
+            }
+        },
+        "map.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 209.33333333333337,
+                "y": 114.66666666666666
+            }
+        },
+        "map.tmx#Castle": {
+            "scaleInDock": 1
+        },
+        "map.tmx#test": {
+            "scaleInDock": 1
+        },
+        "map2.tmj": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        "map2.tmj#Test": {
+            "scaleInDock": 1
+        },
+        "test-tileset.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
+        "test.tsj": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "test.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "C:/Users/Jake/Documents/Pixi-js/assets/maps",
+    "last.imagePath": "C:/Users/Jake/Documents/Pixi-js/assets/maps",
+    "map.fixedSize": true,
+    "map.height": 100,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.layerDataFormat": null,
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 100,
+    "openFiles": [
+        "map.tmx"
+    ],
+    "project": "test.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+        "map.tmx",
+        "key.tmj",
+        "map2.tmj",
+        "test.tsx",
+        "test.tsj",
+        "map.json",
+        "map..tmj",
+        "test-tileset.tsx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
