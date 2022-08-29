@@ -39,6 +39,7 @@ class TileMap {
         console.log(this.collisionLayer)
 
         this.createMapArray(this.collisionLayer)
+        //setTimeout(() => {   }, 10000);
 
 
         for (let col = 0; col < height; col++) {
@@ -78,11 +79,13 @@ class TileMap {
                 var layer = new PIXI.Sprite(text);
                 layer.x = x * tileHeight;
                 layer.y = y * tileWidth;
+                layer.zIndex = -99999;
+                layer._zIndex = -99999;
                 // console.log('layer x',layer.x);
                 // console.log('layer y',layer.y);
                 // console.log('')
+                
                 this._game.stage.addChild(layer);
-
                 //if(row == 30){throw new Error("Something went badly wrong!");}
 
             }//row
@@ -166,5 +169,4 @@ class TileMap {
 
         return file;
     }
-
 };

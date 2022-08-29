@@ -7,19 +7,32 @@ document.body.appendChild(app.view);
 
 // Create the sprite and add it to the stage
 const loader = PIXI.Loader.shared;
+const container = new PIXI.Container();
 
-loader.add('tileset', 'Borg.json')
-loader.add('atlas', 'atlas.json');
+app.stage.addChild(container);
+
+//loader.add('tileset', 'Borg.json')
+//loader.add('atlas', 'atlas.json');
 //loader.add('assets','assets/maps/key.json');
+
+let testSprite = new Player("Jake",loader,app,container);
 
 let test = new TileMap(app);
 
-console.log(test)
+
+
+//console.log(test)
 
 var borgSprite;
 
 
-loader.load(loadChar);
+
+
+//loader.load(loadChar);
+
+
+
+//loaderl.load(testSprite.init)
 
 
 // Listen for animate update
@@ -27,7 +40,8 @@ app.ticker.add((delta) => {
     // rotate the container!
     // use delta to create frame-independent transform
     //container.rotation -= 0.01 * delta;
-
+    testSprite.addSpriteToStage();
+    testSprite.sprite.position.set(test.width / 2, test.height / 2);
 
 });
 
@@ -52,9 +66,9 @@ function loadChar(loader, resources) {
 
         }
     }
-    //const borgTexture = PIXI.Texture.from('00.png');
-    borgSprite = new PIXI.AnimatedSprite(textures);
-    borgSprite.position.set(test.width / 2, test.height / 2);
+    const borgSprite = PIXI.Texture.from('../Borg.png');
+     //borgSprite = new PIXI.AnimatedSprite(borgSprite);
+    // borgSprite.position.set(test.width / 2, test.height / 2);
     test.current_position = {"col":10,"row":15};
     test.mapArr[10][15].char_here = true;
 
@@ -141,3 +155,6 @@ $('body').on('keydown',moveChar);
 
 
 console.log(loader)
+
+
+
