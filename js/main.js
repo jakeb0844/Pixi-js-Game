@@ -2,46 +2,41 @@
 
 
 // Create the application helper and add its render target to the page
-let app = new PIXI.Application({ width: 1600, height: 1600, transparent: false, antialis: true });
+let app = new PIXI.Application({ width: 600, height: 300, transparent: false, antialis: true });
 document.body.appendChild(app.view);
+// app.stage.scale.x = 2.2
+// app.stage.scale.y = 3.7
+
+var borgSprite;
 
 // Create the sprite and add it to the stage
 const loader = PIXI.Loader.shared;
 const container = new PIXI.Container();
+const container2 = new PIXI.Container();
 
 app.stage.addChild(container);
+app.stage.addChild(container2);
 
 //loader.add('tileset', 'Borg.json')
 //loader.add('atlas', 'atlas.json');
 //loader.add('assets','assets/maps/key.json');
 
-let testSprite = new Player("Jake",loader,app,container);
+let testSprite = new Player("Jake",loader,app,container2);
 
-let test = new TileMap(app);
+let test = new TileMap(app,container);
 
-
-
-//console.log(test)
-
-var borgSprite;
-
-
+//container2.addChild(testSprite.sprite)
 
 
 //loader.load(loadChar);
-
-
-
-//loaderl.load(testSprite.init)
-
 
 // Listen for animate update
 app.ticker.add((delta) => {
     // rotate the container!
     // use delta to create frame-independent transform
     //container.rotation -= 0.01 * delta;
-    testSprite.addSpriteToStage();
-    testSprite.sprite.position.set(test.width / 2, test.height / 2);
+    
+    
 
 });
 
@@ -66,7 +61,7 @@ function loadChar(loader, resources) {
 
         }
     }
-    const borgSprite = PIXI.Texture.from('../Borg.png');
+    borgSprite = PIXI.Texture.from('/Borg.png');
      //borgSprite = new PIXI.AnimatedSprite(borgSprite);
     // borgSprite.position.set(test.width / 2, test.height / 2);
     test.current_position = {"col":10,"row":15};
@@ -86,53 +81,6 @@ function loadChar(loader, resources) {
     });
 }
 
-function moveChar(e) {
-    //console.log('e',e)
-    //Move Left
-    if (e.keyCode == 65) {
-        if(check_if_walkable(e.keyCode,{"col" : test.current_position.col, "row":test.current_position.row - 1})){
-            test.updateCharPosition({"col" : test.current_position.col, "row":test.current_position.row - 1})
-            borgSprite.position.set(borgSprite.position._x - 16, borgSprite.position._y)
-            //test.current_position = {"col" : test.current_position.col, "row":test.current_position.row - 1}
-            console.log(test.current_position)
-        
-        }
-        
-
-    }
-    //Move Right
-    else if (e.keyCode == 68) {
-        if(check_if_walkable(e.keyCode,{"col" : test.current_position.col, "row":test.current_position.row + 1})){
-            test.updateCharPosition({"col" : test.current_position.col, "row":test.current_position.row + 1})
-            borgSprite.position.set(borgSprite.position._x + 16, borgSprite.position._y)
-            //test.current_position = {"col" : test.current_position.col, "row":test.current_position.row - 1}
-            console.log(test.current_position)
-        
-        }
-        
-    }
-    //Move Down
-    else if (e.keyCode == 83) {
-        if(check_if_walkable(e.keyCode,{"col" : test.current_position.col + 1, "row":test.current_position.row})){
-            test.updateCharPosition({"col" : test.current_position.col + 1, "row":test.current_position.row})
-            borgSprite.position.set(borgSprite.position._x, borgSprite.position._y + 16)
-            //test.current_position = {"col" : test.current_position.col, "row":test.current_position.row - 1}
-            console.log(test.current_position)
-        
-        }
-        
-    }
-    else if (e.keyCode == 87) {
-        if(check_if_walkable(e.keyCode,{"col" : test.current_position.col - 1, "row":test.current_position.row})){
-            test.updateCharPosition({"col" : test.current_position.col -1 , "row":test.current_position.row})
-            borgSprite.position.set(borgSprite.position._x, borgSprite.position._y - 16)
-            //test.current_position = {"col" : test.current_position.col, "row":test.current_position.row - 1}
-            console.log(test.current_position)
-        
-        }
-        
-    }
-}
 
 function check_if_walkable(keyCode,position){
     //let current_position = test.find_char_position();
@@ -150,7 +98,10 @@ function check_if_walkable(keyCode,position){
     
 }
 
-$('body').on('keydown',moveChar);
+$('body').on('keydown',testSprite.move);
+
+// app.stage.x = -testSprite.x
+// app.stage.y = -testSprite.y
 
 
 

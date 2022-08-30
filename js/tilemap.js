@@ -1,18 +1,21 @@
 // map
 class TileMap {
-    constructor(game) {
+    constructor(game,container) {
 
         this._game = game;
         this._body = {};
         this.width;
         this.height;
         this.collisionLayer;
+        this.container = container;
         this.mapArr;
-        this.current_position = {"col":0,"row":0};
+        this.current_position = {"col":10,"row":15};
+        
         var tileset = PIXI.Texture.from("/assets/maps/map.png");
         console.log('tileset', tileset)
         //this._game.on( 'update', this._update.bind( this ) );
         this._createMap(tileset);
+        
     }
 
     async _createMap(tileset) {
@@ -39,6 +42,9 @@ class TileMap {
         console.log(this.collisionLayer)
 
         this.createMapArray(this.collisionLayer)
+        console.log(this.mapArr)
+        this.mapArr[10][15].char_here = true;
+        
         //setTimeout(() => {   }, 10000);
 
 
@@ -85,7 +91,8 @@ class TileMap {
                 // console.log('layer y',layer.y);
                 // console.log('')
                 
-                this._game.stage.addChild(layer);
+                //this._game.stage.addChild(layer);
+                this.container.addChild(layer)
                 //if(row == 30){throw new Error("Something went badly wrong!");}
 
             }//row
@@ -143,6 +150,7 @@ class TileMap {
     }
 
     updateCharPosition(position){
+        console.log(this.current_position)
         this.mapArr[this.current_position.col][this.current_position.row].char_here = false;
         this.mapArr[position.col][position.row].char_here = true;
         this.current_position = {"col" : position.col, "row" : position.row}
