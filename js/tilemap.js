@@ -1,6 +1,6 @@
 // map
 class TileMap {
-    constructor(game,container) {
+    constructor(game, container, tile_map_image,tile_map_json) {
 
         this._game = game;
         this._body = {};
@@ -9,13 +9,13 @@ class TileMap {
         this.collisionLayer;
         this.container = container;
         this.mapArr;
-        this.current_position = {"col":10,"row":15};
+        this.current_position = { "col": 50, "row": 50 };
+        this.map_json = tile_map_json;
+
+        var tileset = PIXI.Texture.from(tile_map_image);
         
-        var tileset = PIXI.Texture.from("/assets/maps/map.png");
-        console.log('tileset', tileset)
-        //this._game.on( 'update', this._update.bind( this ) );
         this._createMap(tileset);
-        
+
     }
 
     async _createMap(tileset) {
@@ -43,8 +43,8 @@ class TileMap {
 
         this.createMapArray(this.collisionLayer)
         console.log(this.mapArr)
-        this.mapArr[10][15].char_here = true;
-        
+        this.mapArr[50][50].char_here = true;
+
         //setTimeout(() => {   }, 10000);
 
 
@@ -90,7 +90,7 @@ class TileMap {
                 // console.log('layer x',layer.x);
                 // console.log('layer y',layer.y);
                 // console.log('')
-                
+
                 //this._game.stage.addChild(layer);
                 this.container.addChild(layer)
                 //if(row == 30){throw new Error("Something went badly wrong!");}
@@ -101,19 +101,19 @@ class TileMap {
         // }
     }
 
-    createMapArray(collisionLayer){
+    createMapArray(collisionLayer) {
         this.mapArr = [];
         let index = 0;
 
-        for(let col =0; col < collisionLayer.height; col++){
+        for (let col = 0; col < collisionLayer.height; col++) {
             let tempArr = [];
-            for(let row =0; row < collisionLayer.width; row++){
-                if(collisionLayer.data[index] == 0){
-                    tempArr.push({"walkable" : true, "char_here": false})
+            for (let row = 0; row < collisionLayer.width; row++) {
+                if (collisionLayer.data[index] == 0) {
+                    tempArr.push({ "walkable": true, "char_here": false })
                 }
-                else{
+                else {
                     //this.mapArr[col][row] = 1
-                    tempArr.push({"walkable" : false, "char_here": false})
+                    tempArr.push({ "walkable": false, "char_here": false })
                 }
                 index++;
             }
@@ -123,12 +123,12 @@ class TileMap {
         console.log(this.mapArr)
     }
 
-    find_char_position(){
-        for(let col = 0; col < this.collisionLayer.height; col++){
-            for(let row = 0; row < this.collisionLayer.width; row++){
-                if(this.mapArr[col][row].char_here){
-                    console.log({"col":col, "row":row})
-                    return {"col":col, "row":row};
+    find_char_position() {
+        for (let col = 0; col < this.collisionLayer.height; col++) {
+            for (let row = 0; row < this.collisionLayer.width; row++) {
+                if (this.mapArr[col][row].char_here) {
+                    console.log({ "col": col, "row": row })
+                    return { "col": col, "row": row };
                 }
             }
         }
@@ -149,16 +149,16 @@ class TileMap {
         return null;
     }
 
-    updateCharPosition(position){
+    updateCharPosition(position) {
         console.log(this.current_position)
         this.mapArr[this.current_position.col][this.current_position.row].char_here = false;
         this.mapArr[position.col][position.row].char_here = true;
-        this.current_position = {"col" : position.col, "row" : position.row}
+        this.current_position = { "col": position.col, "row": position.row }
     }
 
     async getJsonFile(callback) {
         // http://localhost:8080
-        let file = await fetch('/assets/maps/map.json')
+        let file = await fetch(this.map_json)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("HTTP error " + response.status);
@@ -176,5 +176,21 @@ class TileMap {
             })
 
         return file;
+    }
+
+    check_if_walkable(position) {
+
+        if (position.col > -1 && position.row > -1)
+
+            if (this.mapArr[position.col][position.row].walkable) {
+                console.log(true)
+                return true;
+            }
+            else {
+                console.log(false)
+                return false;
+            }
+
+
     }
 };
