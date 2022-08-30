@@ -6,8 +6,8 @@ class Player {
         this.sprite;
         this.texture;
         this.container = container;
-        this.x = 800;
-        this.y = 800;
+        this.x = 240;
+        this.y = 160;
         this.walkDownAnimation;
         this.animationTextures;
         this.test = false;

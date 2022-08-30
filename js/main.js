@@ -20,7 +20,7 @@ app.stage.addChild(MapContainer);
 app.stage.addChild(PlayerContainer);
 
 //Create tilemap
-let tilemap = new TileMap(app, MapContainer, '/assets/maps/castle.png', '/assets/maps/world.json');
+let tilemap = new TileMap(app, MapContainer, '/assets/maps/map.png', '/assets/maps/map.json');
 
 //Create Player
 let mainPlayer = new Player("Jake", loader, app, PlayerContainer, tilemap);
