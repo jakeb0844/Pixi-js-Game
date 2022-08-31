@@ -1,7 +1,7 @@
 // Create the application helper and add its render target to the page
 const app = new PIXI.Application({
-    width: 3000,
-    height: 3000,
+    width: 480,
+    height: 320,
     transparent: false,
     antialis: true,
     resolution: 1

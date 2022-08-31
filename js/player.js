@@ -62,8 +62,6 @@ class Player {
 
     }
 
-
-
     init() {
 
         this.load_animations();
