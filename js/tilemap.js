@@ -13,7 +13,7 @@ class TileMap {
         this.mapJson = mapJson;
 
         var tileset = PIXI.Texture.from(mapImage);
-        console.log('tileset', tileset)
+        //console.log('tileset', tileset)
         //this._game.on( 'update', this._update.bind( this ) );
         this._createMap(tileset);
 
@@ -26,7 +26,7 @@ class TileMap {
         var level = await this.getJsonFile(function (data) {
             return data
         });
-        console.log(level)
+        //console.log(level)
         var tileHeight = 16;
         var tileWidth = 16;
         var layers = level.layers;
@@ -37,13 +37,14 @@ class TileMap {
         this.height = height * tileHeight;
 
         let levelHeight = 0;
-        console.log(level)
+        //console.log(level)
 
         this.collisionLayer = this.getCollisionLayer(layers);
-        console.log(this.collisionLayer)
+        this.actionLayer = this.getActionLayer(layers);
+        //console.log(this.collisionLayer)
 
-        this.createMapArray(this.collisionLayer)
-        console.log(this.mapArr)
+        this.createMapArray(this.collisionLayer,this.actionLayer)
+        //console.log(this.mapArr)
         this.mapArr[10][15].char_here = true;
 
         //setTimeout(() => {   }, 10000);
@@ -95,14 +96,63 @@ class TileMap {
                 //this._game.stage.addChild(layer);
                 this.container.addChild(layer)
                 //if(row == 30){throw new Error("Something went badly wrong!");}
-
+                
             }//row
             //if(col == 1){throw new Error("Something went badly wrong!");}
         }
+        this.displayMapArray('grid')
         // }
     }
 
-    createMapArray(collisionLayer) {
+    displayMapArray(id){
+        let height = this.mapArr.length;
+        let width = this.mapArr[0].length;
+        let html = '';
+
+        let el = $('#' + id);
+        el.html('');
+
+        el.append('<table>')
+
+        for (let col = 0; col < height; col++) {
+            //el.append('<tr>')
+            html = '';
+            html += "<tr>";
+            for (let row = 0; row < width; row++) {
+                //el.append('<td>')
+                
+                if(this.mapArr[col][row].char_here){
+                    //el.append('X')
+                    html += "<td style='background:yellow'>";
+                    html += "X";
+                }
+                else if(this.mapArr[col][row].action){
+                    html += "<td style='background:green'>";
+                    html += "a";
+                }
+                else if(this.mapArr[col][row].walkable){
+                    //el.append('0')
+                    html += "<td style='background:lightblue'>";
+                    html += "0";
+                }
+                else{
+                    //el.append('1')
+                    html += "<td style='background:red'>";
+                    html += "1";
+                }
+                //el.append('</td>')
+                html += "</td>";
+            }
+            //el.append('</tr>')
+            html += "</tr>";
+            el.append(html);
+            
+        }
+        el.append('</table>')
+    }
+
+    createMapArray(collisionLayer,actionLayer) { 
+        console.log(actionLayer)
         this.mapArr = [];
         let index = 0;
 
@@ -116,22 +166,44 @@ class TileMap {
                     //this.mapArr[col][row] = 1
                     tempArr.push({ "walkable": false, "char_here": false })
                 }
+
+                for(let i=0; i < actionLayer.layers.length; i++){
+                    if(actionLayer.layers[i].data[index] > 0){
+                        tempArr.pop();
+                        tempArr.push({"walkable": true, "char_here": false,"action":actionLayer.layers[i].properties[0].value})
+                    }
+                }
+
+                
                 index++;
             }
             this.mapArr.push(tempArr)
         }
 
-        console.log(this.mapArr)
+        //console.log(this.mapArr)
     }
 
     find_char_position() {
         for (let col = 0; col < this.collisionLayer.height; col++) {
             for (let row = 0; row < this.collisionLayer.width; row++) {
                 if (this.mapArr[col][row].char_here) {
-                    console.log({ "col": col, "row": row })
+                    //console.log({ "col": col, "row": row })
                     return { "col": col, "row": row };
                 }
             }
+        }
+
+        return null;
+    }
+
+    getActionLayer(mapData){
+        console.log(mapData)
+        for (let i = 0; i < mapData.length; i++) {
+
+            if (mapData[i].name == "Action") {
+                return mapData[i];
+            }
+
         }
 
         return null;
@@ -151,7 +223,7 @@ class TileMap {
     }
 
     updateCharPosition(position) {
-        console.log(this.current_position)
+        //console.log(this.current_position)
         this.mapArr[this.current_position.col][this.current_position.row].char_here = false;
         this.mapArr[position.col][position.row].char_here = true;
         this.current_position = { "col": position.col, "row": position.row }
@@ -179,18 +251,31 @@ class TileMap {
         return file;
     }
 
+
     check_if_walkable(position) {
+        console.log(position)
+        
+        
+        if (position.col > -1 && position.row > -1){
 
-        if (position.col > -1 && position.row > -1)
+            let obj = this.mapArr[position.col][position.row];
+            console.log(obj)
 
-            if (this.mapArr[position.col][position.row].walkable) {
-                console.log(true)
-                return true;
+            if (obj.walkable) {
+                if(obj.action){
+                    return {"walk":true,"action":obj.action};
+                }
+                //console.log(true)
+                return {"walk":true};
             }
             else {
-                console.log(false)
-                return false;
+                //console.log(false)
+                return {"walk":false};
             }
+
+        }
+
+        return {"walk":false}
 
 
     }

@@ -9,6 +9,7 @@ const app = new PIXI.Application({
 const loader = PIXI.Loader.shared;
 const MapContainer = new PIXI.Container();
 const PlayerContainer = new PIXI.Container();
+var message;
 
 document.body.appendChild(app.view);
 // app.stage.scale.x = 2.2
@@ -36,13 +37,26 @@ app.ticker.add((delta) => {
 
 function move(e, player, tilemap) {
     //Move Left
+    console.log('message',message)
+    if(message != null){
+        message.destroy()
+    }
     if (e.keyCode == 65) {
         //console.log("moveLeft")
         player.changeAnimation(player.walkLeftAnimation);
-        if (tilemap.check_if_walkable({ "col": tilemap.current_position.col, "row": tilemap.current_position.row - 1 })) {
+        let temp = tilemap.check_if_walkable({ "col": tilemap.current_position.col, "row": tilemap.current_position.row - 1 });
+        if (temp.walk) {
 
             tilemap.updateCharPosition({ "col": tilemap.current_position.col, "row": tilemap.current_position.row - 1 })
+            tilemap.displayMapArray('grid')
             player.sprite.position.set(player.x -= 16, player.y)
+            //event.start(temp.action)
+            console.log('temp',temp)
+            if(temp.action){
+                console.log('creating event')
+                message = new Event(temp.action);
+                
+            }
 
         }
 
@@ -51,10 +65,18 @@ function move(e, player, tilemap) {
     else if (e.keyCode == 68) {
         //console.log("move right")
         player.changeAnimation(player.walkRightAnimation);
-        if (tilemap.check_if_walkable({ "col": tilemap.current_position.col, "row": tilemap.current_position.row + 1 })) {
+        let temp = tilemap.check_if_walkable({ "col": tilemap.current_position.col, "row": tilemap.current_position.row + 1 });
+        if (temp.walk) {
 
             tilemap.updateCharPosition({ "col": tilemap.current_position.col, "row": tilemap.current_position.row + 1 })
+            tilemap.displayMapArray('grid')
             player.sprite.position.set(player.x += 16, player.y)
+
+            if(temp.action){
+                //console.log('here')
+                message = new Event(temp.action);
+                //console.log(message)
+            }
 
         }
 
@@ -62,20 +84,36 @@ function move(e, player, tilemap) {
     // // //Move Down
     else if (e.keyCode == 83) {
         player.changeAnimation(player.walkDownAnimation);
-        if (tilemap.check_if_walkable({ "col": tilemap.current_position.col + 1, "row": tilemap.current_position.row })) {
+        let temp = tilemap.check_if_walkable({ "col": tilemap.current_position.col + 1, "row": tilemap.current_position.row });
+        if (temp.walk) {
 
             tilemap.updateCharPosition({ "col": tilemap.current_position.col + 1, "row": tilemap.current_position.row })
+            tilemap.displayMapArray('grid')
             player.sprite.position.set(player.x, player.y += 16)
+
+            if(temp.action){
+                console.log('creating event')
+                message = new Event(temp.action);
+                
+            }
 
         }
 
     }
     else if (e.keyCode == 87) {
         player.changeAnimation(player.walkUpAnimation);
-        if (tilemap.check_if_walkable({ "col": tilemap.current_position.col - 1, "row": tilemap.current_position.row })) {
+        let temp = tilemap.check_if_walkable({ "col": tilemap.current_position.col - 1, "row": tilemap.current_position.row });
+        if (temp.walk) {
 
             tilemap.updateCharPosition({ "col": tilemap.current_position.col - 1, "row": tilemap.current_position.row })
+            tilemap.displayMapArray('grid')
             player.sprite.position.set(player.x, player.y -= 16)
+
+            if(temp.action){
+                console.log('creating event')
+                message = new Event(temp.action);
+                
+            }
 
         }
 

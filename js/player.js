@@ -28,7 +28,7 @@ class Player {
     createSprites() {
 
         let loader = this.loader.load((function () {
-            console.log(loader)
+            //console.log(loader)
 
             this.walkDownAnimation = this.createWalkSprite(loader.resources.Walk_down)
             this.walkLeftAnimation = this.createWalkSprite(loader.resources.Walk_left)
