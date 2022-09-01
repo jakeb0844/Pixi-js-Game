@@ -87,8 +87,10 @@ class TileMap {
                 var layer = new PIXI.Sprite(text);
                 layer.x = x * tileHeight;
                 layer.y = y * tileWidth;
-                layer.zIndex = -99999;
-                layer._zIndex = -99999;
+                let rect = this.createRect(layer.x,layer.y);
+                Container.addChild(rect)
+                // layer.zIndex = -99999;
+                // layer._zIndex = -99999;
                 // console.log('layer x',layer.x);
                 // console.log('layer y',layer.y);
                 // console.log('')
@@ -102,6 +104,17 @@ class TileMap {
         }
         this.displayMapArray('grid')
         // }
+    }
+
+    createRect(x,y){
+        let rect = new PIXI.Graphics()
+            .beginFill(0, 0)
+            .lineStyle({ color: 0x0000, width:1, native: true })
+            .drawShape({ "x": 0, "y": 0, "width": 16, "height": 16, "type": 1 });
+
+        rect.position.set(x, y)
+        //rect.tint(0xffff)
+        return rect;
     }
 
     displayMapArray(id){

@@ -9,6 +9,7 @@ const app = new PIXI.Application({
 const loader = PIXI.Loader.shared;
 const MapContainer = new PIXI.Container();
 const PlayerContainer = new PIXI.Container();
+const Container = new PIXI.Container();
 var message;
 
 document.body.appendChild(app.view);
@@ -19,12 +20,20 @@ document.body.appendChild(app.view);
 //Add containers
 app.stage.addChild(MapContainer);
 app.stage.addChild(PlayerContainer);
+app.stage.addChild(Container)
 
 //Create tilemap
 let tilemap = new TileMap(app, MapContainer, '/assets/maps/map.png', '/assets/maps/map.json');
 
 //Create Player
 let mainPlayer = new Player("Jake", loader, app, PlayerContainer, tilemap);
+
+app.stage.interactive = true;
+
+app.stage.on("mousedown", function(e){  
+  console.log(e.data.global.x)
+  click2Move(e.data.global.x,e.data.global.y);
+})
 
 
 // Listen for animate update
@@ -34,6 +43,27 @@ app.ticker.add((delta) => {
     //container.rotation -= 0.01 * delta;
 
 });
+
+function click2Move(x,y){
+    let row = Math.floor(x/16);
+    let col = Math.floor(y/16);
+
+    let playerPosition = mainPlayer.sprite;
+
+    if(x > playerPosition.x){
+        mainPlayer.sprite.position.set(Math.floor((playerPosition.x + Math.abs(x-playerPosition.x))/16)*16 ,Math.floor((playerPosition.y + Math.abs(x-playerPosition.x))/16)*16);
+    }
+    else{
+        mainPlayer.sprite.position.set(Math.floor((playerPosition.x - Math.abs(x-playerPosition.x))/16)*16 , Math.floor((playerPosition.y - Math.abs(y-playerPosition.y))/16)*16);
+    }
+    console.log("row",row);
+    console.log('player',Math.floor(playerPosition.x/16))
+    console.log("diff",Math.abs(row-(Math.floor(playerPosition.x/16))))
+    console.log('end',Math.floor((playerPosition.x + Math.abs(x-playerPosition.x))/16)*16)
+
+    // mainPlayer.sprite.position.set(Math.abs(row-(Math.floor(playerPosition._x/16)))*16 , Math.abs(col-(Math.floor(playerPosition._y/16)))*16);
+    mainPlayer.sprite.position.set(Math.floor((playerPosition.x + Math.abs(x-playerPosition.x))/16)*16 , playerPosition.y);
+}
 
 function move(e, player, tilemap) {
     //Move Left
