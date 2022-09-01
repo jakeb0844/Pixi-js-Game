@@ -11,6 +11,7 @@ const MapContainer = new PIXI.Container();
 const PlayerContainer = new PIXI.Container();
 const Container = new PIXI.Container();
 var message;
+var pos = null;
 
 document.body.appendChild(app.view);
 // app.stage.scale.x = 2.2
@@ -32,7 +33,8 @@ app.stage.interactive = true;
 
 app.stage.on("mousedown", function(e){  
   console.log(e.data.global.x)
-  click2Move(e.data.global.x,e.data.global.y);
+  //click2Move(e.data.global.x,e.data.global.y);
+  pos = {"x": e.data.global.x,"y":e.data.global.y}
 })
 
 
@@ -41,28 +43,33 @@ app.ticker.add((delta) => {
     // rotate the container!
     // use delta to create frame-independent transform
     //container.rotation -= 0.01 * delta;
+    console.log(pos)
+    if(pos != null){
+        click2Move(pos.x,pos.y)
+        pos = null;
+    }
+    
 
 });
 
 function click2Move(x,y){
-    let row = Math.floor(x/16);
-    let col = Math.floor(y/16);
 
     let playerPosition = mainPlayer.sprite;
 
     if(x > playerPosition.x){
-        mainPlayer.sprite.position.set(Math.floor((playerPosition.x + Math.abs(x-playerPosition.x))/16)*16 ,Math.floor((playerPosition.y + Math.abs(x-playerPosition.x))/16)*16);
+        mainPlayer.sprite.position.set(Math.floor((playerPosition.x + Math.abs(x-playerPosition.x))/16)*16 ,playerPosition.y);
     }
     else{
-        mainPlayer.sprite.position.set(Math.floor((playerPosition.x - Math.abs(x-playerPosition.x))/16)*16 , Math.floor((playerPosition.y - Math.abs(y-playerPosition.y))/16)*16);
+        mainPlayer.sprite.position.set(Math.floor((playerPosition.x - Math.abs(x-playerPosition.x))/16)*16 , playerPosition.y);
     }
-    console.log("row",row);
-    console.log('player',Math.floor(playerPosition.x/16))
-    console.log("diff",Math.abs(row-(Math.floor(playerPosition.x/16))))
-    console.log('end',Math.floor((playerPosition.x + Math.abs(x-playerPosition.x))/16)*16)
 
-    // mainPlayer.sprite.position.set(Math.abs(row-(Math.floor(playerPosition._x/16)))*16 , Math.abs(col-(Math.floor(playerPosition._y/16)))*16);
-    mainPlayer.sprite.position.set(Math.floor((playerPosition.x + Math.abs(x-playerPosition.x))/16)*16 , playerPosition.y);
+    if(y > playerPosition.y){
+        mainPlayer.sprite.position.set(mainPlayer.sprite.x , Math.floor((playerPosition.y + Math.abs(y-playerPosition.y))/16)*16);
+    }
+    else{
+        mainPlayer.sprite.position.set(mainPlayer.sprite.x , Math.floor((playerPosition.y - Math.abs(y-playerPosition.y))/16)*16);
+    }
+    
 }
 
 function move(e, player, tilemap) {

@@ -109,7 +109,7 @@ class TileMap {
     createRect(x,y){
         let rect = new PIXI.Graphics()
             .beginFill(0, 0)
-            .lineStyle({ color: 0x0000, width:1, native: true })
+            //.lineStyle({ color: 0x0000, width:1, native: true })
             .drawShape({ "x": 0, "y": 0, "width": 16, "height": 16, "type": 1 });
 
         rect.position.set(x, y)
