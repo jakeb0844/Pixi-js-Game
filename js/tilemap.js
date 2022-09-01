@@ -11,6 +11,7 @@ class TileMap {
         this.mapArr;
         this.current_position = { "col": 10, "row": 15 };
         this.mapJson = mapJson;
+        this.i = 0;
 
         var tileset = PIXI.Texture.from(mapImage);
         //console.log('tileset', tileset)
@@ -108,12 +109,37 @@ class TileMap {
 
     createRect(x,y){
         let rect = new PIXI.Graphics()
-            .beginFill(0, 0)
-            //.lineStyle({ color: 0x0000, width:1, native: true })
-            .drawShape({ "x": 0, "y": 0, "width": 16, "height": 16, "type": 1 });
+            // .beginFill(0x00F000)
+            .lineStyle({ color: 0xffff, width:1, native: true })
+            .drawShape({ "x": x, "y": y, "width": 16, "height": 16, "type": 1 })
+            .endFill();
 
-        rect.position.set(x, y)
-        //rect.tint(0xffff)
+        //rect.position.set(x, y)
+        rect.hitArea = rect.getBounds();
+        rect.interactive = true;
+        //rect.buttonMode = true;
+        rect.on('mouseover',function(e){
+            let x = Math.floor(e.data.global.x/16)*16;
+            let y = Math.floor(e.data.global.y/16)*16;
+            console.log(this)
+            console.log(this.x)
+            this.clear()
+            this.beginFill(0xFC0202)
+            .drawShape({ "x": x, "y": y, "width": 16, "height": 16, "type": 1 })
+            
+        })
+
+        rect.on('mouseout',function(e){
+            let x = Math.floor(e.data.global.x/16)*16;
+            let y = Math.floor(e.data.global.y/16)*16;
+            
+            this.clear()
+            //this.beginFill(0xFFFFF)
+            .lineStyle({ color: 0xffff, width:1, native: true })
+            .drawShape({ "x": x, "y": y, "width": 16, "height": 16, "type": 1 })
+        })
+        
+        //console.log(rect)
         return rect;
     }
 
