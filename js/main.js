@@ -32,74 +32,93 @@ let mainPlayer = new Player("Jake", loader, app, PlayerContainer, tilemap);
 app.stage.interactive = true;
 
 app.stage.on("mousedown", function (e) {
-    console.log("mouse x",e.data.global.x)
-    console.log("mouse y",Math.floor(e.data.global.y/16)*16)
+    console.log("mouse x", e.data.global.x)
+    console.log("mouse y", Math.floor(e.data.global.y / 16) * 16)
     //click2Move(e.data.global.x,e.data.global.y);
     pos = { "x": e.data.global.x, "y": e.data.global.y }
 })
 
 let a = null;
-let walk = null;
+let walkX = null;
+let walkY = null;
+let walking = false;
 // Listen for animate update
 app.ticker.add((delta) => {
     // rotate the container!
     // use delta to create frame-independent transform
     //container.rotation -= 0.01 * delta;
     //console.log(delta)
+
     if (pos != null) {
-        console.log("player x",mainPlayer.sprite.x)
-        console.log("player y",mainPlayer.sprite.y)
-        if(walk == null){
-            walk =  test(pos.x,pos.y)
+        //console.log("player x", mainPlayer.sprite.x)
+        //console.log("player y", mainPlayer.sprite.y)
+        console.log('walkX', walkX)
+        console.log('walkY', walkY)
+        if ((walkX == null && walkY == null)) {
+            console.log('here')
+            let temp = test(pos.x, pos.y)
+            walkX = temp.x;
+            walkY = temp.y;
+
         }
+        if (walkY != null) {
+            if (mainPlayer.sprite.y != walkY) {
+                walking = true;
+
+                if (walkY > mainPlayer.sprite.y) {
+                    mainPlayer.changeAnimation(mainPlayer.walkDownAnimation);
+                    mainPlayer.sprite.y += .5;
+                    mainPlayer.y += .5
+                }
+                else {
+                    mainPlayer.changeAnimation(mainPlayer.walkUpAnimation);
+                    mainPlayer.sprite.y -= .5
+                    mainPlayer.y -= .5
+                }
+            }
+
+            else {
+                //pos = null;
+                walkY = null;
+                walking = false;
+            }
+        }
+       else if (walkX != null) {
+
+            if (mainPlayer.sprite.x != walkX) {
+                walking = true;
+                if (walkX > mainPlayer.sprite.x) {
+                    mainPlayer.changeAnimation(mainPlayer.walkRightAnimation);
+                    mainPlayer.sprite.x += .5;
+                    mainPlayer.x += .5;
+                }
+                else {
+                    mainPlayer.changeAnimation(mainPlayer.walkLeftAnimation);
+                    mainPlayer.sprite.x -= .5;
+                    mainPlayer.x -= .5
+                }
+
+            }
+            else {
+                //pos = null;
+                walkX = null;
+                walking = false;
+            }
+        }
+
        
-       if(mainPlayer.sprite.x != walk.x || mainPlayer.sprite.y != walk.y){
-        if(walk.x > mainPlayer.sprite.x){
-            mainPlayer.changeAnimation(mainPlayer.walkRightAnimation);
-            mainPlayer.sprite.x += .5;
-            mainPlayer.x +=.5;
-        }
-        else{
-            mainPlayer.changeAnimation(mainPlayer.walkLeftAnimation);
-            mainPlayer.sprite.x -= .5;
-            mainPlayer.x -= .5
-        }
+    
+}
 
-        if(walk.y > mainPlayer.sprite.y){
-           mainPlayer.changeAnimation(mainPlayer.walkDownAnimation);
-            mainPlayer.sprite.y += .5;
-            mainPlayer.y += .5
-        }
-        else{
-            mainPlayer.changeAnimation(mainPlayer.walkUpAnimation);
-            mainPlayer.sprite.y -=.5
-            mainPlayer.y -= .5
-        }
-       }
-       else{
-        pos = null;
-        walk = null;
-       }
-    //    if(mainPlayer.sprite.y != walk.y){
-    //    if(walk.y > mainPlayer.sprite.y){
-    //         mainPlayer.sprite.y += .5;
-    //     }
-    //     else{
-    //         mainPlayer.sprite.y -=.5
-    //     }
-    // }
-    // else{
-    //     pos = null;
-    //    }
-        //click2Move(pos.x, pos.y)
+    //click2Move(pos.x, pos.y)
 
-        //pos = null;
-    }
+    //pos = null;
+
 
 
 });
 
-function test(x,y){
+function test(x, y) {
     //console.log('walk x,y',{'x':x,'y':y})
     // x = Math.floor(x/16)*16;
     // y = Math.floor(y/16)*16;
@@ -116,14 +135,14 @@ function test(x,y){
     }
 
     if (y > playerPosition.y) {
-        temp2 =  Math.floor((playerPosition.y + Math.abs(y - playerPosition.y)) / 16) * 16;
+        temp2 = Math.floor((playerPosition.y + Math.abs(y - playerPosition.y)) / 16) * 16;
     }
     else {
-        temp2 =  Math.floor((playerPosition.y - Math.abs(y - playerPosition.y)) / 16) * 16;
+        temp2 = Math.floor((playerPosition.y - Math.abs(y - playerPosition.y)) / 16) * 16;
     }
 
-    console.log({"x":temp,"y":temp2})
-    return {"x":temp,"y":temp2}
+    console.log({ "x": temp, "y": temp2 })
+    return { "x": temp, "y": temp2 }
 }
 
 function click2Move(x, y) {

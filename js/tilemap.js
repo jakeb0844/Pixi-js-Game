@@ -12,6 +12,7 @@ class TileMap {
         this.current_position = { "col": 10, "row": 15 };
         this.mapJson = mapJson;
         this.i = 0;
+        this.tile = [];
 
         var tileset = PIXI.Texture.from(mapImage);
         //console.log('tileset', tileset)
@@ -44,9 +45,9 @@ class TileMap {
         this.actionLayer = this.getActionLayer(layers);
         //console.log(this.collisionLayer)
 
-        this.createMapArray(this.collisionLayer,this.actionLayer)
+        // this.createMapArray(this.collisionLayer,this.actionLayer)
         //console.log(this.mapArr)
-        this.mapArr[10][15].char_here = true;
+        // this.mapArr[10][15].char_here = true;
 
         //setTimeout(() => {   }, 10000);
 
@@ -89,6 +90,8 @@ class TileMap {
                 layer.x = x * tileHeight;
                 layer.y = y * tileWidth;
                 let rect = this.createRect(layer.x,layer.y);
+                this.tile[this.i] = rect;
+                this.i++;
                 Container.addChild(rect)
                 // layer.zIndex = -99999;
                 // layer._zIndex = -99999;
@@ -103,6 +106,8 @@ class TileMap {
             }//row
             //if(col == 1){throw new Error("Something went badly wrong!");}
         }
+        this.createMapArray(this.collisionLayer,this.actionLayer)
+        this.mapArr[10][15].char_here = true;
         this.displayMapArray('grid')
         // }
     }
@@ -110,36 +115,141 @@ class TileMap {
     createRect(x,y){
         let rect = new PIXI.Graphics()
             // .beginFill(0x00F000)
-            .lineStyle({ color: 0xffff, width:1, native: true })
+            .lineStyle({ color: 1, width:1, native: true })
             .drawShape({ "x": x, "y": y, "width": 16, "height": 16, "type": 1 })
-            .endFill();
+            //.endFill();
 
         //rect.position.set(x, y)
         rect.hitArea = rect.getBounds();
         rect.interactive = true;
         //rect.buttonMode = true;
-        rect.on('mouseover',function(e){
-            let x = Math.floor(e.data.global.x/16)*16;
-            let y = Math.floor(e.data.global.y/16)*16;
-            console.log(this)
-            console.log(this.x)
-            this.clear()
-            this.beginFill(0xFC0202)
-            .drawShape({ "x": x, "y": y, "width": 16, "height": 16, "type": 1 })
-            
-        })
 
-        rect.on('mouseout',function(e){
-            let x = Math.floor(e.data.global.x/16)*16;
-            let y = Math.floor(e.data.global.y/16)*16;
+        // rect.on('click',(function(e){
+        //     let x = Math.floor(e.data.global.x/16);
+        //     let y = Math.floor(e.data.global.y/16);
+        //     console.log(x + ' and ' + y)
+        //     let playerX = mainPlayer.x;
+        //     let playerY = mainPlayer.y;
+        //     console.log(playerX + " and " + playerY)
             
-            this.clear()
-            //this.beginFill(0xFFFFF)
-            .lineStyle({ color: 0xffff, width:1, native: true })
-            .drawShape({ "x": x, "y": y, "width": 16, "height": 16, "type": 1 })
-        })
+        //     let r = this.mapArr[y][x].tile;
+        //     r.clear();
+        //     r.beginFill(0xFC0202);
+        //     r.lineStyle({ color: 0xffff, width:1, native: true })
+        //     r.drawShape({ "x": x * 16, "y": y * 16, "width": 16, "height": 16, "type": 1 })
+
+        //     let temp = [];
+
+        //     for(let i =0; i < (x - playerX/16);i++){
+        //         temp.push(this.mapArr[i+1][0])
+        //     }
+
+        //     console.log(temp)
+
+        //     for(let i=0; i < temp.length; i++){
+        //         temp[i].tile.clear();
+        //         temp[i].tile.beginFill(0xFC0202);
+        //         temp[i].tile.lineStyle({ color: 0xffff, width:1, native: true })
+        //         temp[i].tile.drawShape({ "x": (Math.floor(playerX/16) + (i+1)) * 16, "y": y*16, "width": 16, "height": 16, "type": 1 })
+        //     }
+            
+
+        // }).bind(this))
+
+        rect.on('mouseover',(function(e){
+            let x = Math.floor(e.data.global.x/16);
+            let y = Math.floor(e.data.global.y/16);
+            //console.log(x + ' and ' + y)
+            let playerX = mainPlayer.x;
+            let playerY = mainPlayer.y;
+           // console.log(playerX + " and " + playerY)
+            
+            let r = this.mapArr[y][x].tile;
+            r.clear();
+            //r.beginFill(0xFC0202);
+            r.lineStyle({ color: 0xFC0202, width:1, native: true })
+            r.drawShape({ "x": x * 16, "y": y * 16, "width": 16, "height": 16, "type": 1 })
+
+            let tempX = [];
+            let tempY = [];
+
+            if(playerX/16 > x){
+                for(let i =0; i < (playerX/16 - x);i++){
+                    tempX.push(this.mapArr[0][i])
+                }
+    
+                //console.log(tempX)
+    
+                for(let i=0; i < tempX.length; i++){
+                    //temp[i].tile.clear();
+                    //temp[i].tile.beginFill(0xFC0202);
+                    tempX[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
+                    tempX[i].tile.drawShape({ "x": (Math.floor(playerX/16) - (i+1)) * 16, "y": y*16, "width": 16, "height": 16, "type": 1 })
+                }
+            }
+            else{
+                for(let i =0; i < (x - playerX/16);i++){
+                    tempX.push(this.mapArr[0][i])
+                }
+    
+                //console.log(tempX)
+    
+                for(let i=0; i < tempX.length; i++){
+                    //temp[i].tile.clear();
+                    //temp[i].tile.beginFill(0xFC0202);
+                    tempX[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
+                    tempX[i].tile.drawShape({ "x": (Math.floor(playerX/16) + (i+1)) * 16, "y": y*16, "width": 16, "height": 16, "type": 1 })
+                }
+            }
+
+            if(playerY/16 > y){
+                for(let i =0; i < (playerY/16 - y);i++){
+                    tempY.push(this.mapArr[i+1][0])
+                }
+    
+                //console.log(tempY)
+    
+                for(let i=0; i < tempY.length; i++){
+                    //temp[i].tile.clear();
+                    //temp[i].tile.beginFill(0xFC0202);
+                    tempY[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
+                    tempY[i].tile.drawShape({ "x": playerX, "y": (Math.floor(playerY/16) - (i+1)) * 16, "width": 16, "height": 16, "type": 1 })
+                }
+            }
+            else{
+                for(let i =0; i < (y - playerY/16);i++){
+                    tempY.push(this.mapArr[i+1][0])
+                }
+    
+                //console.log(tempY)
+    
+                for(let i=0; i < tempY.length; i++){
+                    //temp[i].tile.clear();
+                    //temp[i].tile.beginFill(0xFC0202);
+                    tempY[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
+                    tempY[i].tile.drawShape({ "x": playerX, "y": (Math.floor(playerY/16) + (i+1)) * 16, "width": 16, "height": 16, "type": 1 })
+                }
+            }
+
+            
+
+            
+            
+
+            
+
+           // this.tile = temp;
+            
+        }).bind(this))
+
+        rect.on('mouseout',(function(e){
+            for(let i=0; i < tilemap.tile.length; i++){
+                tilemap.tile[i].clear();
+            }
+        }))
         
         //console.log(rect)
+        rect.clear();
         return rect;
     }
 
@@ -191,7 +301,7 @@ class TileMap {
     }
 
     createMapArray(collisionLayer,actionLayer) { 
-        console.log(actionLayer)
+        //console.log(actionLayer)
         this.mapArr = [];
         let index = 0;
 
@@ -199,17 +309,17 @@ class TileMap {
             let tempArr = [];
             for (let row = 0; row < collisionLayer.width; row++) {
                 if (collisionLayer.data[index] == 0) {
-                    tempArr.push({ "walkable": true, "char_here": false })
+                    tempArr.push({ "walkable": true, "char_here": false,"tile": this.tile[index] })
                 }
                 else {
                     //this.mapArr[col][row] = 1
-                    tempArr.push({ "walkable": false, "char_here": false })
+                    tempArr.push({ "walkable": false, "char_here": false,"tile": this.tile[index] })
                 }
 
                 for(let i=0; i < actionLayer.layers.length; i++){
                     if(actionLayer.layers[i].data[index] > 0){
                         tempArr.pop();
-                        tempArr.push({"walkable": true, "char_here": false,"action":actionLayer.layers[i].properties[0].value})
+                        tempArr.push({"walkable": true, "char_here": false,"action":actionLayer.layers[i].properties[0].value,"tile": this.tile[index]})
                     }
                 }
 
