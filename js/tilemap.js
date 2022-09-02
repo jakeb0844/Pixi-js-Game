@@ -156,80 +156,84 @@ class TileMap {
 
         // }).bind(this))
 
-        rect.on('mouseover',(function(e){
+        rect.on('click',(function(e){
             let x = Math.floor(e.data.global.x/16);
             let y = Math.floor(e.data.global.y/16);
             //console.log(x + ' and ' + y)
             let playerX = mainPlayer.x;
             let playerY = mainPlayer.y;
+            let playerRow = Math.floor(playerX/16);
+            let playerCol = Math.floor(playerY/16);
            // console.log(playerX + " and " + playerY)
+
+           tilemap.quickest_path({'col':playerCol,"row":playerRow},{'col':y,"row":x});
             
-            let r = this.mapArr[y][x].tile;
-            r.clear();
-            //r.beginFill(0xFC0202);
-            r.lineStyle({ color: 0xFC0202, width:1, native: true })
-            r.drawShape({ "x": x * 16, "y": y * 16, "width": 16, "height": 16, "type": 1 })
+            // let r = this.mapArr[y][x].tile;
+            // r.clear();
+            // //r.beginFill(0xFC0202);
+            // r.lineStyle({ color: 0xFC0202, width:1, native: true })
+            // r.drawShape({ "x": x * 16, "y": y * 16, "width": 16, "height": 16, "type": 1 })
 
-            let tempX = [];
-            let tempY = [];
+            // let tempX = [];
+            // let tempY = [];
 
-            if(playerX/16 > x){
-                for(let i =0; i < (playerX/16 - x);i++){
-                    tempX.push(this.mapArr[0][i])
-                }
+            // if(playerX/16 > x){
+            //     for(let i =0; i < (playerX/16 - x);i++){
+            //         tempX.push(this.mapArr[0][i])
+            //     }
     
-                //console.log(tempX)
+            //     //console.log(tempX)
     
-                for(let i=0; i < tempX.length; i++){
-                    //temp[i].tile.clear();
-                    //temp[i].tile.beginFill(0xFC0202);
-                    tempX[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
-                    tempX[i].tile.drawShape({ "x": (Math.floor(playerX/16) - (i+1)) * 16, "y": y*16, "width": 16, "height": 16, "type": 1 })
-                }
-            }
-            else{
-                for(let i =0; i < (x - playerX/16);i++){
-                    tempX.push(this.mapArr[0][i])
-                }
+            //     for(let i=0; i < tempX.length; i++){
+            //         //temp[i].tile.clear();
+            //         //temp[i].tile.beginFill(0xFC0202);
+            //         tempX[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
+            //         tempX[i].tile.drawShape({ "x": (Math.floor(playerX/16) - (i+1)) * 16, "y": y*16, "width": 16, "height": 16, "type": 1 })
+            //     }
+            // }
+            // else{
+            //     for(let i =0; i < (x - playerX/16);i++){
+            //         tempX.push(this.mapArr[0][i])
+            //     }
     
-                //console.log(tempX)
+            //     //console.log(tempX)
     
-                for(let i=0; i < tempX.length; i++){
-                    //temp[i].tile.clear();
-                    //temp[i].tile.beginFill(0xFC0202);
-                    tempX[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
-                    tempX[i].tile.drawShape({ "x": (Math.floor(playerX/16) + (i+1)) * 16, "y": y*16, "width": 16, "height": 16, "type": 1 })
-                }
-            }
+            //     for(let i=0; i < tempX.length; i++){
+            //         //temp[i].tile.clear();
+            //         //temp[i].tile.beginFill(0xFC0202);
+            //         tempX[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
+            //         tempX[i].tile.drawShape({ "x": (Math.floor(playerX/16) + (i+1)) * 16, "y": y*16, "width": 16, "height": 16, "type": 1 })
+            //     }
+            // }
 
-            if(playerY/16 > y){
-                for(let i =0; i < (playerY/16 - y);i++){
-                    tempY.push(this.mapArr[i+1][0])
-                }
+            // if(playerY/16 > y){
+            //     for(let i =0; i < (playerY/16 - y);i++){
+            //         tempY.push(this.mapArr[i+1][0])
+            //     }
     
-                //console.log(tempY)
+            //     //console.log(tempY)
     
-                for(let i=0; i < tempY.length; i++){
-                    //temp[i].tile.clear();
-                    //temp[i].tile.beginFill(0xFC0202);
-                    tempY[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
-                    tempY[i].tile.drawShape({ "x": playerX, "y": (Math.floor(playerY/16) - (i+1)) * 16, "width": 16, "height": 16, "type": 1 })
-                }
-            }
-            else{
-                for(let i =0; i < (y - playerY/16);i++){
-                    tempY.push(this.mapArr[i+1][0])
-                }
+            //     for(let i=0; i < tempY.length; i++){
+            //         //temp[i].tile.clear();
+            //         //temp[i].tile.beginFill(0xFC0202);
+            //         tempY[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
+            //         tempY[i].tile.drawShape({ "x": playerX, "y": (Math.floor(playerY/16) - (i+1)) * 16, "width": 16, "height": 16, "type": 1 })
+            //     }
+            // }
+            // else{
+            //     for(let i =0; i < (y - playerY/16);i++){
+            //         tempY.push(this.mapArr[i+1][0])
+            //     }
     
-                //console.log(tempY)
+            //     //console.log(tempY)
     
-                for(let i=0; i < tempY.length; i++){
-                    //temp[i].tile.clear();
-                    //temp[i].tile.beginFill(0xFC0202);
-                    tempY[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
-                    tempY[i].tile.drawShape({ "x": playerX, "y": (Math.floor(playerY/16) + (i+1)) * 16, "width": 16, "height": 16, "type": 1 })
-                }
-            }
+            //     for(let i=0; i < tempY.length; i++){
+            //         //temp[i].tile.clear();
+            //         //temp[i].tile.beginFill(0xFC0202);
+            //         tempY[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
+            //         tempY[i].tile.drawShape({ "x": playerX, "y": (Math.floor(playerY/16) + (i+1)) * 16, "width": 16, "height": 16, "type": 1 })
+            //     }
+            // }
 
             
 
@@ -242,15 +246,108 @@ class TileMap {
             
         }).bind(this))
 
-        rect.on('mouseout',(function(e){
-            for(let i=0; i < tilemap.tile.length; i++){
-                tilemap.tile[i].clear();
-            }
-        }))
+        // rect.on('mouseout',(function(e){
+        //     for(let i=0; i < tilemap.tile.length; i++){
+        //         tilemap.tile[i].clear();
+        //     }
+        // }))
         
         //console.log(rect)
         rect.clear();
         return rect;
+    }
+
+    quickest_path(startPoint,endPoint){
+        for(let i=0; i < tilemap.tile.length; i++){
+                     tilemap.tile[i].clear();
+                 }
+        // let r = this.mapArr[y][x].tile;
+        //     r.clear();
+        //     //r.beginFill(0xFC0202);
+        //     r.lineStyle({ color: 0xFC0202, width:1, native: true })
+        //     r.drawShape({ "x": x * 16, "y": y * 16, "width": 16, "height": 16, "type": 1 })
+        console.log("distance",Math.abs(startPoint.col - endPoint.col))
+        // this.mapArr[0][0].tile.clear()
+        //         .beginFill(0xFC0202)
+        //         .lineStyle({ color: 0xFC0202, width:1, native: true })
+        //         .drawShape({ "x": 0, "y": 0, "width": 16, "height": 16, "type": 1 })
+        if(this.mapArr[endPoint.col][endPoint.row].walkable){
+            
+            //Check if any non-walkables in path
+
+            if(startPoint.col > endPoint.col){
+                console.log('greater')
+                for(let i =startPoint.col-1;  i >= startPoint.col - Math.abs(startPoint.col - endPoint.col); i--){
+                    this.mapArr[i][startPoint.row].tile.clear()
+                    //.beginFill(0xFC0202)
+                    .lineStyle({ color: 0xFC0202, width:1, native: true })
+                    .drawShape({ "x": startPoint.row*16, "y": (i)*16, "width": 16, "height": 16, "type": 1 });
+                    if((this.mapArr[i][startPoint.row].walkable)){
+                        console.log('walk',i)
+                        
+                    }
+                    else{
+                        console.log("not walk",i)
+                    }
+                }
+            }
+            else{
+                console.log('less')
+                for(let i =startPoint.col+1; i <= startPoint.col + Math.abs(startPoint.col - endPoint.col); i++){
+                    this.mapArr[i][startPoint.row].tile.clear()
+                   // .beginFill(0xFC0202)
+                    .lineStyle({ color: 0xFC0202, width:1, native: true })
+                    .drawShape({ "x": startPoint.row*16, "y": (i)*16, "width": 16, "height": 16, "type": 1 });
+                    if((this.mapArr[i][startPoint.row].walkable)){
+                        console.log('walk',i)
+                        
+                    }
+                    else{
+                        console.log("not walk",i)
+                    }
+                }
+            }
+
+            if(startPoint.row > endPoint.row){
+                console.log('row greater')
+                for(let i =startPoint.row-1;  i >= startPoint.row - Math.abs(startPoint.row - endPoint.row); i--){
+                    this.mapArr[i][startPoint.row].tile.clear()
+                    //.beginFill(0xFC0202)
+                    .lineStyle({ color: 0xFC0202, width:1, native: true })
+                    .drawShape({ "x": i*16, "y": startPoint.col*16, "width": 16, "height": 16, "type": 1 });
+                    if((this.mapArr[i][startPoint.row].walkable)){
+                        console.log('walk',i)
+                        
+                    }
+                    else{
+                        console.log("not walk",i)
+                    }
+                }
+            }
+            else{
+                console.log('row less')
+                for(let i =startPoint.row+1; i <= startPoint.row + Math.abs(startPoint.row - endPoint.row); i++){
+                    this.mapArr[startPoint.col][i].tile.clear()
+                   // .beginFill(0xFC0202)
+                    .lineStyle({ color: 0xFC0202, width:1, native: true })
+                    .drawShape({ "x": i*16, "y": startPoint.col*16, "width": 16, "height": 16, "type": 1 });
+                    if((this.mapArr[startPoint.col][i].walkable)){
+                        console.log('walk',i)
+                        
+                    }
+                    else{
+                        console.log("not walk",i)
+                    }
+                }
+            }
+
+            
+
+
+
+        }
+
+        return false;
     }
 
     displayMapArray(id){

@@ -24,12 +24,12 @@ app.stage.addChild(PlayerContainer);
 app.stage.addChild(Container)
 
 //Create tilemap
-let tilemap = new TileMap(app, MapContainer, '/assets/maps/map.png', '/assets/maps/map.json');
+let tilemap = new TileMap(app, MapContainer, '/assets/maps/map_walkpath.png', '/assets/maps/map_walkpath.json');
 
 //Create Player
 let mainPlayer = new Player("Jake", loader, app, PlayerContainer, tilemap);
 
-app.stage.interactive = true;
+//app.stage.interactive = true;
 
 app.stage.on("mousedown", function (e) {
     console.log("mouse x", e.data.global.x)
@@ -170,7 +170,7 @@ function click2Move(x, y) {
 
 function move(e, player, tilemap) {
     //Move Left
-    console.log('message', message)
+    //console.log('message', message)
     if (message != null) {
         message.destroy()
     }
