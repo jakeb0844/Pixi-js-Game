@@ -4,15 +4,22 @@
 <head>
   <script src="https://pixijs.download/release/pixi.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@pixi/tilemap@latest/dist/pixi-tilemap.umd.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 </head>
 
 <style>
-  table, th, td {
-    border:1px solid black;
+  table,
+  th,
+  td {
+    border: 1px solid black;
     padding: 5px;
   }
-  </style>
+
+  .select {
+    background-color: red !important;
+  }
+</style>
 
 <!-- Tools -->
 
@@ -53,9 +60,151 @@
   <script src="js/player.js"></script>
   <script src="js/event.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/grid.js"></script>
+  <script src="js/node.js"></script>
+  <script src="js/dijkstra-pathfinding.js"></script>
 
   <div id="grid"></div>
+
+  <script>
+    // let grid = new Grid(5, 5)
+    // let nodes = grid.nodes;
+    // grid = grid.grid;
+    // let startNode = grid[0][0];
+    // let endNode = grid[2][2];
+    // //let path = new Dijkstra(grid, { "x": 0, "y": 0 }, { "x": 4, "y": 4 })
+
+    // let temp = dijkstra(grid, startNode, endNode,nodes)
+
+    //  let path = makePath(endNode, 0);
+
+    // // let tds = 0;
+
+    // setTimeout(()=>{
+    //   tds = $('#grid td');
+    //   console.log(tds)
+
+    //   for(const node of path){
+    //     for(let el of tds){
+    //       let txt = node.row + ',' + node.col;
+    //       el = $(el)
+    //       if(txt == el.text()){
+    //         el.toggleClass('select')
+    //       }
+    //     }
+    //   }
+    // },1000)
     
+
+    
+
+
+    // function makePath(node, timeDelay) {
+    //   let currentNode = node;
+    //   console.log("start", currentNode)
+    //   let path = [];
+    //   let delay = timeDelay
+    //   let step = 1
+    //   while (currentNode !== null) {
+    //     delay += 20
+    //     //currentNode.addTimer("path", delay)
+    //     path.unshift(currentNode);
+    //     currentNode = currentNode.parent;
+    //     console.log('while', currentNode)
+    //     //break;
+    //   }
+    //   return path;
+    // }
+
+    // function dijkstra(grid, startNode, endNode,nodes) {
+    //   startNode.distance = 0
+    //   const visitedNodes = []
+    //   //const unvisitedNodes = getNodes(grid)
+    //   const unvisitedNodes = nodes;
+    //   const delay = 5
+    //   let step = 1
+    //   while (unvisitedNodes.length) {
+    //     unvisitedNodes.sort((a, b) => a.distance - b.distance)
+    //     const closestNode = unvisitedNodes.shift()
+    //     console.log('closest',closestNode)
+    //     if (closestNode.col == endNode.col && closestNode.row == endNode.row) {
+    //       //endNode.parent = visitedNodes[visitedNodes.length-1]
+    //       console.log(visitedNodes)
+    //       return visitedNodes;
+    //     }
+    //     if (closestNode.distance === Infinity) {
+    //       console.log("here")
+    //     }
+
+    //     //closestNode.addTimer("visited", delay * step)
+    //     closestNode.visited = true;
+    //     visitedNodes.push(closestNode)
+    //     const neighbors = getNeighbors(closestNode, grid)
+    //     console.log('neighborgs',neighbors)
+    //     for (const neighbor of neighbors) {
+          
+    //       neighbor.distance = closestNode.distance + 1
+    //       neighbor.parent = closestNode
+
+    //       if(neighbor.col == endNode.col && neighbor.row == endNode.row){
+    //         return visitedNodes
+    //       }
+    //     }
+    //     ++step
+    //   }
+    // }
+
+
+    // function getNodes(grid) {
+    //   const nodes = []
+    //   for (const row of grid) {
+    //     for (const node of row) {
+    //       nodes.push(node)
+    //     }
+    //   }
+    //   return nodes
+    // }
+
+    // function getNeighbors(node, grid) {
+    //   console.log('node',node)
+    //   const neighbors = []
+    //   const { row, col } = node
+      
+    //   //previous
+    //   if (row !== 0) neighbors.push(grid[row - 1][col])
+    //   //Get next
+    //   if (row !== grid.length - 1) neighbors.push(grid[row + 1][col])
+    //   //get up
+    //   if (col !== 0) neighbors.push(grid[row][col - 1])
+    //   //get down
+    //   if (col !== grid[0].length - 1) neighbors.push(grid[row][col + 1])
+
+    //   //get dia across right
+    //   //if(row == 0 && col == 0) neighbors.push(grid[row+1][col+1])
+    //   //get dia across left
+    //   //if(row == 0 && col != 0) neighbors.push(grid[row+1][col-1])
+
+
+    //   //dia up left
+    //   // if(row > 0 && col > 0) neighbors.push(grid[row-1][col-1])
+    //   // //dia up right
+    //   // if(row > 0 && row < grid.length -1) neighbors.push(grid[row-1][col+1])
+    //   // //dia down left
+    //   // if(col > 0 && col < grid[0].length -1) neighbors.push(grid[row+1][col-1])
+    //   // //dia down right
+    //   // if(row < grid.length -1  && col < grid[0].length -1) neighbors.push(grid[row+1][col+1])
+    //   // console.log('before filter',neighbors)
+    //    return neighbors.filter((neighbor) => !neighbor.visited)
+    // }
+
+    function toggle(el) {
+      el = $(el);
+
+      el.toggleClass('select');
+    }
+
+  </script>
+
 </body>
 
 </html>

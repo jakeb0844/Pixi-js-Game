@@ -1,6 +1,6 @@
 // map
 class TileMap {
-    constructor(game, container, mapImage, mapJson) {
+    constructor(game, container, mapImage, mapJson,player_position) {
 
         this._game = game;
         this._body = {};
@@ -9,10 +9,11 @@ class TileMap {
         this.collisionLayer;
         this.container = container;
         this.mapArr;
-        this.current_position = { "col": 10, "row": 15 };
+        this.current_position = player_position;
         this.mapJson = mapJson;
         this.i = 0;
         this.tile = [];
+        this.nodes = [];
 
         var tileset = PIXI.Texture.from(mapImage);
         //console.log('tileset', tileset)
@@ -89,7 +90,9 @@ class TileMap {
                 var layer = new PIXI.Sprite(text);
                 layer.x = x * tileHeight;
                 layer.y = y * tileWidth;
+
                 let rect = this.createRect(layer.x,layer.y);
+                
                 this.tile[this.i] = rect;
                 this.i++;
                 Container.addChild(rect)
@@ -114,9 +117,10 @@ class TileMap {
 
     createRect(x,y){
         let rect = new PIXI.Graphics()
-            // .beginFill(0x00F000)
-            .lineStyle({ color: 1, width:1, native: true })
-            .drawShape({ "x": x, "y": y, "width": 16, "height": 16, "type": 1 })
+        //rect.clear();
+        //r.beginFill(0xFC0202);
+        rect.lineStyle({ color: 0xFC0202, width:1, native: true })
+        rect.drawShape({ "x": x , "y": y, "width": 16, "height": 16, "type": 1 })
             //.endFill();
 
         //rect.position.set(x, y)
@@ -159,20 +163,20 @@ class TileMap {
         rect.on('click',(function(e){
             let x = Math.floor(e.data.global.x/16);
             let y = Math.floor(e.data.global.y/16);
-            //console.log(x + ' and ' + y)
+            console.log(x + ' and ' + y)
             let playerX = mainPlayer.x;
             let playerY = mainPlayer.y;
             let playerRow = Math.floor(playerX/16);
             let playerCol = Math.floor(playerY/16);
            // console.log(playerX + " and " + playerY)
 
-           tilemap.quickest_path({'col':playerCol,"row":playerRow},{'col':y,"row":x});
+           tilemap.quickest_path(this.mapArr[playerRow][playerCol],this.mapArr[y][x]);
             
-            // let r = this.mapArr[y][x].tile;
-            // r.clear();
-            // //r.beginFill(0xFC0202);
-            // r.lineStyle({ color: 0xFC0202, width:1, native: true })
-            // r.drawShape({ "x": x * 16, "y": y * 16, "width": 16, "height": 16, "type": 1 })
+            let r = this.mapArr[y][x].tile;
+            r.clear();
+            r.beginFill(0xFC0202);
+            r.lineStyle({ color: 0xFC0202, width:1, native: true })
+            r.drawShape({ "x": x * 16, "y": y * 16, "width": 16, "height": 16, "type": 1 })
 
             // let tempX = [];
             // let tempY = [];
@@ -253,99 +257,31 @@ class TileMap {
         // }))
         
         //console.log(rect)
-        rect.clear();
+        //rect.clear();
         return rect;
     }
 
+
     quickest_path(startPoint,endPoint){
-        for(let i=0; i < tilemap.tile.length; i++){
-                     tilemap.tile[i].clear();
-                 }
-        // let r = this.mapArr[y][x].tile;
-        //     r.clear();
-        //     //r.beginFill(0xFC0202);
-        //     r.lineStyle({ color: 0xFC0202, width:1, native: true })
-        //     r.drawShape({ "x": x * 16, "y": y * 16, "width": 16, "height": 16, "type": 1 })
-        console.log("distance",Math.abs(startPoint.col - endPoint.col))
-        // this.mapArr[0][0].tile.clear()
-        //         .beginFill(0xFC0202)
-        //         .lineStyle({ color: 0xFC0202, width:1, native: true })
-        //         .drawShape({ "x": 0, "y": 0, "width": 16, "height": 16, "type": 1 })
-        if(this.mapArr[endPoint.col][endPoint.row].walkable){
+        console.log('here')
+        console.log(startPoint)
+        console.log(endPoint)
+        if(startPoint.walkable && endPoint.walkable){
+            //console.log('not walkable')
+            let dijkstra = new Dijkstra(this.mapArr,startPoint.node,endPoint.node,tilemap.nodes);
+            console.log(dijkstra)
+            // if(path != 0){
+            //     path = path.makePath(path);
+            //     console.log(path);
+            //     return path;
+            // }
+            // else{
+            //     return path;
+            // }
             
-            //Check if any non-walkables in path
-
-            if(startPoint.col > endPoint.col){
-                console.log('greater')
-                for(let i =startPoint.col-1;  i >= startPoint.col - Math.abs(startPoint.col - endPoint.col); i--){
-                    this.mapArr[i][startPoint.row].tile.clear()
-                    //.beginFill(0xFC0202)
-                    .lineStyle({ color: 0xFC0202, width:1, native: true })
-                    .drawShape({ "x": startPoint.row*16, "y": (i)*16, "width": 16, "height": 16, "type": 1 });
-                    if((this.mapArr[i][startPoint.row].walkable)){
-                        console.log('walk',i)
-                        
-                    }
-                    else{
-                        console.log("not walk",i)
-                    }
-                }
-            }
-            else{
-                console.log('less')
-                for(let i =startPoint.col+1; i <= startPoint.col + Math.abs(startPoint.col - endPoint.col); i++){
-                    this.mapArr[i][startPoint.row].tile.clear()
-                   // .beginFill(0xFC0202)
-                    .lineStyle({ color: 0xFC0202, width:1, native: true })
-                    .drawShape({ "x": startPoint.row*16, "y": (i)*16, "width": 16, "height": 16, "type": 1 });
-                    if((this.mapArr[i][startPoint.row].walkable)){
-                        console.log('walk',i)
-                        
-                    }
-                    else{
-                        console.log("not walk",i)
-                    }
-                }
-            }
-
-            if(startPoint.row > endPoint.row){
-                console.log('row greater')
-                for(let i =startPoint.row-1;  i >= startPoint.row - Math.abs(startPoint.row - endPoint.row); i--){
-                    this.mapArr[i][startPoint.row].tile.clear()
-                    //.beginFill(0xFC0202)
-                    .lineStyle({ color: 0xFC0202, width:1, native: true })
-                    .drawShape({ "x": i*16, "y": startPoint.col*16, "width": 16, "height": 16, "type": 1 });
-                    if((this.mapArr[i][startPoint.row].walkable)){
-                        console.log('walk',i)
-                        
-                    }
-                    else{
-                        console.log("not walk",i)
-                    }
-                }
-            }
-            else{
-                console.log('row less')
-                for(let i =startPoint.row+1; i <= startPoint.row + Math.abs(startPoint.row - endPoint.row); i++){
-                    this.mapArr[startPoint.col][i].tile.clear()
-                   // .beginFill(0xFC0202)
-                    .lineStyle({ color: 0xFC0202, width:1, native: true })
-                    .drawShape({ "x": i*16, "y": startPoint.col*16, "width": 16, "height": 16, "type": 1 });
-                    if((this.mapArr[startPoint.col][i].walkable)){
-                        console.log('walk',i)
-                        
-                    }
-                    else{
-                        console.log("not walk",i)
-                    }
-                }
-            }
-
-            
-
-
-
         }
+
+            
 
         return false;
     }
@@ -360,32 +296,35 @@ class TileMap {
 
         el.append('<table>')
 
-        for (let col = 0; col < height; col++) {
+        for (let col = 0; col < 5; col++) {
             //el.append('<tr>')
             html = '';
             html += "<tr>";
-            for (let row = 0; row < width; row++) {
+            for (let row = 0; row < 5; row++) {
                 //el.append('<td>')
+
+                html += "<td onClick='toggle(this)' style='background:'>";
+                html += col  + "," + row;
                 
-                if(this.mapArr[col][row].char_here){
-                    //el.append('X')
-                    html += "<td style='background:yellow'>";
-                    html += "X";
-                }
-                else if(this.mapArr[col][row].action){
-                    html += "<td style='background:green'>";
-                    html += "a";
-                }
-                else if(this.mapArr[col][row].walkable){
-                    //el.append('0')
-                    html += "<td style='background:lightblue'>";
-                    html += "0";
-                }
-                else{
-                    //el.append('1')
-                    html += "<td style='background:red'>";
-                    html += "1";
-                }
+                // if(this.mapArr[col][row].char_here){
+                //     //el.append('X')
+                //     html += "<td onClick='toggle(this)' style='background:yellow'>";
+                //     html += "X";
+                // }
+                // else if(this.mapArr[col][row].action){
+                //     html += "<td onClick='toggle(this)' style='background:green'>";
+                //     html += "a";
+                // }
+                // else if(this.mapArr[col][row].walkable){
+                //     //el.append('0')
+                //     html += "<td onClick='toggle(this)' style='background:lightblue'>";
+                //     html += "0";
+                // }
+                // else{
+                //     //el.append('1')
+                //     html += "<td onClick='toggle(this)' style='background:red'>";
+                //     html += "1";
+                // }
                 //el.append('</td>')
                 html += "</td>";
             }
@@ -405,18 +344,20 @@ class TileMap {
         for (let col = 0; col < collisionLayer.height; col++) {
             let tempArr = [];
             for (let row = 0; row < collisionLayer.width; row++) {
+                let node = new Node(row,col)
+                this.nodes[index] = node;
                 if (collisionLayer.data[index] == 0) {
-                    tempArr.push({ "walkable": true, "char_here": false,"tile": this.tile[index] })
+                    tempArr.push({ "walkable": true, "char_here": false,"tile": this.tile[index],"node" : node })
                 }
                 else {
                     //this.mapArr[col][row] = 1
-                    tempArr.push({ "walkable": false, "char_here": false,"tile": this.tile[index] })
+                    tempArr.push({ "walkable": false, "char_here": false,"tile": this.tile[index],"node" : node })
                 }
 
                 for(let i=0; i < actionLayer.layers.length; i++){
                     if(actionLayer.layers[i].data[index] > 0){
                         tempArr.pop();
-                        tempArr.push({"walkable": true, "char_here": false,"action":actionLayer.layers[i].properties[0].value,"tile": this.tile[index]})
+                        tempArr.push({"walkable": true, "char_here": false,"action":actionLayer.layers[i].properties[0].value,"tile": this.tile[index],"node" : node})
                     }
                 }
 
