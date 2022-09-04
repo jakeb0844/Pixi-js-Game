@@ -8,8 +8,8 @@ class Dijkstra {
   }
 
   find_path(grid, startNode, endNode) {
-    console.log("start",startNode)
-    console.log("end",endNode)
+    //console.log("start",startNode)
+    //console.log("end",endNode)
     let nodes = grid.nodes;
     grid = grid.grid;
 
@@ -18,17 +18,17 @@ class Dijkstra {
     startNode.distance = 0
     const visitedNodes = []
     //const unvisitedNodes = getNodes(grid)
-    const unvisitedNodes = nodes;
+    const unvisitedNodes = nodes.slice(0);
 
     const delay = 5
     let step = 1
     while (unvisitedNodes.length > 0) {
       unvisitedNodes.sort((a, b) => a.distance - b.distance)
       const closestNode = unvisitedNodes.shift()
-      console.log('closest', closestNode)
+      //console.log('closest', closestNode)
       if (closestNode.col == endNode.col && closestNode.row == endNode.row) {
         //endNode.parent = visitedNodes[visitedNodes.length-1]
-        console.log('end',visitedNodes)
+        //console.log('end',visitedNodes)
         return visitedNodes;
       }
       if (closestNode.distance === Infinity) {
@@ -51,7 +51,7 @@ class Dijkstra {
         //   return visitedNodes
         // }
       }
-      // console.log('n',neighbors)
+       //console.log('n',neighbors)
       // console.log('v',visitedNodes)
       ++step
     }
@@ -59,7 +59,7 @@ class Dijkstra {
 
   makePath(node) {
     let currentNode = node;
-    console.log("start", currentNode)
+    //console.log("start", currentNode)
     let path = [];
     //let delay = timeDelay
     let step = 1
@@ -68,7 +68,7 @@ class Dijkstra {
       //currentNode.addTimer("path", delay)
       path.unshift(currentNode);
       currentNode = currentNode.parent;
-      console.log('while', currentNode)
+      //console.log('while', currentNode)
       //break;
     }
     return path;
@@ -76,11 +76,11 @@ class Dijkstra {
 
 
   getNeighbors(node, grid) {
-    console.log('node', node)
+    //console.log('node', node)
     const neighbors = []
     const { row, col } = node
-    // console.log('row', row)
-    // console.log('col', col)
+    //console.log('row', row)
+    //console.log('col', col)
 
     //previous
     if (row !== 0) neighbors.push(grid[row - 1][col])

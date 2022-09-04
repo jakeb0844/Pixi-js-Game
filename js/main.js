@@ -50,66 +50,67 @@ app.ticker.add((delta) => {
     //container.rotation -= 0.01 * delta;
     //console.log(delta)
 
-    if (pos != null) {
-        //console.log("player x", mainPlayer.sprite.x)
-        //console.log("player y", mainPlayer.sprite.y)
-        console.log('walkX', walkX)
-        console.log('walkY', walkY)
-        if ((walkX == null && walkY == null)) {
-            console.log('here')
-            let temp = test(pos.x, pos.y)
-            walkX = temp.x;
-            walkY = temp.y;
 
-        }
-        if (walkY != null) {
-            if (mainPlayer.sprite.y != walkY) {
-                walking = true;
+    // if (pos != null) {
+    //     //console.log("player x", mainPlayer.sprite.x)
+    //     //console.log("player y", mainPlayer.sprite.y)
+    //     console.log('walkX', walkX)
+    //     console.log('walkY', walkY)
+    //     if ((walkX == null && walkY == null)) {
+    //         console.log('here')
+    //         let temp = test(pos.x, pos.y)
+    //         walkX = temp.x;
+    //         walkY = temp.y;
 
-                if (walkY > mainPlayer.sprite.y) {
-                    mainPlayer.changeAnimation(mainPlayer.walkDownAnimation);
-                    mainPlayer.sprite.y += .5;
-                    mainPlayer.y += .5
-                }
-                else {
-                    mainPlayer.changeAnimation(mainPlayer.walkUpAnimation);
-                    mainPlayer.sprite.y -= .5
-                    mainPlayer.y -= .5
-                }
-            }
+    //     }
+    //     if (walkY != null) {
+    //         if (mainPlayer.sprite.y != walkY) {
+    //             walking = true;
 
-            else {
-                //pos = null;
-                walkY = null;
-                walking = false;
-            }
-        }
-       else if (walkX != null) {
+    //             if (walkY > mainPlayer.sprite.y) {
+    //                 mainPlayer.changeAnimation(mainPlayer.walkDownAnimation);
+    //                 mainPlayer.sprite.y += .5;
+    //                 mainPlayer.y += .5
+    //             }
+    //             else {
+    //                 mainPlayer.changeAnimation(mainPlayer.walkUpAnimation);
+    //                 mainPlayer.sprite.y -= .5
+    //                 mainPlayer.y -= .5
+    //             }
+    //         }
 
-            if (mainPlayer.sprite.x != walkX) {
-                walking = true;
-                if (walkX > mainPlayer.sprite.x) {
-                    mainPlayer.changeAnimation(mainPlayer.walkRightAnimation);
-                    mainPlayer.sprite.x += .5;
-                    mainPlayer.x += .5;
-                }
-                else {
-                    mainPlayer.changeAnimation(mainPlayer.walkLeftAnimation);
-                    mainPlayer.sprite.x -= .5;
-                    mainPlayer.x -= .5
-                }
+    //         else {
+    //             //pos = null;
+    //             walkY = null;
+    //             walking = false;
+    //         }
+    //     }
+    //    else if (walkX != null) {
 
-            }
-            else {
-                //pos = null;
-                walkX = null;
-                walking = false;
-            }
-        }
+    //         if (mainPlayer.sprite.x != walkX) {
+    //             walking = true;
+    //             if (walkX > mainPlayer.sprite.x) {
+    //                 mainPlayer.changeAnimation(mainPlayer.walkRightAnimation);
+    //                 mainPlayer.sprite.x += .5;
+    //                 mainPlayer.x += .5;
+    //             }
+    //             else {
+    //                 mainPlayer.changeAnimation(mainPlayer.walkLeftAnimation);
+    //                 mainPlayer.sprite.x -= .5;
+    //                 mainPlayer.x -= .5
+    //             }
+
+    //         }
+    //         else {
+    //             //pos = null;
+    //             walkX = null;
+    //             walking = false;
+    //         }
+    //     }
 
        
     
-}
+//}
 
     //click2Move(pos.x, pos.y)
 

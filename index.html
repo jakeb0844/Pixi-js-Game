@@ -13,6 +13,9 @@
     border:1px solid black;
     padding: 5px;
   }
+  .select{
+    background-color: red;
+  }
   </style>
 
 <!-- Tools -->
@@ -63,6 +66,12 @@
 
 
   <div id="grid"></div>
+
+  <script>
+    function toggle(el){
+      $(el).toggleClass('select')
+    }
+  </script>
     
 </body>
 

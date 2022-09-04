@@ -96,17 +96,20 @@ class TileMap {
     }
 
     find_path(start,end){
+        if(!end.wall){
         let di = new Dijkstra(tilemap.grid,start,end)
         let path = di.find_path(di.grid,di.startNode,di.endNode)
         let shortest_path = di.makePath(di.endNode);
+        this.path = shortest_path;
 
         for(const node of shortest_path){
             let tile = node.tile;
             tile.clear()
-            .beginFill(0xFC0202)
-            .lineStyle({ color: 0xffff, width:1, native: true })
-            .drawShape({ "x": node.row * 16, "y": node.col * 16, "width": 16, "height": 16, "type": 1 });
+            //.beginFill(0xFC0202)
+            .lineStyle({ color: 0xaaaa, width:1, native: true })
+            .drawShape({ "x": node.col * 16, "y": node.row * 16, "width": 16, "height": 16, "type": 1 });
         }
+    }
         // console.log(path)
         // console.log(di.makePath(di.endNode))
     }
@@ -123,120 +126,37 @@ class TileMap {
         rect.interactive = true;
         //rect.buttonMode = true;
 
-        rect.on('click',(function(e){
+        rect.on('click',move())
+
+        rect.on('mouseover',(function(e){
             //console.log(Math.floor(this.hitArea.x/16) + " and " + Math.floor(this.hitArea.y/16))
              let row = Math.floor(e.data.global.x/16);
              let col = Math.floor(e.data.global.y/16);
-             console.log(row + ' and ' + col)
+             //console.log(row + ' and ' + col)
             let playerX = mainPlayer.x;
             let playerY = mainPlayer.y;
-            console.log(Math.floor(playerX/16) + " and " + Math.floor(playerY/16))
+            //console.log(Math.floor(playerX/16) + " and " + Math.floor(playerY/16))
             // console.log(this.grid.grid[Math.floor(playerX/16)][Math.floor(playerY/16)])
             
-             let r = this.grid.grid[row][col].tile;
-             console.log(r)
+             let r = this.grid.grid[col][row].tile;
+             //console.log(r)
              r.clear();
-             r.beginFill(0xFC0202);
+              //r.beginFill(0xFC0202);
              r.lineStyle({ color: 0xffff, width:1, native: true })
              r.drawShape({ "x": row * 16, "y": col * 16, "width": 16, "height": 16, "type": 1 })
 
-             this.find_path(this.grid.grid[Math.floor(playerX/16)][Math.floor(playerY/16)],this.grid.grid[row][col])
+             this.find_path(this.grid.grid[Math.floor(playerY/16)][Math.floor(playerX/16)],this.grid.grid[col][row])
 
             
 
         }).bind(this))
 
-        // rect.on('mouseover',(function(e){
-        //     let x = Math.floor(e.data.global.x/16);
-        //     let y = Math.floor(e.data.global.y/16);
-        //     //console.log(x + ' and ' + y)
-        //     let playerX = mainPlayer.x;
-        //     let playerY = mainPlayer.y;
-        //    // console.log(playerX + " and " + playerY)
-            
-        //     let r = this.mapArr[y][x].tile;
-        //     r.clear();
-        //     //r.beginFill(0xFC0202);
-        //     r.lineStyle({ color: 0xFC0202, width:1, native: true })
-        //     r.drawShape({ "x": x * 16, "y": y * 16, "width": 16, "height": 16, "type": 1 })
-
-        //     let tempX = [];
-        //     let tempY = [];
-
-        //     if(playerX/16 > x){
-        //         for(let i =0; i < (playerX/16 - x);i++){
-        //             tempX.push(this.mapArr[0][i])
-        //         }
-    
-        //         //console.log(tempX)
-    
-        //         for(let i=0; i < tempX.length; i++){
-        //             //temp[i].tile.clear();
-        //             //temp[i].tile.beginFill(0xFC0202);
-        //             tempX[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
-        //             tempX[i].tile.drawShape({ "x": (Math.floor(playerX/16) - (i+1)) * 16, "y": y*16, "width": 16, "height": 16, "type": 1 })
-        //         }
-        //     }
-        //     else{
-        //         for(let i =0; i < (x - playerX/16);i++){
-        //             tempX.push(this.mapArr[0][i])
-        //         }
-    
-        //         //console.log(tempX)
-    
-        //         for(let i=0; i < tempX.length; i++){
-        //             //temp[i].tile.clear();
-        //             //temp[i].tile.beginFill(0xFC0202);
-        //             tempX[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
-        //             tempX[i].tile.drawShape({ "x": (Math.floor(playerX/16) + (i+1)) * 16, "y": y*16, "width": 16, "height": 16, "type": 1 })
-        //         }
-        //     }
-
-        //     if(playerY/16 > y){
-        //         for(let i =0; i < (playerY/16 - y);i++){
-        //             tempY.push(this.mapArr[i+1][0])
-        //         }
-    
-        //         //console.log(tempY)
-    
-        //         for(let i=0; i < tempY.length; i++){
-        //             //temp[i].tile.clear();
-        //             //temp[i].tile.beginFill(0xFC0202);
-        //             tempY[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
-        //             tempY[i].tile.drawShape({ "x": playerX, "y": (Math.floor(playerY/16) - (i+1)) * 16, "width": 16, "height": 16, "type": 1 })
-        //         }
-        //     }
-        //     else{
-        //         for(let i =0; i < (y - playerY/16);i++){
-        //             tempY.push(this.mapArr[i+1][0])
-        //         }
-    
-        //         //console.log(tempY)
-    
-        //         for(let i=0; i < tempY.length; i++){
-        //             //temp[i].tile.clear();
-        //             //temp[i].tile.beginFill(0xFC0202);
-        //             tempY[i].tile.lineStyle({ color: 0xFC0202, width:1, native: true })
-        //             tempY[i].tile.drawShape({ "x": playerX, "y": (Math.floor(playerY/16) + (i+1)) * 16, "width": 16, "height": 16, "type": 1 })
-        //         }
-        //     }
-
-            
-
-            
-            
-
-            
-
-        //    // this.tile = temp;
-            
-        // }).bind(this))
-
-        // rect.on('mouseout',(function(e){
-        //     for(let i=0; i < tilemap.tile.length; i++){
-        //         tilemap.tile[i].clear();
-        //     }
-        // }))
+        
+        rect.on('mouseout',(function(e){
+            for(let i=0; i < tilemap.tile.length; i++){
+                tilemap.tile[i].clear();
+            }
+        }))
         
         //console.log(rect)
         //rect.clear();
@@ -262,26 +182,28 @@ class TileMap {
             html += "<tr>";
             for (let row = 0; row < width; row++) {
                 //el.append('<td>')
+                html += "<td onClick='toggle(this)'>";
+                html += col + "," + row;
                 
-                if(nodes[index].char_here){
-                    //el.append('X')
-                    html += "<td style='background:yellow'>";
-                    html += "X";
-                }
-                // else if(mapArr[col][row].action){
-                //     html += "<td style='background:green'>";
-                //     html += "a";
+                // if(nodes[index].char_here){
+                //     //el.append('X')
+                //     html += "<td style='background:yellow'>";
+                //     html += "X";
                 // }
-                else if(!nodes[index].wall){
-                    //el.append('0')
-                    html += "<td style='background:lightblue'>";
-                    html += "0";
-                }
-                else{
-                    //el.append('1')
-                    html += "<td style='background:red'>";
-                    html += "1";
-                }
+                // // else if(mapArr[col][row].action){
+                // //     html += "<td style='background:green'>";
+                // //     html += "a";
+                // // }
+                // else if(!nodes[index].wall){
+                //     //el.append('0')
+                //     html += "<td style='background:lightblue'>";
+                //     html += "0";
+                // }
+                // else{
+                //     //el.append('1')
+                //     html += "<td style='background:red'>";
+                //     html += "1";
+                // }
                 //el.append('</td>')
                 html += "</td>";
                 index++
