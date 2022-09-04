@@ -99,16 +99,31 @@ class TileMap {
         if(!end.wall){
         let di = new Dijkstra(tilemap.grid,start,end)
         let path = di.find_path(di.grid,di.startNode,di.endNode)
-        let shortest_path = di.makePath(di.endNode);
-        this.path = shortest_path;
+            console.log('start',di.startNode)
+            console.log('end',end)
+            let shortest_path = di.makePath(di.endNode);
+            this.path = shortest_path;
+    
+            for(const node of shortest_path){
+                let tile = node.tile;
+                tile.clear()
+                //.beginFill(0xFC0202)
+                .lineStyle({ color: 0xaaaa, width:1, native: true })
+                .drawShape({ "x": node.col * 16, "y": node.row * 16, "width": 16, "height": 16, "type": 1 });
 
-        for(const node of shortest_path){
-            let tile = node.tile;
-            tile.clear()
-            //.beginFill(0xFC0202)
-            .lineStyle({ color: 0xaaaa, width:1, native: true })
-            .drawShape({ "x": node.col * 16, "y": node.row * 16, "width": 16, "height": 16, "type": 1 });
-        }
+                mainPlayer.sprite.x = node.col *16;
+                mainPlayer.sprite.y = node.row * 16;
+                mainPlayer.x = node.col * 16;
+                mainPlayer.y = node.row * 16;
+            }
+        
+        
+
+        // for(let i=0; i < tilemap.grid.nodes.length; i++){
+        //     tilemap.grid.nodes[i].parent = null;
+        //     tilemap.grid.nodes[i].visted = false;
+        //     tilemap.grid.nodes[i].distance = Infinity;
+        // }
     }
         // console.log(path)
         // console.log(di.makePath(di.endNode))
@@ -126,7 +141,10 @@ class TileMap {
         rect.interactive = true;
         //rect.buttonMode = true;
 
-        //rect.on('click',move())
+        // rect.on('click',(function(){
+        //     mainPlayer.walk()
+        //     //this.path = 
+        // }).bind(this))
 
         rect.on('mouseover',(function(e){
             //console.log(Math.floor(this.hitArea.x/16) + " and " + Math.floor(this.hitArea.y/16))
@@ -135,17 +153,18 @@ class TileMap {
              //console.log(row + ' and ' + col)
             let playerX = mainPlayer.x;
             let playerY = mainPlayer.y;
-            //console.log(Math.floor(playerX/16) + " and " + Math.floor(playerY/16))
-            // console.log(this.grid.grid[Math.floor(playerX/16)][Math.floor(playerY/16)])
+            console.log(Math.floor(playerX/16) + " and " + Math.floor(playerY/16))
+             //console.log(this.grid.grid[Math.floor(playerX/16)][Math.floor(playerY/16)])
+
             
              let r = this.grid.grid[col][row].tile;
              //console.log(r)
              r.clear();
               //r.beginFill(0xFC0202);
-             r.lineStyle({ color: 0xffff, width:1, native: true })
+             r.lineStyle({ color: 0xfc0202, width:1, native: true })
              r.drawShape({ "x": row * 16, "y": col * 16, "width": 16, "height": 16, "type": 1 })
 
-             this.find_path(this.grid.grid[Math.floor(playerY/16)][Math.floor(playerX/16)],this.grid.grid[col][row])
+             this.find_path(this.grid.grid[Math.floor(mainPlayer.sprite.y/16)][Math.floor(mainPlayer.sprite.x/16)],this.grid.grid[col][row])
 
             
 

@@ -12,6 +12,7 @@ class Player {
         this.animationTextures;
         this.test = false;
         this.tilemap = tilemap;
+        this.walking = false;
 
         this.init();
         //this.loadChar();
@@ -37,6 +38,10 @@ class Player {
 
 
         }).bind(this));
+    }
+
+    walk(){
+        this.walking = true;
     }
 
     createWalkSprite(resources) {

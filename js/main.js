@@ -43,12 +43,39 @@ let a = null;
 let walkX = null;
 let walkY = null;
 let walking = false;
+let index = 0;
 // Listen for animate update
 app.ticker.add((delta) => {
     // rotate the container!
     // use delta to create frame-independent transform
     //container.rotation -= 0.01 * delta;
     //console.log(delta)
+    //console.log(walking)
+    if(mainPlayer.walking){
+        if(index < tilemap.path.length){
+            let node = tilemap.path[index];
+            let y = node.row * 16;
+            let x = node.col * 16;
+
+            mainPlayer.sprite.y = y;
+            mainPlayer.sprite.x = x;
+
+            mainPlayer.y = y;
+            mainPlayer.x = x;
+    
+            index++
+        }
+        else{
+            mainPlayer.walking = false
+        }
+
+        
+
+
+    }
+    else{
+        index =0;
+    }
 
 
     // if (pos != null) {
@@ -120,6 +147,10 @@ app.ticker.add((delta) => {
 
 });
 
+function move(){
+    walking = true;
+}
+
 function test(x, y) {
     //console.log('walk x,y',{'x':x,'y':y})
     // x = Math.floor(x/16)*16;
@@ -170,93 +201,93 @@ function click2Move(x, y) {
 
 }
 
-function move(e, player, tilemap) {
-    //Move Left
-    console.log('message', message)
-    if (message != null) {
-        message.destroy()
-    }
-    if (e.keyCode == 65) {
-        //console.log("moveLeft")
-        player.changeAnimation(player.walkLeftAnimation);
-        let temp = tilemap.check_if_walkable({ "col": tilemap.current_position.col, "row": tilemap.current_position.row - 1 });
-        if (temp.walk) {
+// function move(e, player, tilemap) {
+//     //Move Left
+//     console.log('message', message)
+//     if (message != null) {
+//         message.destroy()
+//     }
+//     if (e.keyCode == 65) {
+//         //console.log("moveLeft")
+//         player.changeAnimation(player.walkLeftAnimation);
+//         let temp = tilemap.check_if_walkable({ "col": tilemap.current_position.col, "row": tilemap.current_position.row - 1 });
+//         if (temp.walk) {
 
-            tilemap.updateCharPosition({ "col": tilemap.current_position.col, "row": tilemap.current_position.row - 1 })
-            tilemap.displayMapArray('grid')
-            player.sprite.position.set(player.x -= 16, player.y)
-            //event.start(temp.action)
-            console.log('temp', temp)
-            if (temp.action) {
-                console.log('creating event')
-                message = new Event(temp.action);
+//             tilemap.updateCharPosition({ "col": tilemap.current_position.col, "row": tilemap.current_position.row - 1 })
+//             tilemap.displayMapArray('grid')
+//             player.sprite.position.set(player.x -= 16, player.y)
+//             //event.start(temp.action)
+//             console.log('temp', temp)
+//             if (temp.action) {
+//                 console.log('creating event')
+//                 message = new Event(temp.action);
 
-            }
+//             }
 
-        }
+//         }
 
-    }
-    //Move Right
-    else if (e.keyCode == 68) {
-        //console.log("move right")
-        player.changeAnimation(player.walkRightAnimation);
-        let temp = tilemap.check_if_walkable({ "col": tilemap.current_position.col, "row": tilemap.current_position.row + 1 });
-        if (temp.walk) {
+//     }
+//     //Move Right
+//     else if (e.keyCode == 68) {
+//         //console.log("move right")
+//         player.changeAnimation(player.walkRightAnimation);
+//         let temp = tilemap.check_if_walkable({ "col": tilemap.current_position.col, "row": tilemap.current_position.row + 1 });
+//         if (temp.walk) {
 
-            tilemap.updateCharPosition({ "col": tilemap.current_position.col, "row": tilemap.current_position.row + 1 })
-            tilemap.displayMapArray('grid')
-            player.sprite.position.set(player.x += 16, player.y)
+//             tilemap.updateCharPosition({ "col": tilemap.current_position.col, "row": tilemap.current_position.row + 1 })
+//             tilemap.displayMapArray('grid')
+//             player.sprite.position.set(player.x += 16, player.y)
 
-            if (temp.action) {
-                //console.log('here')
-                message = new Event(temp.action);
-                //console.log(message)
-            }
+//             if (temp.action) {
+//                 //console.log('here')
+//                 message = new Event(temp.action);
+//                 //console.log(message)
+//             }
 
-        }
+//         }
 
-    }
-    // // //Move Down
-    else if (e.keyCode == 83) {
-        player.changeAnimation(player.walkDownAnimation);
-        let temp = tilemap.check_if_walkable({ "col": tilemap.current_position.col + 1, "row": tilemap.current_position.row });
-        if (temp.walk) {
+//     }
+//     // // //Move Down
+//     else if (e.keyCode == 83) {
+//         player.changeAnimation(player.walkDownAnimation);
+//         let temp = tilemap.check_if_walkable({ "col": tilemap.current_position.col + 1, "row": tilemap.current_position.row });
+//         if (temp.walk) {
 
-            tilemap.updateCharPosition({ "col": tilemap.current_position.col + 1, "row": tilemap.current_position.row })
-            tilemap.displayMapArray('grid')
-            player.sprite.position.set(player.x, player.y += 16)
+//             tilemap.updateCharPosition({ "col": tilemap.current_position.col + 1, "row": tilemap.current_position.row })
+//             tilemap.displayMapArray('grid')
+//             player.sprite.position.set(player.x, player.y += 16)
 
-            if (temp.action) {
-                console.log('creating event')
-                message = new Event(temp.action);
+//             if (temp.action) {
+//                 console.log('creating event')
+//                 message = new Event(temp.action);
 
-            }
+//             }
 
-        }
+//         }
 
-    }
-    else if (e.keyCode == 87) {
-        player.changeAnimation(player.walkUpAnimation);
-        let temp = tilemap.check_if_walkable({ "col": tilemap.current_position.col - 1, "row": tilemap.current_position.row });
-        if (temp.walk) {
+//     }
+//     else if (e.keyCode == 87) {
+//         player.changeAnimation(player.walkUpAnimation);
+//         let temp = tilemap.check_if_walkable({ "col": tilemap.current_position.col - 1, "row": tilemap.current_position.row });
+//         if (temp.walk) {
 
-            tilemap.updateCharPosition({ "col": tilemap.current_position.col - 1, "row": tilemap.current_position.row })
-            tilemap.displayMapArray('grid')
-            player.sprite.position.set(player.x, player.y -= 16)
+//             tilemap.updateCharPosition({ "col": tilemap.current_position.col - 1, "row": tilemap.current_position.row })
+//             tilemap.displayMapArray('grid')
+//             player.sprite.position.set(player.x, player.y -= 16)
 
-            if (temp.action) {
-                console.log('creating event')
-                message = new Event(temp.action);
+//             if (temp.action) {
+//                 console.log('creating event')
+//                 message = new Event(temp.action);
 
-            }
+//             }
 
-        }
+//         }
 
-    }
+//     }
 
-    // testSprite._game.stage.x -= 100
-    // testSprite._game.stage.y -= 100
-}
+//     // testSprite._game.stage.x -= 100
+//     // testSprite._game.stage.y -= 100
+// }
 
 
 //Hoping to get rid of this
