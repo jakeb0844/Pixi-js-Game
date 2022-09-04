@@ -30,14 +30,14 @@ let tilemap = new TileMap(app, MapContainer, '/assets/maps/map.png', '/assets/ma
 //Create Player
 let mainPlayer = new Player("Jake", loader, app, PlayerContainer, tilemap);
 
-//app.stage.interactive = true;
+// app.stage.interactive = true;
 
-app.stage.on("mousedown", function (e) {
-    console.log("mouse x", e.data.global.x)
-    console.log("mouse y", Math.floor(e.data.global.y / 16) * 16)
-    //click2Move(e.data.global.x,e.data.global.y);
-    pos = { "x": e.data.global.x, "y": e.data.global.y }
-})
+// app.stage.on("mousedown", function (e) {
+//     console.log("mouse x", e.data.global.x)
+//     console.log("mouse y", Math.floor(e.data.global.y / 16) * 16)
+//     //click2Move(e.data.global.x,e.data.global.y);
+//     pos = { "x": e.data.global.x, "y": e.data.global.y }
+// })
 
 let a = null;
 let walkX = null;
@@ -51,30 +51,69 @@ app.ticker.add((delta) => {
     //container.rotation -= 0.01 * delta;
     //console.log(delta)
     //console.log(walking)
-    if(mainPlayer.walking){
-        if(index < tilemap.path.length){
+    if (mainPlayer.walking) {
+        if (index < tilemap.path.length) {
             let node = tilemap.path[index];
-            let y = node.row * 16;
-            let x = node.col * 16;
+            let walkY = node.row * 16;
+            let walkX = node.col * 16;
 
-            mainPlayer.sprite.y = y;
-            mainPlayer.sprite.x = x;
+            // console.log("player y: " + mainPlayer.sprite.y + " and des y " + walkY);
+            // console.log("player x: " + mainPlayer.sprite.x + " and des x " + walkX);
+            // console.log("index: " + index)
 
-            mainPlayer.y = y;
-            mainPlayer.x = x;
-    
-            index++
+                if (mainPlayer.sprite.y != walkY) {
+                    //walking = true;
+
+                    if (walkY > mainPlayer.sprite.y) {
+                        mainPlayer.changeAnimation(mainPlayer.walkDownAnimation);
+                        mainPlayer.sprite.y += .5;
+                        mainPlayer.y += .5
+                    }
+                    else {
+                        mainPlayer.changeAnimation(mainPlayer.walkUpAnimation);
+                        mainPlayer.sprite.y -= .5
+                        mainPlayer.y -= .5
+                    }
+                }
+            
+            else if (mainPlayer.sprite.x != walkX) {
+
+                if (mainPlayer.sprite.x != walkX) {
+                    walking = true;
+                    if (walkX > mainPlayer.sprite.x) {
+                        mainPlayer.changeAnimation(mainPlayer.walkRightAnimation);
+                        mainPlayer.sprite.x += .5;
+                        mainPlayer.x += .5;
+                    }
+                    else {
+                        mainPlayer.changeAnimation(mainPlayer.walkLeftAnimation);
+                        mainPlayer.sprite.x -= .5;
+                        mainPlayer.x -= .5
+                    }
+
+                }
+                else {
+                    //pos = null;
+                    walkX = null;
+                    walking = false;
+                }
+            }
+            else{
+                index++
+                walking = false
+            }
+
         }
-        else{
+        else {
             mainPlayer.walking = false
         }
 
-        
+
 
 
     }
-    else{
-        index =0;
+    else {
+        index = 0;
     }
 
 
@@ -135,9 +174,9 @@ app.ticker.add((delta) => {
     //         }
     //     }
 
-       
-    
-//}
+
+
+    //}
 
     //click2Move(pos.x, pos.y)
 
@@ -147,7 +186,7 @@ app.ticker.add((delta) => {
 
 });
 
-function move(){
+function move() {
     walking = true;
 }
 
