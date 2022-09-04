@@ -8,4 +8,6 @@ class Node{
         this.wall = false;
         this.tile = tile;
     }
+
+    
 }

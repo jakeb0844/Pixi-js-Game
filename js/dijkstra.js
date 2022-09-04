@@ -7,8 +7,54 @@ class Dijkstra {
     //this.find_path(grid, startNode, endNode)
   }
 
-  find_path(grid, startNode, endNode) {
+  duplicateGrid(grid,startNode){
+    //console.log(grid)
+    let nodes = [];
+    let grid2 = [];
+    let size = 0;
 
+        for (let row = 0;row < grid.length;row++) {
+            let arr = [];
+            for (let col = 0; col < grid[0].length; col++) {
+                let node = new Node(row, col);
+
+                if(row == startNode.row && col == startNode.col){
+                  node.distance = 0;
+                }
+
+                if(row == this.endNode.row && col == this.endNode.col){
+                  this.endNode == node;
+                }
+                
+                if (grid[row][col].wall) {
+                    node.wall = true;
+                    
+                }
+                else {
+                    //this.mapArr[col][row] = 1
+                    node.wall = false;
+                    
+                }
+
+                node.tile = grid[row][col].tile;
+                arr[col] = node;
+                nodes.push(node)
+                //this.nodes[size] = arr[col];
+                //size++;
+            }
+            
+            grid2.push(arr)
+
+        }
+        //console.log('grid2',grid2)
+        return {"grid":grid2,"nodes":nodes};
+  }
+
+
+  find_path(grid, startNode, endNode) {
+    let gridObj = this.duplicateGrid(grid.grid,startNode)
+    let dupGrid = gridObj.grid;
+    let nodes = gridObj.nodes
   //   for(let i=0; i < tilemap.grid.nodes.length; i++){
   //     console.log(i)
   //     tilemap.grid.nodes[i].parent = null;
@@ -17,29 +63,31 @@ class Dijkstra {
   // }
     //console.log("start",startNode)
     //console.log("end",endNode)
-    let nodes = grid.nodes;
-    grid = grid.grid;
+    //let nodes = grid.nodes;
+    //grid = d;
 
-    //console.log('grid',grid)
-    console.log("nodes", nodes)
-    startNode.distance = 0
+    //console.log('grid',dupGrid)
+    //console.log("nodes", nodes)
+    //startNode.distance = 0
     const visitedNodes = []
-    //const unvisitedNodes = getNodes(grid)
-    const unvisitedNodes = this.getNodes(nodes)
-    console.log(unvisitedNodes)
+    const unvisitedNodes = nodes
+    //let unvisitedNodes = this.getNodes(nodes)
+    
+    //console.log(unvisitedNodes)
+    //throw new Error("Something went badly wrong!");
 
     const delay = 5
     let step = 1
     while (unvisitedNodes.length > 0) {
       unvisitedNodes.sort((a, b) => a.distance - b.distance)
       const closestNode = unvisitedNodes.shift()
-      //console.log('closest', closestNode)
+      console.log('closest', closestNode)
       if (closestNode.col == endNode.col && closestNode.row == endNode.row) {
         //endNode.parent = visitedNodes[visitedNodes.length-1]
         //console.log('end',visitedNodes)
         // startNode.parent = null;
         // startNode.distance = Infinity;
-        return visitedNodes;
+        return {"visited":visitedNodes,"endNode":closestNode};
       }
       if (closestNode.distance === Infinity) {
         console.log("No path found")
@@ -49,7 +97,7 @@ class Dijkstra {
       //closestNode.addTimer("visited", delay * step)
       closestNode.visited = true;
       visitedNodes.push(closestNode)
-      const neighbors = this.getNeighbors(closestNode, grid)
+      const neighbors = this.getNeighbors(closestNode, dupGrid)
       //console.log('neighborgs', neighbors)
       for (const neighbor of neighbors) {
 
@@ -61,16 +109,18 @@ class Dijkstra {
         //   return visitedNodes
         // }
       }
-       //console.log('n',neighbors)
+       console.log('n',neighbors)
       // console.log('v',visitedNodes)
       ++step
     }
   }
 
-  getNodes(nodes){
+  getNodes(grid){
     let temp = [];
-    for(let i=0; i < nodes.length; i++){
-      temp[i] = new Node(nodes[i].row,nodes[i].col,nodes[i].tile)
+    for(let row = 0; row < grid.length; row++){
+      for(let col = 0; col < grid[0].length; col++){
+        temp.push(grid[row][col]);
+      }
     }
 
     return temp;

@@ -96,12 +96,13 @@ class TileMap {
     }
 
     find_path(start,end){
-        if(!end.wall){
+        //if(!end.wall){
         let di = new Dijkstra(tilemap.grid,start,end)
-        let path = di.find_path(di.grid,di.startNode,di.endNode)
-            console.log('start',di.startNode)
-            console.log('end',end)
-            let shortest_path = di.makePath(di.endNode);
+        let {visited,endNode} = di.find_path(di.grid,di.startNode,di.endNode)
+            //console.log('start',di.startNode)
+            //console.log('end',end)
+            let shortest_path = di.makePath(endNode);
+            //console.log(di.endNode)
             this.path = shortest_path;
     
             for(const node of shortest_path){
@@ -111,11 +112,23 @@ class TileMap {
                 .lineStyle({ color: 0xaaaa, width:1, native: true })
                 .drawShape({ "x": node.col * 16, "y": node.row * 16, "width": 16, "height": 16, "type": 1 });
 
-                mainPlayer.sprite.x = node.col *16;
-                mainPlayer.sprite.y = node.row * 16;
-                mainPlayer.x = node.col * 16;
-                mainPlayer.y = node.row * 16;
+                // mainPlayer.sprite.x = node.col *16;
+                // mainPlayer.sprite.y = node.row * 16;
+                // mainPlayer.x = node.col * 16;
+                // mainPlayer.y = node.row * 16;
+
+                // node.parent = null;
+                // node.distance = Infinity;
+                // node.visited = false;
             }
+
+            // for(let i =0; i < path.length; i++){
+            //     //path[i].parent = null;
+            //     //path[i].distance = Infinity;
+            //     //path[i].visited = false;
+            // }
+
+
         
         
 
@@ -124,7 +137,7 @@ class TileMap {
         //     tilemap.grid.nodes[i].visted = false;
         //     tilemap.grid.nodes[i].distance = Infinity;
         // }
-    }
+    //}
         // console.log(path)
         // console.log(di.makePath(di.endNode))
     }
@@ -141,10 +154,10 @@ class TileMap {
         rect.interactive = true;
         //rect.buttonMode = true;
 
-        // rect.on('click',(function(){
-        //     mainPlayer.walk()
-        //     //this.path = 
-        // }).bind(this))
+        rect.on('click',(function(){
+            mainPlayer.walk()
+            //this.path = 
+        }).bind(this))
 
         rect.on('mouseover',(function(e){
             //console.log(Math.floor(this.hitArea.x/16) + " and " + Math.floor(this.hitArea.y/16))
