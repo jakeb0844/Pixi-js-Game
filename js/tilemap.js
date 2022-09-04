@@ -126,7 +126,7 @@ class TileMap {
         rect.interactive = true;
         //rect.buttonMode = true;
 
-        rect.on('click',move())
+        //rect.on('click',move())
 
         rect.on('mouseover',(function(e){
             //console.log(Math.floor(this.hitArea.x/16) + " and " + Math.floor(this.hitArea.y/16))
