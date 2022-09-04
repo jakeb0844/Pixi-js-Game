@@ -76,41 +76,41 @@ class TileMap {
                 var layer = new PIXI.Sprite(text);
                 layer.x = x * tileWidth;
                 layer.y = y * tileHeight;
-                let rect = this.createRect(layer.x,layer.y);
+                let rect = this.createRect(layer.x, layer.y);
                 this.tile[this.i] = rect;
                 this.i++;
                 Container.addChild(rect)
 
                 this.container.addChild(layer)
                 //if(row == 30){throw new Error("Something went badly wrong!");}
-                
+
             }//col
             //if(col == 1){throw new Error("Something went badly wrong!");}
         }
         //this.createMapArray(this.collisionLayer,this.actionLayer)
         this.grid = this.createGrid(this.collisionLayer);
-        
+
         this.grid.grid[10][15].char_here = true;
         this.displayMapArray('grid')
         // }
     }
 
-    find_path(start,end){
-        //if(!end.wall){
-        let di = new Dijkstra(tilemap.grid,start,end)
-        let {visited,endNode} = di.find_path(di.grid,di.startNode,di.endNode)
+    find_path(start, end) {
+        if (!end.wall) {
+            let di = new Dijkstra(tilemap.grid, start, end)
+            let { visited, endNode } = di.find_path(di.grid, di.startNode, di.endNode)
             //console.log('start',di.startNode)
             //console.log('end',end)
             let shortest_path = di.makePath(endNode);
             //console.log(di.endNode)
             this.path = shortest_path;
-    
-            for(const node of shortest_path){
+
+            for (const node of shortest_path) {
                 let tile = node.tile;
                 tile.clear()
-                //.beginFill(0xFC0202)
-                .lineStyle({ color: 0xaaaa, width:1, native: true })
-                .drawShape({ "x": node.col * 16, "y": node.row * 16, "width": 16, "height": 16, "type": 1 });
+                    //.beginFill(0xFC0202)
+                    .lineStyle({ color: 0xaaaa, width: 1, native: true })
+                    .drawShape({ "x": node.col * 16, "y": node.row * 16, "width": 16, "height": 16, "type": 1 });
 
                 // mainPlayer.sprite.x = node.col *16;
                 // mainPlayer.sprite.y = node.row * 16;
@@ -129,79 +129,92 @@ class TileMap {
             // }
 
 
-        
-        
 
-        // for(let i=0; i < tilemap.grid.nodes.length; i++){
-        //     tilemap.grid.nodes[i].parent = null;
-        //     tilemap.grid.nodes[i].visted = false;
-        //     tilemap.grid.nodes[i].distance = Infinity;
-        // }
-    //}
+
+
+            // for(let i=0; i < tilemap.grid.nodes.length; i++){
+            //     tilemap.grid.nodes[i].parent = null;
+            //     tilemap.grid.nodes[i].visted = false;
+            //     tilemap.grid.nodes[i].distance = Infinity;
+            // }
+        }
         // console.log(path)
         // console.log(di.makePath(di.endNode))
     }
 
-    createRect(x,y){
+    createRect(x, y) {
         let rect = new PIXI.Graphics()
-             //.beginFill(0x00F000)
-            .lineStyle({ color: 0xffffff, width:1, native: true })
+            //.beginFill(0x00F000)
+            .lineStyle({ color: 0xffffff, width: 1, native: true })
             .drawShape({ "x": x, "y": y, "width": 16, "height": 16, "type": 1 });
-            //.endFill();
+        //.endFill();
 
         //rect.position.set(x, y)
         rect.hitArea = rect.getBounds();
         rect.interactive = true;
         //rect.buttonMode = true;
 
-        rect.on('click',(function(){
-            mainPlayer.walk()
+        rect.on('click', (function (e) {
+            if (mainPlayer.walking) {
+                mainPlayer.walking = false;
+
+            }
+            else {
+                let row = Math.floor(e.data.global.x / 16);
+                let col = Math.floor(e.data.global.y / 16);
+                if (!this.grid.grid[col][row].wall) {
+                    mainPlayer.walk()
+                }
+            }
+
+
             //this.path = 
         }).bind(this))
 
-        rect.on('mouseover',(function(e){
+        rect.on('mouseover', (function (e) {
             //console.log(Math.floor(this.hitArea.x/16) + " and " + Math.floor(this.hitArea.y/16))
-             let row = Math.floor(e.data.global.x/16);
-             let col = Math.floor(e.data.global.y/16);
-             //console.log(row + ' and ' + col)
+            let row = Math.floor(e.data.global.x / 16);
+            let col = Math.floor(e.data.global.y / 16);
+            //console.log(row + ' and ' + col)
             let playerX = mainPlayer.x;
             let playerY = mainPlayer.y;
-            console.log(Math.floor(playerX/16) + " and " + Math.floor(playerY/16))
-             //console.log(this.grid.grid[Math.floor(playerX/16)][Math.floor(playerY/16)])
+            console.log(Math.floor(playerX / 16) + " and " + Math.floor(playerY / 16))
+            //console.log(this.grid.grid[Math.floor(playerX/16)][Math.floor(playerY/16)])
 
-            
-             let r = this.grid.grid[col][row].tile;
-             //console.log(r)
-             r.clear();
-              //r.beginFill(0xFC0202);
-             r.lineStyle({ color: 0xfc0202, width:1, native: true })
-             r.drawShape({ "x": row * 16, "y": col * 16, "width": 16, "height": 16, "type": 1 })
 
-             this.find_path(this.grid.grid[Math.floor(mainPlayer.sprite.y/16)][Math.floor(mainPlayer.sprite.x/16)],this.grid.grid[col][row])
+            let r = this.grid.grid[col][row].tile;
+            //console.log(r)
+            r.clear();
+            //r.beginFill(0xFC0202);
+            r.lineStyle({ color: 0xfc0202, width: 1, native: true })
+            r.drawShape({ "x": row * 16, "y": col * 16, "width": 16, "height": 16, "type": 1 })
 
-            
+            if (!mainPlayer.walking) {
+                this.find_path(this.grid.grid[Math.floor(mainPlayer.sprite.y / 16)][Math.floor(mainPlayer.sprite.x / 16)], this.grid.grid[col][row])
+            }
+
 
         }).bind(this))
 
-        
-        rect.on('mouseout',(function(e){
-            for(let i=0; i < tilemap.tile.length; i++){
+
+        rect.on('mouseout', (function (e) {
+            for (let i = 0; i < tilemap.tile.length; i++) {
                 tilemap.tile[i].clear();
             }
         }))
-        
+
         //console.log(rect)
         //rect.clear();
         return rect;
     }
 
-    displayMapArray(id){
+    displayMapArray(id) {
         let mapArr = this.grid.grid;
         let nodes = this.grid.nodes;
-        let height =  mapArr.length;
+        let height = mapArr.length;
         let width = mapArr[0].length;
         let html = '';
-        let index =0;
+        let index = 0;
 
         let el = $('#' + id);
         el.html('');
@@ -216,7 +229,7 @@ class TileMap {
                 //el.append('<td>')
                 html += "<td onClick='toggle(this)'>";
                 html += col + "," + row;
-                
+
                 // if(nodes[index].char_here){
                 //     //el.append('X')
                 //     html += "<td style='background:yellow'>";
@@ -240,18 +253,18 @@ class TileMap {
                 html += "</td>";
                 index++
             }
-            
+
             //el.append('</tr>')
             html += "</tr>";
             el.append(html);
-            
+
         }
         el.append('</table>')
     }
 
-   createGrid(collisionLayer) { 
+    createGrid(collisionLayer) {
 
-        let grid = new Grid(collisionLayer.width,collisionLayer.height,collisionLayer,this.tile);
+        let grid = new Grid(collisionLayer.width, collisionLayer.height, collisionLayer, this.tile);
         return grid;
         //console.log(actionLayer)
         // this.mapArr = [];
@@ -275,7 +288,7 @@ class TileMap {
         //             }
         //         }
 
-                
+
         //         index++;
         //     }
         //     this.mapArr.push(tempArr)
@@ -297,7 +310,7 @@ class TileMap {
         return null;
     }
 
-    getActionLayer(mapData){
+    getActionLayer(mapData) {
         console.log(mapData)
         for (let i = 0; i < mapData.length; i++) {
 
@@ -355,28 +368,28 @@ class TileMap {
 
     check_if_walkable(position) {
         console.log(position)
-        
-        
-        if (position.col > -1 && position.row > -1){
+
+
+        if (position.col > -1 && position.row > -1) {
 
             let obj = this.mapArr[position.col][position.row];
             console.log(obj)
 
             if (obj.walkable) {
-                if(obj.action){
-                    return {"walk":true,"action":obj.action};
+                if (obj.action) {
+                    return { "walk": true, "action": obj.action };
                 }
                 //console.log(true)
-                return {"walk":true};
+                return { "walk": true };
             }
             else {
                 //console.log(false)
-                return {"walk":false};
+                return { "walk": false };
             }
 
         }
 
-        return {"walk":false}
+        return { "walk": false }
 
 
     }

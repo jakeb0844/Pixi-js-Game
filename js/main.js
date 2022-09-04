@@ -33,10 +33,14 @@ let mainPlayer = new Player("Jake", loader, app, PlayerContainer, tilemap);
 // app.stage.interactive = true;
 
 // app.stage.on("mousedown", function (e) {
-//     console.log("mouse x", e.data.global.x)
-//     console.log("mouse y", Math.floor(e.data.global.y / 16) * 16)
-//     //click2Move(e.data.global.x,e.data.global.y);
-//     pos = { "x": e.data.global.x, "y": e.data.global.y }
+//     // console.log("mouse x", e.data.global.x)
+//     // console.log("mouse y", Math.floor(e.data.global.y / 16) * 16)
+//     // //click2Move(e.data.global.x,e.data.global.y);
+//     // pos = { "x": e.data.global.x, "y": e.data.global.y }
+
+//     if(mainPlayer.walking){
+//         mainPlayer.walking = false
+//     }
 // })
 
 let a = null;
