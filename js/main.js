@@ -10,6 +10,7 @@ const loader = PIXI.Loader.shared;
 const MapContainer = new PIXI.Container();
 const PlayerContainer = new PIXI.Container();
 const Container = new PIXI.Container();
+
 var message;
 var pos = null;
 
@@ -29,7 +30,7 @@ let tilemap = new TileMap(app, MapContainer, '/assets/maps/map.png', '/assets/ma
 //Create Player
 let mainPlayer = new Player("Jake", loader, app, PlayerContainer, tilemap);
 
-app.stage.interactive = true;
+//app.stage.interactive = true;
 
 app.stage.on("mousedown", function (e) {
     console.log("mouse x", e.data.global.x)
