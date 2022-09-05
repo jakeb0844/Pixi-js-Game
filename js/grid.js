@@ -1,14 +1,14 @@
 class Grid {
     constructor(cols, rows, collisionLayer,tiles) {
-        console.log('cols',cols);
-        console.log('rows',rows)
+        //console.log('cols',cols);
+        //console.log('rows',rows)
         this.nodes = [];
         this.grid = [];
-        this.init(cols, rows, collisionLayer,tiles);
+        this.init(collisionLayer,tiles);
     }
 
-    init(cols, rows,collisionLayer,tiles) {
-        console.log(collisionLayer)
+    init(collisionLayer,tiles) {
+        //console.log(collisionLayer)
         let size = 0;
 
         for (let row = 0;row < collisionLayer.height;row++) {
@@ -34,14 +34,14 @@ class Grid {
 
         }
 
-        console.log(this.grid)
-        console.log(this.nodes)
+        // console.log(this.grid)
+        // console.log(this.nodes)
 
     }
 
     printGrid(id) {
-        let height = this.mapArr.length;
-        let width = this.mapArr[0].length;
+        let height = this.grid.length;
+        let width = this.grid[0].length;
         let html = '';
 
         let el = $('#' + id);
@@ -56,16 +56,16 @@ class Grid {
             for (let row = 0; row < width; row++) {
                 //el.append('<td>')
 
-                if (this.mapArr[col][row].char_here) {
+                if (this.grid[col][row].playerPosition) {
                     //el.append('X')
                     html += "<td style='background:yellow'>";
                     html += "X";
                 }
-                else if (this.mapArr[col][row].action) {
+                else if (this.grid[col][row].action) {
                     html += "<td style='background:green'>";
                     html += "a";
                 }
-                else if (this.mapArr[col][row].walkable) {
+                else if (!this.grid[col][row].wall) {
                     //el.append('0')
                     html += "<td style='background:lightblue'>";
                     html += "0";

@@ -7,6 +7,7 @@ class Node{
         this.visited = false;
         this.wall = false;
         this.tile = tile;
+        this.playerPosition = false;
     }
 
     

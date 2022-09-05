@@ -1,25 +1,45 @@
 class Player {
-    constructor(name = "", loader, app, container, tilemap) {
+    constructor(name = "", loader, app, container, startPosition = { "x": 240, "y": 160 }) {
         this.name = '';
         this.loader = loader;
         this.game = app;
         this.sprite;
-        this.texture;
         this.container = container;
-        this.x = 240;
-        this.y = 160;
-        this.walkDownAnimation;
-        this.animationTextures;
-        this.test = false;
-        this.tilemap = tilemap;
+        this.x = startPosition.x;
+        this.y = startPosition.y;
+        this.spriteCreated = false;
+        this.tilemap;
         this.walking = false;
+        this.walkDownAnimation;
+        this.walkLeftAnimation;
+        this.walkRightAnimation;
+        this.walkUpAnimation;
 
         this.init();
-        //this.loadChar();
 
     }
 
-    load_animations() {
+    init() {
+
+        this.loadAnimations();
+
+        this.createSprites();
+        (async () => {
+            //Since sprites are being created in the loader callback
+            //We have to wait for the sprites to be loaded
+            //While the sprited has loaded, wait...
+            while (this.spriteCreated != 1)
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+            this.sprite = this.walkDownAnimation;
+            this.container.addChild(this.sprite)
+            this.sprite.position.set(this.x, this.y)
+        })();
+
+
+    }
+
+    loadAnimations() {
         this.loader.add('Walk_down', 'Borg_walk_down.json');
         this.loader.add('Walk_left', 'Borg_walk_left.json');
         this.loader.add('Walk_right', 'Borg_walk_right.json');
@@ -29,22 +49,25 @@ class Player {
     createSprites() {
 
         let loader = this.loader.load((function () {
-            //console.log(loader)
 
-            this.walkDownAnimation = this.createWalkSprite(loader.resources.Walk_down)
-            this.walkLeftAnimation = this.createWalkSprite(loader.resources.Walk_left)
-            this.walkRightAnimation = this.createWalkSprite(loader.resources.Walk_right)
-            this.walkUpAnimation = this.createWalkSprite(loader.resources.Walk_up)
-
+            this.walkDownAnimation = this.createSprite(loader.resources.Walk_down);
+            this.walkLeftAnimation = this.createSprite(loader.resources.Walk_left);
+            this.walkRightAnimation = this.createSprite(loader.resources.Walk_right);
+            this.walkUpAnimation = this.createSprite(loader.resources.Walk_up);
+            //this.defaultAnimation = this.createSprite(loader.resources.default);
 
         }).bind(this));
     }
 
-    walk(){
+    startWalking() {
         this.walking = true;
     }
 
-    createWalkSprite(resources) {
+    stopWalking() {
+        this.walking = false;
+    }
+
+    createSprite(resources) {
 
         let size = Object.keys(resources.textures).length;
 
@@ -62,30 +85,12 @@ class Player {
         sprite.play();
         sprite.animationSpeed = .1;
 
-        this.test = true;
+        this.spriteCreated = true;
         return sprite;
 
     }
 
-    init() {
-
-        this.load_animations();
-
-        this.createSprites();
-        (async () => {
-            console.log("waiting for variable");
-            while (this.test != 1) // define the condition as you like
-                await new Promise(resolve => setTimeout(resolve, 100));
-            PIXI.utils.clearTextureCache();
-            //console.log("variable is defined");
-            //console.log(this.test)
-            this.sprite = this.walkDownAnimation;
-            this.container.addChild(this.sprite)
-            this.sprite.position.set(this.x, this.y)
-        })();
-
-
-    }
+    
 
     changeAnimation(animation) {
 
