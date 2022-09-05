@@ -81,7 +81,7 @@ class Dijkstra {
     while (unvisitedNodes.length > 0) {
       unvisitedNodes.sort((a, b) => a.distance - b.distance)
       const closestNode = unvisitedNodes.shift()
-      console.log('closest', closestNode)
+      //console.log('closest', closestNode)
       if (closestNode.col == endNode.col && closestNode.row == endNode.row) {
         //endNode.parent = visitedNodes[visitedNodes.length-1]
         //console.log('end',visitedNodes)
@@ -109,7 +109,7 @@ class Dijkstra {
           //   return visitedNodes
           // }
         }
-        console.log('n', neighbors)
+        //console.log('n', neighbors)
         // console.log('v',visitedNodes)
         ++step
       }
@@ -131,7 +131,7 @@ class Dijkstra {
 
   makePath(node) {
     let currentNode = node;
-    console.log("start", currentNode)
+    //console.log("start", currentNode)
     let path = [];
     //let delay = timeDelay
     let step = 1
@@ -140,7 +140,7 @@ class Dijkstra {
       //currentNode.addTimer("path", delay)
       path.unshift(currentNode);
       currentNode = currentNode.parent;
-      console.log('while', currentNode)
+      //console.log('while', currentNode)
       //break;
     }
     return path;

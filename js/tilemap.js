@@ -155,13 +155,23 @@ class TileMap {
         //rect.buttonMode = true;
 
         rect.on('click', (function (e) {
+            let row = Math.floor(e.data.global.x / 16);
+            let col = Math.floor(e.data.global.y / 16);
             if (mainPlayer.walking) {
                 mainPlayer.walking = false;
+                mainPlayer.sprite.x = Math.floor(mainPlayer.sprite.x / 16) * 16 
+                mainPlayer.sprite.y = Math.floor(mainPlayer.sprite.y / 16) * 16 
+                mainPlayer.x = Math.floor(mainPlayer.sprite.x / 16) * 16;
+                mainPlayer.y = Math.floor(mainPlayer.sprite.y / 16) * 16;
+                // for(let i =0; i < index; i++){
+                //     this.path[i].tile.clear()
+                // }
+                this.path = this.path.slice(index)
+
 
             }
             else {
-                let row = Math.floor(e.data.global.x / 16);
-                let col = Math.floor(e.data.global.y / 16);
+
                 if (!this.grid.grid[col][row].wall) {
                     mainPlayer.walk()
                 }

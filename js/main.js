@@ -58,8 +58,10 @@ app.ticker.add((delta) => {
     if (mainPlayer.walking) {
         if (index < tilemap.path.length) {
             let node = tilemap.path[index];
+            //console.log(node)
             let walkY = node.row * 16;
             let walkX = node.col * 16;
+            let walkSpeed = .5;
 
             // console.log("player y: " + mainPlayer.sprite.y + " and des y " + walkY);
             // console.log("player x: " + mainPlayer.sprite.x + " and des x " + walkX);
@@ -70,13 +72,13 @@ app.ticker.add((delta) => {
 
                     if (walkY > mainPlayer.sprite.y) {
                         mainPlayer.changeAnimation(mainPlayer.walkDownAnimation);
-                        mainPlayer.sprite.y += .5;
-                        mainPlayer.y += .5
+                        mainPlayer.sprite.y += walkSpeed;;
+                        mainPlayer.y += walkSpeed;
                     }
                     else {
                         mainPlayer.changeAnimation(mainPlayer.walkUpAnimation);
-                        mainPlayer.sprite.y -= .5
-                        mainPlayer.y -= .5
+                        mainPlayer.sprite.y -= walkSpeed;
+                        mainPlayer.y -= walkSpeed;
                     }
                 }
             
@@ -86,13 +88,13 @@ app.ticker.add((delta) => {
                     walking = true;
                     if (walkX > mainPlayer.sprite.x) {
                         mainPlayer.changeAnimation(mainPlayer.walkRightAnimation);
-                        mainPlayer.sprite.x += .5;
-                        mainPlayer.x += .5;
+                        mainPlayer.sprite.x +=  walkSpeed;
+                        mainPlayer.x +=  walkSpeed;
                     }
                     else {
                         mainPlayer.changeAnimation(mainPlayer.walkLeftAnimation);
-                        mainPlayer.sprite.x -= .5;
-                        mainPlayer.x -= .5
+                        mainPlayer.sprite.x -=  walkSpeed;
+                        mainPlayer.x -= walkSpeed;
                     }
 
                 }
@@ -103,6 +105,8 @@ app.ticker.add((delta) => {
                 }
             }
             else{
+                //tilemap.path[index] = null;
+                tilemap.path[index].tile.clear()
                 index++
                 walking = false
             }
@@ -117,6 +121,8 @@ app.ticker.add((delta) => {
 
     }
     else {
+        //let temp = tilemap.path.slice(index)
+        //tilemap.path = tilemap.path.slice(index)
         index = 0;
     }
 
