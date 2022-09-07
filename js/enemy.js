@@ -6,7 +6,9 @@ class Enemy{
         this.x = position.x;
         this.y = position.y;
         this.sprite;
-        this.animations = [];
+        this.animations = {
+            "default": null,
+        };
         
     }
 }

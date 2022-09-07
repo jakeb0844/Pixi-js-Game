@@ -1,7 +1,7 @@
 // Create the application helper and add its render target to the page
 const app = new PIXI.Application({
     width: 480,
-    height: 320,
+    height: 360,
     transparent: false,
     antialis: true,
     resolution: 1
@@ -23,11 +23,13 @@ app.stage.addChild(MapContainer);
 app.stage.addChild(PlayerContainer);
 app.stage.addChild(Container)
 
+
+
 //Create Player
-let mainPlayer = new Player("Jake", loader, app, PlayerContainer,{"x": 32, "y": 32});
+let mainPlayer = new Player("Jake", loader, app, PlayerContainer,{"x": 240, "y": 160});
 
 //Create tilemap
-let tilemap = new TileMap(app, MapContainer, '/assets/maps/dungeon.png', '/assets/maps/dungeon.json', {"x": mainPlayer.x,"y": mainPlayer.y});
+let tilemap = new TileMap(app, MapContainer, '/assets/maps/map.png', '/assets/maps/map.json', {"x": mainPlayer.x,"y": mainPlayer.y});
 tilemap.player = mainPlayer;
 
 
@@ -104,3 +106,21 @@ app.ticker.add((delta) => {
     }
 
 });
+
+let rect = new PIXI.Graphics()
+            .beginFill(0xFFFFFFF0000)
+            .lineStyle({ color: 1, width: 1, native: true })
+            .drawShape({ "x": 2.5, "y": app.view.height - 38, "width": app.view.width-5, "height": 35, "type": 1 });
+
+        
+Container.addChild(rect)
+
+
+let rect1 = new PIXI.Graphics()
+            .beginFill(0xFFFff)
+            .lineStyle({ color: 1, width: 1, native: true })
+            .drawShape({ "x": rect.getBounds().x, "y": rect.getBounds().y, "width": 32, "height": 32, "type": 1 });
+
+Container.addChild(rect1)
+
+        

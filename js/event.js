@@ -21,6 +21,7 @@ class Event {
             .drawShape({ "x": 0, "y": 0, "width": app.stage.width / 1.5, "height": app.stage.height / 4, "type": 1 });
 
         this.rect.position.set(this.rect.width / 4, (app.stage.height - this.rect.height)-10)
+        console.log(app.stage.width)
         //rect.tint(0xffff)
         
         this.bg.x = this.rect.x;
