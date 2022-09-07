@@ -24,10 +24,10 @@ app.stage.addChild(PlayerContainer);
 app.stage.addChild(Container)
 
 //Create Player
-let mainPlayer = new Player("Jake", loader, app, PlayerContainer);
+let mainPlayer = new Player("Jake", loader, app, PlayerContainer,{"x": 32, "y": 32});
 
 //Create tilemap
-let tilemap = new TileMap(app, MapContainer, '/assets/maps/map.png', '/assets/maps/map.json', {"x": mainPlayer.x,"y": mainPlayer.y});
+let tilemap = new TileMap(app, MapContainer, '/assets/maps/dungeon.png', '/assets/maps/dungeon.json', {"x": mainPlayer.x,"y": mainPlayer.y});
 tilemap.player = mainPlayer;
 
 
@@ -93,8 +93,9 @@ app.ticker.add((delta) => {
 
         }
         else {
-            mainPlayer.walking = false
+            mainPlayer.stopWalking()
             tilemap.path = [];
+            mainPlayer.changeAnimation(mainPlayer.defaultAnimation)
         }
 
     }

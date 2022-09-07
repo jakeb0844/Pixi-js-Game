@@ -14,6 +14,7 @@ class Player {
         this.walkLeftAnimation;
         this.walkRightAnimation;
         this.walkUpAnimation;
+        this.defaultAnimation;
 
         this.init();
 
@@ -31,7 +32,7 @@ class Player {
             while (this.spriteCreated != 1)
                 await new Promise(resolve => setTimeout(resolve, 100));
 
-            this.sprite = this.walkDownAnimation;
+            this.sprite = this.defaultAnimation;
             this.container.addChild(this.sprite)
             this.sprite.position.set(this.x, this.y)
         })();
@@ -44,27 +45,20 @@ class Player {
         this.loader.add('Walk_left', 'Borg_walk_left.json');
         this.loader.add('Walk_right', 'Borg_walk_right.json');
         this.loader.add('Walk_up', 'Borg_walk_up.json');
+        this.loader.add('default', 'Borg-default.json');
     }
 
     createSprites() {
 
         let loader = this.loader.load((function () {
-
+            this.defaultAnimation = this.createSprite(loader.resources.default);
             this.walkDownAnimation = this.createSprite(loader.resources.Walk_down);
             this.walkLeftAnimation = this.createSprite(loader.resources.Walk_left);
             this.walkRightAnimation = this.createSprite(loader.resources.Walk_right);
             this.walkUpAnimation = this.createSprite(loader.resources.Walk_up);
-            //this.defaultAnimation = this.createSprite(loader.resources.default);
+            
 
         }).bind(this));
-    }
-
-    startWalking() {
-        this.walking = true;
-    }
-
-    stopWalking() {
-        this.walking = false;
     }
 
     createSprite(resources) {
@@ -88,6 +82,14 @@ class Player {
         this.spriteCreated = true;
         return sprite;
 
+    }
+
+    startWalking() {
+        this.walking = true;
+    }
+
+    stopWalking() {
+        this.walking = false;
     }
 
     

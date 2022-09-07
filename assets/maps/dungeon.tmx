@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="12" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
+ <editorsettings>
+  <export target="dungeon.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" name="Dungeon" tilewidth="16" tileheight="16" tilecount="1" columns="1">
+  <image source="../sprites/Dungeon/dunegon-wall.png" width="16" height="16"/>
+ </tileset>
+ <tileset firstgid="2" name="top" tilewidth="16" tileheight="16" tilecount="1" columns="1">
+  <image source="../sprites/Dungeon/Top-Wall.png" width="16" height="16"/>
+ </tileset>
+ <tileset firstgid="3" name="floor" tilewidth="16" tileheight="16" tilecount="1" columns="1">
+  <image source="../sprites/Dungeon/Floor.png" width="16" height="16"/>
+ </tileset>
+ <tileset firstgid="4" name="Door" tilewidth="16" tileheight="16" tilecount="1" columns="1">
+  <image source="../sprites/Dungeon/Door.png" width="16" height="16"/>
+ </tileset>
+ <layer id="1" name="Tile Layer 1" width="12" height="10" offsetx="0" offsety="0.5">
+  <data encoding="csv">
+2,1,1,1,1,1,1,1,1,1,1,3221225474,
+2,3,3,3,3,3,3,3,3,3,3,3221225474,
+2,3,3,3,3,3,3,3,3,3,3,3221225474,
+2,3,3,3,3,3,3,3,3,3,3,3221225474,
+2,3,3,3,3,3,3,3,3,3,3,3221225474,
+2,3,3,3,3,3,3,3,3,3,3,3221225474,
+2,3,3,3,3,3,3,3,3,3,3,3221225474,
+2,3,3,3,3,3,3,3,3,3,3,3221225474,
+2,3,3,3,3,3,3,3,3,3,3,3221225474,
+2,1,1,1,1,1,1,1,1,1,1,3221225474
+</data>
+ </layer>
+ <layer id="3" name="Door" width="12" height="10">
+  <data encoding="csv">
+0,0,0,0,0,4,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="2" name="Collision" width="12" height="10" visible="0" opacity="0.3">
+  <data encoding="csv">
+3,3,3,3,3,3,3,3,3,3,3,3,
+3,0,0,0,0,0,0,0,0,0,0,3,
+3,0,0,0,0,0,0,0,0,0,0,3,
+3,0,0,0,0,0,0,0,0,0,0,3,
+3,0,0,0,0,0,0,0,0,0,0,3,
+3,0,0,0,0,0,0,0,0,0,0,3,
+3,0,0,0,0,0,0,0,0,0,0,3,
+3,0,0,0,0,0,0,0,0,0,0,3,
+3,0,0,0,0,0,0,0,0,0,0,3,
+3,3,3,3,3,3,3,3,3,3,3,3
+</data>
+ </layer>
+</map>

@@ -139,6 +139,7 @@ class TileMap {
             // and remove the already walked portion;
             if (this.player.walking) {
                 this.player.stopWalking()
+                this.player.changeAnimation(this.player.defaultAnimation)
                 this.player.sprite.x = playerX;
                 this.player.sprite.y = playerY;
                 this.player.x = playerX;
