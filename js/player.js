@@ -20,6 +20,18 @@ class Player {
 
     }
 
+    /*
+https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20all%20kinds%20of%20rolls.
+    Stats:
+        Strength
+        Dex
+        Constituion
+        Intelligence
+        Wisdom
+        Charisma
+
+    */
+
     init() {
 
         this.loadAnimations();
