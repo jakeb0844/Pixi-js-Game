@@ -1,14 +1,12 @@
 class Enemy{
-    constructor(name,game,container,position) {
+    constructor(name,game,container) {
         this.name = name;
         this.game = game;
         this.container = container;
-        this.x = position.x;
-        this.y = position.y;
-        this.sprite;
-        this.animations = {
-            "default": null,
-        };
         
     }
+
+    //Detect player
+    
+
 }

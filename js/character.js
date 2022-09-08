@@ -1,15 +1,27 @@
-class Player {
-    constructor(name = "", loader, app, container,  charObject) {
-        this.name = '';
-        //this.loader = loader;
+class Character {
+    constructor(name = "", loader, app, container, startPosition = { "x": 240, "y": 160 }, type, stats) {
+        this.name = name;
+        this.loader = loader;
         this.game = app;
+        this.sprite;
         this.container = container;
-        this.tilemap;
-        this.walking = false;
-        this.characterObject = charObject;
-        
+        this.x = startPosition.x;
+        this.y = startPosition.y;
+        this.spriteCreated = false;
 
-        //this.init();
+        this.animations = {
+            "default": null,
+            "up": null,
+            "down": null,
+            "left": null,
+            "right": null,
+            "attack-up": null,
+            "attack-down": null,
+            "attack-left": null,
+            "attack-right": null,
+        }
+
+        this.init();
 
     }
 
@@ -37,7 +49,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             while (this.spriteCreated != 1)
                 await new Promise(resolve => setTimeout(resolve, 100));
 
-            this.sprite = this.defaultAnimation;
+            this.sprite = this.animations.default;
             this.container.addChild(this.sprite)
             this.sprite.position.set(this.x, this.y)
         })();
@@ -45,23 +57,37 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
     }
 
+    createPlayer() {
+        return new Player(this.name, this.loader, this.app, this.container, this)
+    }
+
+    createEnemy() {
+        return new Enemy(this.name, this.loader, this.app, this.container, this)
+    }
+
     loadAnimations() {
-        this.loader.add('Walk_down', 'Borg_walk_down.json');
-        this.loader.add('Walk_left', 'Borg_walk_left.json');
-        this.loader.add('Walk_right', 'Borg_walk_right.json');
-        this.loader.add('Walk_up', 'Borg_walk_up.json');
-        this.loader.add('default', 'Borg-default.json');
+
+        // this.loader.add('Walk_down', 'Borg_walk_down.json')
+        //     .add('Walk_left', 'Borg_walk_left.json')
+        //     .add('Walk_right', 'Borg_walk_right.json')
+        //     .add('Walk_up', 'Borg_walk_up.json')
+            this.loader.add('default', this.name + '-default.json');
+
     }
 
     createSprites() {
+        // this.loader.onProgress.add(showProgress);
+        // this.loader.onComplete.add(doneLoading);
 
         let loader = this.loader.load((function () {
-            this.defaultAnimation = this.createSprite(loader.resources.default);
-            this.walkDownAnimation = this.createSprite(loader.resources.Walk_down);
-            this.walkLeftAnimation = this.createSprite(loader.resources.Walk_left);
-            this.walkRightAnimation = this.createSprite(loader.resources.Walk_right);
-            this.walkUpAnimation = this.createSprite(loader.resources.Walk_up);
-            
+            this.animations.default = this.createSprite(loader.resources.default);
+            // this.animations.down = this.createSprite(loader.resources.Walk_down);
+            // this.animations.left = this.createSprite(loader.resources.Walk_left);
+            // this.animations.right = this.createSprite(loader.resources.Walk_right);
+            // this.animations.up = this.createSprite(loader.resources.Walk_up);
+
+            //this.loader.reset();
+
 
         }).bind(this));
     }
@@ -97,7 +123,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
         this.walking = false;
     }
 
-    
+
 
     changeAnimation(animation) {
 

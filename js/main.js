@@ -7,11 +7,15 @@ const app = new PIXI.Application({
     resolution: 1
 });
 const loader = PIXI.Loader.shared;
+const EnemyLoader = new PIXI.Loader;
+
 const MapContainer = new PIXI.Container();
 const PlayerContainer = new PIXI.Container();
+const EnemyContainer = new PIXI.Container();
 const Container = new PIXI.Container();
 
 var message;
+var loading = false;
 
 document.body.appendChild(app.view);
 // app.stage.scale.x = 2.2
@@ -21,16 +25,23 @@ document.body.appendChild(app.view);
 //Add containers
 app.stage.addChild(MapContainer);
 app.stage.addChild(PlayerContainer);
+app.stage.addChild(EnemyContainer);
 app.stage.addChild(Container)
 
+//loader.onProgress.add(showProgress);
 
+
+//Create Character
+let playerChar = new Character("Borg", loader,app,PlayerContainer,{"x":240, "y":160});
 
 //Create Player
-let mainPlayer = new Player("Jake", loader, app, PlayerContainer,{"x": 240, "y": 160});
+// let mainPlayer = new Player("Jake", loader, app, PlayerContainer,{"x": 240, "y": 160});
+let mainPlayer = playerChar.createPlayer();
+let EnemyChar = new Character("Orc", EnemyLoader,app,EnemyContainer,{"x":200, "y":160});
 
 //Create tilemap
-let tilemap = new TileMap(app, MapContainer, '/assets/maps/map.png', '/assets/maps/map.json', {"x": mainPlayer.x,"y": mainPlayer.y});
-tilemap.player = mainPlayer;
+ let tilemap = new TileMap(app, MapContainer, '/assets/maps/map.png', '/assets/maps/map.json', {"x": mainPlayer.characterObject.x,"y": mainPlayer.characterObject.y});
+ tilemap.player = mainPlayer;
 
 
 
@@ -49,36 +60,36 @@ app.ticker.add((delta) => {
             let walkX = node.col * tilemap.tileHeight;
             let walkSpeed = 1;
 
-            tilemap.updateCharPosition({ "col": Math.floor(mainPlayer.sprite.y / 16), "row": Math.floor(mainPlayer.sprite.x / 16) })
+            tilemap.updateCharPosition({ "col": Math.floor(mainPlayer.characterObject.sprite.y / 16), "row": Math.floor(mainPlayer.characterObject.sprite.x / 16) })
             tilemap.gridObj.printGrid('grid')
 
-            if (mainPlayer.sprite.y != walkY) {
+            if (mainPlayer.characterObject.sprite.y != walkY) {
 
-                if (walkY > mainPlayer.sprite.y) {
-                    mainPlayer.changeAnimation(mainPlayer.walkDownAnimation);
-                    mainPlayer.sprite.y += walkSpeed;;
-                    mainPlayer.y += walkSpeed;
+                if (walkY > mainPlayer.characterObject.sprite.y) {
+                    mainPlayer.characterObject.changeAnimation(mainPlayer.characterObject.animations.down);
+                    mainPlayer.characterObject.sprite.y += walkSpeed;
+                    mainPlayer.characterObject.y += walkSpeed;
                 }
                 else {
-                    mainPlayer.changeAnimation(mainPlayer.walkUpAnimation);
-                    mainPlayer.sprite.y -= walkSpeed;
-                    mainPlayer.y -= walkSpeed;
+                    mainPlayer.characterObject.changeAnimation(mainPlayer.characterObject.animations.up);
+                    mainPlayer.characterObject.sprite.y -= walkSpeed;
+                    mainPlayer.characterObject.y -= walkSpeed;
                 }
             }
 
-            else if (mainPlayer.sprite.x != walkX) {
+            else if (mainPlayer.characterObject.sprite.x != walkX) {
 
-                if (mainPlayer.sprite.x != walkX) {
+                if (mainPlayer.characterObject.sprite.x != walkX) {
 
-                    if (walkX > mainPlayer.sprite.x) {
-                        mainPlayer.changeAnimation(mainPlayer.walkRightAnimation);
-                        mainPlayer.sprite.x += walkSpeed;
-                        mainPlayer.x += walkSpeed;
+                    if (walkX > mainPlayer.characterObject.sprite.x) {
+                        mainPlayer.characterObject.changeAnimation(mainPlayer.characterObject.animations.right);
+                        mainPlayer.characterObject.sprite.x += walkSpeed;
+                        mainPlayer.characterObject.x += walkSpeed;
                     }
                     else {
-                        mainPlayer.changeAnimation(mainPlayer.walkLeftAnimation);
-                        mainPlayer.sprite.x -= walkSpeed;
-                        mainPlayer.x -= walkSpeed;
+                        mainPlayer.characterObject.changeAnimation(mainPlayer.characterObject.animations.left);
+                        mainPlayer.characterObject.sprite.x -= walkSpeed;
+                        mainPlayer.characterObject.x -= walkSpeed;
                     }
 
                 }
@@ -97,7 +108,7 @@ app.ticker.add((delta) => {
         else {
             mainPlayer.stopWalking()
             tilemap.path = [];
-            mainPlayer.changeAnimation(mainPlayer.defaultAnimation)
+            mainPlayer.characterObject.changeAnimation(mainPlayer.characterObject.animations.default)
         }
 
     }
@@ -122,5 +133,6 @@ let rect1 = new PIXI.Graphics()
             .drawShape({ "x": rect.getBounds().x, "y": rect.getBounds().y, "width": 32, "height": 32, "type": 1 });
 
 Container.addChild(rect1)
+
 
         
