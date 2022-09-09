@@ -65,6 +65,10 @@ class Grid {
                     html += "<td style='background:green'>";
                     html += "a";
                 }
+                else if(this.grid[col][row].enemeyPosition){
+                    html += "<td style='background:pink'>";
+                    html += "E";
+                }
                 else if (!this.grid[col][row].wall) {
                     //el.append('0')
                     html += "<td style='background:lightblue'>";

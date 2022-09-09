@@ -1,5 +1,5 @@
 class Character {
-    constructor(name = "", loader, app, container, startPosition = { "x": 240, "y": 160 }, type, stats) {
+    constructor(name = "", loader, app, container, tilemap, startPosition = { "x": 240, "y": 160 }, type, stats) {
         this.name = name;
         this.loader = loader;
         this.game = app;
@@ -52,13 +52,14 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             this.sprite = this.animations.default;
             this.container.addChild(this.sprite)
             this.sprite.position.set(this.x, this.y)
+            
         })();
 
 
     }
 
     createPlayer() {
-        return new Player(this.name, this.loader, this.app, this.container, this)
+        return new Player(this.name, this.loader, this.app, this.container, this.tilemap, this)
     }
 
     createEnemy() {
@@ -113,6 +114,20 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
         this.spriteCreated = true;
         return sprite;
 
+    }
+
+    updatePosition(position){
+        if(position.x){
+            this.sprite.x = position.x;
+            this.x = position.x;
+        }
+
+        if(position.y){
+            this.sprite.y = position.y;
+            this.y = position.y;
+        }
+        
+        
     }
 
     startWalking() {

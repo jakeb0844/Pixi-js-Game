@@ -29,19 +29,25 @@ app.stage.addChild(EnemyContainer);
 app.stage.addChild(Container)
 
 //loader.onProgress.add(showProgress);
-
+let tilemap;
 
 //Create Character
-let playerChar = new Character("Borg", loader,app,PlayerContainer,{"x":240, "y":160});
+let playerChar = new Character("Borg", loader, app, PlayerContainer, tilemap, { "x": 240, "y": 160 });
 
 //Create Player
 // let mainPlayer = new Player("Jake", loader, app, PlayerContainer,{"x": 240, "y": 160});
 let mainPlayer = playerChar.createPlayer();
-let EnemyChar = new Character("Orc", EnemyLoader,app,EnemyContainer,{"x":200, "y":160});
+let EnemyChar = new Character("Orc", EnemyLoader, app, EnemyContainer, tilemap, { "x": 176, "y": 160 });
 
 //Create tilemap
- let tilemap = new TileMap(app, MapContainer, '/assets/maps/map.png', '/assets/maps/map.json', {"x": mainPlayer.characterObject.x,"y": mainPlayer.characterObject.y});
- tilemap.player = mainPlayer;
+tilemap = new TileMap(app, MapContainer, '/assets/maps/map.png', '/assets/maps/map.json', { "x": mainPlayer.characterObject.x, "y": mainPlayer.characterObject.y });
+tilemap.player = mainPlayer;
+
+//Wait for everything to load
+setTimeout(() => {
+    tilemap.addChild(EnemyChar)
+    
+  }, "100")
 
 
 
@@ -51,6 +57,31 @@ let index = 0;
 
 // Listen for animate update
 app.ticker.add((delta) => {
+    
+    movePlayer();
+
+    if (EnemyChar.sprite) {
+        let row = Math.floor(EnemyChar.sprite.x / 16);
+        let col = Math.floor(EnemyChar.sprite.y / 16);
+        if(!tilemap.gridObj.grid[col][row+1].wall){
+            //console.log('here')
+            EnemyChar.sprite.x++
+            tilemap.gridObj.printGrid()
+        }
+        else{
+            //console.log(tilemap.gridObj.grid[col][row-1].wall)
+            while(EnemyChar.sprite.x > 16){
+                console.log('here')
+                EnemyChar.sprite.x--;
+            }
+        }
+    }
+
+});
+
+
+
+function movePlayer() {
 
     if (mainPlayer.walking) {
         if (index < tilemap.path.length) {
@@ -58,7 +89,9 @@ app.ticker.add((delta) => {
             let node = tilemap.path[index];
             let walkY = node.row * tilemap.tileWidth;
             let walkX = node.col * tilemap.tileHeight;
-            let walkSpeed = 1;
+
+            //Walk speed needs to be a divider of 16
+            let walkSpeed = 2;
 
             tilemap.updateCharPosition({ "col": Math.floor(mainPlayer.characterObject.sprite.y / 16), "row": Math.floor(mainPlayer.characterObject.sprite.x / 16) })
             tilemap.gridObj.printGrid('grid')
@@ -115,24 +148,23 @@ app.ticker.add((delta) => {
     else {
         index = 0;
     }
-
-});
+}
 
 let rect = new PIXI.Graphics()
-            .beginFill(0xFFFFFFF0000)
-            .lineStyle({ color: 1, width: 1, native: true })
-            .drawShape({ "x": 2.5, "y": app.view.height - 38, "width": app.view.width-5, "height": 35, "type": 1 });
+    .beginFill(0xFFFFFFF0000)
+    .lineStyle({ color: 1, width: 1, native: true })
+    .drawShape({ "x": 2.5, "y": app.view.height - 38, "width": app.view.width - 5, "height": 35, "type": 1 });
 
-        
+
 Container.addChild(rect)
 
 
 let rect1 = new PIXI.Graphics()
-            .beginFill(0xFFFff)
-            .lineStyle({ color: 1, width: 1, native: true })
-            .drawShape({ "x": rect.getBounds().x, "y": rect.getBounds().y, "width": 32, "height": 32, "type": 1 });
+    .beginFill(0xFFFff)
+    .lineStyle({ color: 1, width: 1, native: true })
+    .drawShape({ "x": rect.getBounds().x, "y": rect.getBounds().y, "width": 32, "height": 32, "type": 1 });
 
 Container.addChild(rect1)
 
 
-        
+

@@ -1,5 +1,5 @@
 class Player {
-    constructor(name = "", loader, app, container,  charObject) {
+    constructor(name = "", loader, app, container, tilemap,  charObject) {
         this.name = '';
         //this.loader = loader;
         this.game = app;

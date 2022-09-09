@@ -8,6 +8,7 @@ class Node{
         this.wall = false;
         this.tile = tile;
         this.playerPosition = false;
+        this.enemeyPosition = false;
     }
 
     

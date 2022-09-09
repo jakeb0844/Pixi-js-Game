@@ -24,6 +24,15 @@ class TileMap {
 
     }
 
+    addChild(entity){
+        let row = Math.floor(entity.x / 16);
+        let col = Math.floor(entity.y / 16);
+
+        console.log(row + " " + col)
+
+        this.gridObj.grid[col][row].enemeyPosition = true;
+    }
+
     async _createMap(tileset,playerPosition) {
 
         // load json
