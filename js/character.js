@@ -67,10 +67,10 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
     loadAnimations() {
 
-        // this.loader.add('Walk_down', 'Borg_walk_down.json')
-        //     .add('Walk_left', 'Borg_walk_left.json')
-        //     .add('Walk_right', 'Borg_walk_right.json')
-        //     .add('Walk_up', 'Borg_walk_up.json')
+        this.loader.add('Walk_down', 'Borg_walk_down.json')
+            .add('Walk_left', 'Borg_walk_left.json')
+            .add('Walk_right', 'Borg_walk_right.json')
+            .add('Walk_up', 'Borg_walk_up.json')
             this.loader.add('default', this.name + '-default.json');
 
     }
@@ -81,10 +81,10 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
         let loader = this.loader.load((function () {
             this.animations.default = this.createSprite(loader.resources.default);
-            // this.animations.down = this.createSprite(loader.resources.Walk_down);
-            // this.animations.left = this.createSprite(loader.resources.Walk_left);
-            // this.animations.right = this.createSprite(loader.resources.Walk_right);
-            // this.animations.up = this.createSprite(loader.resources.Walk_up);
+            this.animations.down = this.createSprite(loader.resources.Walk_down);
+            this.animations.left = this.createSprite(loader.resources.Walk_left);
+            this.animations.right = this.createSprite(loader.resources.Walk_right);
+            this.animations.up = this.createSprite(loader.resources.Walk_up);
 
             //this.loader.reset();
 
