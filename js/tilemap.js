@@ -1,6 +1,6 @@
 // map
 class TileMap {
-    constructor(game, container, mapImage, mapJson, playerPosition, tileDimensions = { "height": 16, "width": 16 }) {
+    constructor(game, container, TileContainer, mapImage, mapJson, playerPosition, tileDimensions = { "height": 16, "width": 16 }) {
 
         this.game = game;
         this.width;
@@ -8,6 +8,7 @@ class TileMap {
         this.collisionLayer;
         this.actionLayer;
         this.container = container;
+        this.tileContainer = TileContainer;
         this.gridObj;
         this.playerPosition = playerPosition;
         this.mapJson = mapJson;
@@ -89,7 +90,7 @@ class TileMap {
                 let rect = this.createRect(layer.x, layer.y);
                 this.rects[tileIndex] = rect;
                 tileIndex++;
-                Container.addChild(rect)
+                this.tileContainer.addChild(rect)
 
                 this.container.addChild(layer)
 
@@ -103,12 +104,13 @@ class TileMap {
         let col = Math.floor(playerPosition. y / 16);
         this.playerPosition = {"row": row, "col": col};
         this.gridObj.grid[col][row].playerPosition = true;
-        this.gridObj.printGrid('grid')
+        //this.gridObj.printGrid('grid')
         
     }
 
     find_path(start, end) {
-        if (!end.wall) {
+        
+        if ((!end.wall)) {
 
             let di = new Dijkstra(this.gridObj.grid, start, end);
             let { visited, endNode } = di.find_path(di.grid, di.startNode, di.endNode);
@@ -126,6 +128,10 @@ class TileMap {
             }
 
         }
+        else{
+            this.path = [];
+        }
+        
 
     }
 
@@ -141,18 +147,18 @@ class TileMap {
             let endRow = Math.floor(e.data.global.x / 16);
             let endCol = Math.floor(e.data.global.y / 16);
             let grid = this.gridObj.grid;
-            let playerX = Math.floor(this.player.characterObject.sprite.x / 16) * 16;
-            let playerY = Math.floor(this.player.characterObject.sprite.y / 16) * 16;
+            let playerX = Math.floor(this.player.sprite.x / 16) * 16;
+            let playerY = Math.floor(this.player.sprite.y / 16) * 16;
 
             // If the player is following the path, stop walking, set the player to the nearest tile,
             // and remove the already walked portion;
             if (this.player.walking) {
                 this.player.stopWalking()
-                this.player.characterObject.changeAnimation(this.player.characterObject.animations.default)
-                this.player.characterObject.sprite.x = playerX;
-                this.player.characterObject.sprite.y = playerY;
-                this.player.characterObject.x = playerX;
-                this.player.characterObject.y = playerY;
+                this.player.changeAnimation(this.player.animations.default)
+                this.player.sprite.x = playerX;
+                this.player.sprite.y = playerY;
+                this.player.x = playerX;
+                this.player.y = playerY;
 
                 this.path = this.path.slice(index)
                 
@@ -171,8 +177,8 @@ class TileMap {
             let endRow = Math.floor(e.data.global.x / 16);
             let endCol = Math.floor(e.data.global.y / 16);
             let grid = this.gridObj.grid;
-            let playerRow = Math.floor(this.player.characterObject.x / 16);
-            let playerCol = Math.floor(this.player.characterObject.y / 16);
+            let playerRow = Math.floor(this.player.x / 16);
+            let playerCol = Math.floor(this.player.y / 16);
 
             let r = grid[endCol][endRow].tile;
             r.clear();

@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"Walk_left_0.png": {
+		"Borg_Walk_left_0.png": {
 			"frame": {
 				"x": 0,
 				"y": 32,
@@ -20,7 +20,7 @@
 				"h": 16
 			}
 		},
-		"Walk_left_1.png": {
+		"Borg_Walk_left_1.png": {
 			"frame": {
 				"x": 16,
 				"y": 32,
@@ -40,7 +40,7 @@
 				"h": 16
 			}
 		},
-		"Walk_left_2.png": {
+		"Borg_Walk_left_2.png": {
 			"frame": {
 				"x": 32,
 				"y": 32,
@@ -60,7 +60,7 @@
 				"h": 16
 			}
 		},
-		"Walk_left_3.png": {
+		"Borg_Walk_left_3.png": {
 			"frame": {
 				"x": 48,
 				"y": 32,
@@ -80,7 +80,7 @@
 				"h": 16
 			}
 		},
-		"Walk_left_4.png": {
+		"Borg_Walk_left_4.png": {
 			"frame": {
 				"x": 64,
 				"y": 32,

@@ -62,6 +62,7 @@ class Dijkstra {
       }
       if (closestNode.distance === Infinity) {
         console.log("No path found")
+        return null;
         //return 0;
       }
       if (!closestNode.wall) {

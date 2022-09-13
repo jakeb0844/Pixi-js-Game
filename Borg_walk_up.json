@@ -1,6 +1,6 @@
 {
 	"frames": {
-		"Walk_up_0.png": {
+		"Borg_Walk_up_0.png": {
 			"frame": {
 				"x": 0,
 				"y": 16,
@@ -20,7 +20,7 @@
 				"h": 16
 			}
 		},
-		"Walk_up_1.png": {
+		"Borg_Walk_up_1.png": {
 			"frame": {
 				"x": 16,
 				"y": 16,
@@ -40,7 +40,7 @@
 				"h": 16
 			}
 		},
-		"Walk_up_2.png": {
+		"Borg_Walk_up_2.png": {
 			"frame": {
 				"x": 32,
 				"y": 16,
@@ -60,7 +60,7 @@
 				"h": 16
 			}
 		},
-		"Walk_up_3.png": {
+		"Borg_Walk_up_3.png": {
 			"frame": {
 				"x": 48,
 				"y": 16,
@@ -80,7 +80,7 @@
 				"h": 16
 			}
 		},
-		"Walk_up_4.png": {
+		"Borg_Walk_up_4.png": {
 			"frame": {
 				"x": 64,
 				"y": 16,

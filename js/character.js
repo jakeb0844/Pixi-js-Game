@@ -68,11 +68,11 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
     loadAnimations() {
 
-        this.loader.add('Walk_down', 'Borg_walk_down.json')
-            .add('Walk_left', 'Borg_walk_left.json')
-            .add('Walk_right', 'Borg_walk_right.json')
-            .add('Walk_up', 'Borg_walk_up.json')
-            this.loader.add('default', this.name + '-default.json');
+        this.loader.add(this.name + '_Walk_down', this.name + '_walk_down.json')
+            .add(this.name + '_Walk_left', this.name + '_walk_left.json')
+            .add(this.name + '_Walk_right', this.name + '_walk_right.json')
+            .add(this.name + '_Walk_up', this.name + '_walk_up.json')
+            .add(this.name + '_default', this.name + '-default.json');
 
     }
 
@@ -81,11 +81,11 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
         // this.loader.onComplete.add(doneLoading);
 
         let loader = this.loader.load((function () {
-            this.animations.default = this.createSprite(loader.resources.default);
-            this.animations.down = this.createSprite(loader.resources.Walk_down);
-            this.animations.left = this.createSprite(loader.resources.Walk_left);
-            this.animations.right = this.createSprite(loader.resources.Walk_right);
-            this.animations.up = this.createSprite(loader.resources.Walk_up);
+            this.animations.default = this.createSprite(loader.resources[this.name + '_default']);
+            this.animations.down = this.createSprite(loader.resources[this.name + '_Walk_down']);
+            this.animations.left = this.createSprite(loader.resources[this.name + '_Walk_left']);
+            this.animations.right = this.createSprite(loader.resources[this.name + '_Walk_right']);
+            this.animations.up = this.createSprite(loader.resources[this.name + '_Walk_up']);
 
             //this.loader.reset();
 
@@ -95,24 +95,30 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
     createSprite(resources) {
 
-        let size = Object.keys(resources.textures).length;
+        if(resources.textures){
+            let size = Object.keys(resources.textures).length;
 
-        const textures = [];
-
-        for (let i = 0; i < size; i++) {
-
-            const texture = PIXI.Texture.from(resources.name + "_" + i + ".png");
-            textures.push(texture);
-
+            const textures = [];
+    
+            for (let i = 0; i < size; i++) {
+    
+                const texture = PIXI.Texture.from(resources.name + "_" + i + ".png");
+                textures.push(texture);
+    
+            }
+    
+            let sprite = new PIXI.AnimatedSprite(textures);
+    
+            sprite.play();
+            sprite.animationSpeed = .1;
+    
+            this.spriteCreated = true;
+            return sprite;
         }
 
-        let sprite = new PIXI.AnimatedSprite(textures);
+        return null;
 
-        sprite.play();
-        sprite.animationSpeed = .1;
-
-        this.spriteCreated = true;
-        return sprite;
+        
 
     }
 
