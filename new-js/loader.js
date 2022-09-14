@@ -1,7 +1,7 @@
 export class PreLoader {
     constructor(app) {
         this.app = app;
-        this.assetsLoadedFlag = false;
+        this.assets = [];
     }
 
     load(callback) {
@@ -29,5 +29,9 @@ export class PreLoader {
 
     error(e) {
 
+    }
+
+    saveAssets(asset){
+        this.assets.push(asset);
     }
 }
