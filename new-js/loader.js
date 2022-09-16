@@ -1,6 +1,6 @@
 export class PreLoader {
     constructor(app) {
-        this.app = app;
+        // this.app = app;
         this.assets = [];
     }
 
@@ -33,5 +33,9 @@ export class PreLoader {
 
     saveAssets(asset){
         this.assets.push(asset);
+    }
+
+    getAsset(name){
+        return this.assets.find(asset => asset.name === name);
     }
 }

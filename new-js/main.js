@@ -1,47 +1,51 @@
 import { PreLoader } from "./loader.js";
+//import { Entity } from "./entity.js";
+// import { Tilemap } from "./tilemap.js";
+import { Player } from "./player.js";
+// import { Enemy } from "./enemy.js";
 
 const app = new PIXI.Application({
     width: 480,
     height: 320,
     transparent: false,
     antialis: true,
-    resolution: 1
+    resolution: 1.4
 });
 
 document.body.appendChild(app.view);
 
-var loader = new PreLoader(app);
-loader.load(setup);
+var loader;
+var player;
+var tilemap;
 
-function setup(e){
-    //Create a class that stores all textures from here or even creates the textures and animations;;;
-    //How do we find out what each texture is called?
+const MapContainer = new PIXI.Container();
+const TileContainer = new PIXI.Container();
+const PlayerContainer = new PIXI.Container();
+const EnemyContainer = new PIXI.Container();
+const Container = new PIXI.Container();
 
-    console.log(e);
+app.stage.addChild(PlayerContainer);
+
+// Load Assets
+loader = new PreLoader(app);
+loader.load(start);
+
+
+function start(e) {
 
     let size = getObjectSize(e.resources)
     let keys = getObjectKeys(e.resources);
 
-    for(let i = 0; i < size; i++) {
+    for (let i = 0; i < size; i++) {
         loader.saveAssets({
             "name": keys[i],
             "resource": e.resources[keys[i]],
         });
     }
 
-    console.log(loader);
-    
-    // let sheet = e.resources["Börg.json"].spritesheet;
-    // console.log(sheet)
+    player = new Player("Börg",app,loader,PlayerContainer,tilemap,{'x':240, 'y':160});
 
-    // // create an animated sprite
-    // let animatedCapguy = new PIXI.AnimatedSprite(sheet.animations["Börg-attack-forward"]);
-    
-    // // set speed, start playback and add it to the stage
-    // animatedCapguy.animationSpeed = 0.1;
-    // animatedCapguy.play();
-    // animatedCapguy.x = app.view.width / 2;
-    // animatedCapguy.y = app.view.height / 2;
-    // app.stage.addChild(animatedCapguy);
 
- }
+
+
+}
