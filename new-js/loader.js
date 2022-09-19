@@ -10,7 +10,8 @@ export class PreLoader {
         //loader.baseUrl = "./assets/";
 
         loader.add("Börg.json")
-            .add(baseUrl + "maps/map.json")
+            .add('mapJson',baseUrl + "maps/map.json")
+            .add('map', baseUrl + "maps/map.png")
 
         loader.onProgress.add(this.progress);
         loader.onComplete.add(this.complete);

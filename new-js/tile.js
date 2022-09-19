@@ -1,4 +1,4 @@
-class Tile{
+export class Tile{
     constructor(row,col,rect) {
         this.row = row;
         this.col = col;

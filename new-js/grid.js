@@ -1,6 +1,7 @@
-class Grid {
+import {Tile} from './tile.js'
+export class Grid {
     constructor(cols, rows, collisionLayer,tiles) {
-        this.nodes = [];
+        this.tiles = [];
         this.grid = [];
         this.init(collisionLayer,tiles);
     }

@@ -1,6 +1,6 @@
 import { PreLoader } from "./loader.js";
 //import { Entity } from "./entity.js";
-// import { Tilemap } from "./tilemap.js";
+import { Tilemap } from "./tilemap.js";
 import { Player } from "./player.js";
 // import { Enemy } from "./enemy.js";
 
@@ -9,7 +9,7 @@ const app = new PIXI.Application({
     height: 320,
     transparent: false,
     antialis: true,
-    resolution: 1.4
+    resolution: 1
 });
 
 document.body.appendChild(app.view);
@@ -24,7 +24,10 @@ const PlayerContainer = new PIXI.Container();
 const EnemyContainer = new PIXI.Container();
 const Container = new PIXI.Container();
 
+app.stage.addChild(MapContainer);
+app.stage.addChild(TileContainer);
 app.stage.addChild(PlayerContainer);
+
 
 // Load Assets
 loader = new PreLoader(app);
@@ -42,8 +45,9 @@ function start(e) {
             "resource": e.resources[keys[i]],
         });
     }
-
+    console.log(loader)
     player = new Player("Börg",app,loader,PlayerContainer,tilemap,{'x':240, 'y':160});
+    tilemap = new Tilemap(app,loader,MapContainer,TileContainer,{"x":player.x, 'y':player.y});
 
 
 
