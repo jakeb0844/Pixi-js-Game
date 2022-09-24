@@ -9,6 +9,8 @@ export class Entity {
         this.x = startPosition.x;
         this.y = startPosition.y;
         this.spriteCreated = false;
+        this.path =[];
+        this.turn = false;
 
         this.animations = {
             "default": null,

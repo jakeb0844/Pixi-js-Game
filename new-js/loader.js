@@ -2,6 +2,7 @@ export class PreLoader {
     constructor(app) {
         // this.app = app;
         this.assets = [];
+        this.completed = false;
     }
 
     load(callback) {

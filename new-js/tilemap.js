@@ -1,8 +1,9 @@
 // map
-import {Grid} from './grid.js';
+//import {Grid} from './grid.js';
+import { Pathfinding } from "./pathfinding.js";
 
 export class Tilemap {
-    constructor(game, loader, container, TileContainer, playerPosition, tileDimensions = { "height": 16, "width": 16 }) {
+    constructor(game, loader, container, TileContainer, playerPosition, player, tileDimensions = { "height": 16, "width": 16 }) {
 
         this.game = game;
         this.loader = loader;
@@ -12,7 +13,7 @@ export class Tilemap {
         this.actionLayer;
         this.container = container;
         this.tileContainer = TileContainer;
-        this.gridObj;
+        this.player = player;
         this.playerPosition = playerPosition;
         //this.mapJson = mapJson;
         this.rects = [];
@@ -34,7 +35,7 @@ export class Tilemap {
 
         console.log(row + " " + col)
 
-        this.gridObj.grid[col][row].enemeyPosition = true;
+        this.grid[col][row].enemeyPosition = true;
     }
 
     async _createMap(tileset,playerPosition) {
@@ -103,13 +104,19 @@ export class Tilemap {
 
         }
 
-        this.gridObj = this.createGrid(this.collisionLayer);
+        let {grid,nodes} = this.createGrid(this.collisionLayer);
+
+        this.grid = grid;
+        this.nodes = nodes;
 
         let row = Math.floor(playerPosition.x / 16);
         let col = Math.floor(playerPosition. y / 16);
         this.playerPosition = {"row": row, "col": col};
-        this.gridObj.grid[col][row].playerPosition = true;
-        this.gridObj.printGrid('grid')
+        this.grid[col][row].playerPosition = true;
+        setTimeout(function() {
+            printGrid(grid,'grid')
+        }, 1000);
+        
         
     }
 
@@ -117,12 +124,14 @@ export class Tilemap {
         
         if ((!end.wall)) {
 
-            let di = new Dijkstra(this.gridObj.grid, start, end);
+            let di = new Pathfinding(this.grid, start, end);
             let { visited, endNode } = di.find_path(di.grid, di.startNode, di.endNode);
             
             let shortest_path = di.makePath(endNode);
             
-            this.path = shortest_path;
+            // this.path = shortest_path;
+            // this.player.path = shortest_path;
+            this.test = shortest_path;
 
             for (const node of shortest_path) {
                 let tile = node.tile;
@@ -134,7 +143,8 @@ export class Tilemap {
 
         }
         else{
-            this.path = [];
+            // this.path = [];
+            this.player.path = [];
         }
         
 
@@ -149,9 +159,10 @@ export class Tilemap {
         rect.interactive = true;
 
         rect.on('click', (function (e) {
+            console.log(this.player)
             let endRow = Math.floor(e.data.global.x / 16);
             let endCol = Math.floor(e.data.global.y / 16);
-            let grid = this.gridObj.grid;
+            let grid = this.grid;
             let playerX = Math.floor(this.player.sprite.x / 16) * 16;
             let playerY = Math.floor(this.player.sprite.y / 16) * 16;
 
@@ -165,13 +176,16 @@ export class Tilemap {
                 this.player.x = playerX;
                 this.player.y = playerY;
 
-                this.path = this.path.slice(index)
+                // this.path = this.path.slice(index)
+                //this.player.path = this.player.path.slice(index)
+                this.player.path = [];
                 
 
             }
             else {
 
                 if (!grid[endCol][endRow].wall) {
+                    this.player.path = this.test;
                     this.player.startWalking()
                 }
             }
@@ -181,7 +195,7 @@ export class Tilemap {
         rect.on('mouseover', (function (e) {
             let endRow = Math.floor(e.data.global.x / 16);
             let endCol = Math.floor(e.data.global.y / 16);
-            let grid = this.gridObj.grid;
+            let grid = this.grid;
             let playerRow = Math.floor(this.player.x / 16);
             let playerCol = Math.floor(this.player.y / 16);
 
@@ -214,15 +228,14 @@ export class Tilemap {
 
     createGrid() {
 
-        let grid = new Grid(this.collisionLayer.width, this.collisionLayer.height, this.collisionLayer, this.rects);
-        return grid;
+       return createGrid(this.collisionLayer,this.rects);
 
     }
 
     find_char_position() {
         for (let col = 0; col < this.collisionLayer.height; col++) {
             for (let row = 0; row < this.collisionLayer.width; row++) {
-                if (this.gridObj.grid[col][row].playerPosition) {
+                if (this.grid[col][row].playerPosition) {
                    
                     return { "col": col, "row": row };
                 }
@@ -259,7 +272,7 @@ export class Tilemap {
     }
 
     updateCharPosition(position) {
-        let grid = this.gridObj.grid;
+        let grid = this.grid;
         grid[this.playerPosition.col][this.playerPosition.row].playerPosition = false;
         grid[position.col][position.row].playerPosition = true;
         this.playerPosition = { "col": position.col, "row": position.row }

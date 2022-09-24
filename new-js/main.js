@@ -4,6 +4,7 @@ import { Tilemap } from "./tilemap.js";
 import { Player } from "./player.js";
 // import { Enemy } from "./enemy.js";
 
+
 const app = new PIXI.Application({
     width: 480,
     height: 320,
@@ -12,11 +13,13 @@ const app = new PIXI.Application({
     resolution: 1
 });
 
-document.body.appendChild(app.view);
+$('.canvas').append(app.view);
 
 var loader;
 var player;
 var tilemap;
+var index = 0;
+let mode = {'exploration':true,'combat':false};
 
 const MapContainer = new PIXI.Container();
 const TileContainer = new PIXI.Container();
@@ -28,15 +31,13 @@ app.stage.addChild(MapContainer);
 app.stage.addChild(TileContainer);
 app.stage.addChild(PlayerContainer);
 
-
 // Load Assets
 loader = new PreLoader(app);
 loader.load(start);
 
-
 function start(e) {
 
-    let size = getObjectSize(e.resources)
+    let size = getObjectSize(e.resources);
     let keys = getObjectKeys(e.resources);
 
     for (let i = 0; i < size; i++) {
@@ -46,10 +47,27 @@ function start(e) {
         });
     }
     console.log(loader)
-    player = new Player("Börg",app,loader,PlayerContainer,tilemap,{'x':240, 'y':160});
-    tilemap = new Tilemap(app,loader,MapContainer,TileContainer,{"x":player.x, 'y':player.y});
+    player = new Player("Börg", app, loader, PlayerContainer, tilemap, { 'x': 240, 'y': 160 });
+    tilemap = new Tilemap(app, loader, MapContainer, TileContainer, { "x": player.x, 'y': player.y },player);
+    // let walkX = null;
+    // let walkY = null;
+    var index = 0;
+    let turns = 0;
+    app.ticker.add((delta) => {
+        //modes: exploration, combat
+        if(mode.exploration){
+			
+			if(player.turn){
+				if(player.path.length > 0){
+					//Step
+					index = playerWalk(player,tilemap,index);
+				}
+			}
+            
+        }
+        
 
-
+    });
 
 
 }
