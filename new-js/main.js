@@ -6,11 +6,11 @@ import { Player } from "./player.js";
 
 
 const app = new PIXI.Application({
-    width: 480,
-    height: 320,
-    transparent: false,
-    antialis: true,
-    resolution: 1
+	width: 480,
+	height: 320,
+	transparent: false,
+	antialis: true,
+	resolution: 1
 });
 
 $('.canvas').append(app.view);
@@ -19,7 +19,7 @@ var loader;
 var player;
 var tilemap;
 var index = 0;
-let mode = {'exploration':true,'combat':false};
+let mode = { 'exploration': true, 'combat': false };
 
 const MapContainer = new PIXI.Container();
 const TileContainer = new PIXI.Container();
@@ -37,37 +37,53 @@ loader.load(start);
 
 function start(e) {
 
-    let size = getObjectSize(e.resources);
-    let keys = getObjectKeys(e.resources);
+	let size = getObjectSize(e.resources);
+	let keys = getObjectKeys(e.resources);
 
-    for (let i = 0; i < size; i++) {
-        loader.saveAssets({
-            "name": keys[i],
-            "resource": e.resources[keys[i]],
-        });
-    }
-    console.log(loader)
-    player = new Player("Börg", app, loader, PlayerContainer, tilemap, { 'x': 240, 'y': 160 });
-    tilemap = new Tilemap(app, loader, MapContainer, TileContainer, { "x": player.x, 'y': player.y },player);
-    // let walkX = null;
-    // let walkY = null;
-    var index = 0;
-    let turns = 0;
-    app.ticker.add((delta) => {
-        //modes: exploration, combat
-        if(mode.exploration){
-			
-			if(player.turn){
-				if(player.path.length > 0){
+	for (let i = 0; i < size; i++) {
+		loader.saveAssets({
+			"name": keys[i],
+			"resource": e.resources[keys[i]],
+		});
+	}
+	console.log(loader)
+	player = new Player("Börg", app, loader, PlayerContainer, tilemap, { 'x': 240, 'y': 160 });
+	tilemap = new Tilemap(app, loader, MapContainer, TileContainer, { "x": player.x, 'y': player.y }, player);
+	// let walkX = null;
+	// let walkY = null;
+	var index = 0;
+	let turns = 0;
+	let no_more_other_turns = false;
+	player.turn = true;
+	app.ticker.add((delta) => {
+		//modes: exploration, combat
+		if (mode.exploration) {
+
+			if (player.turn) {
+
+				if (player.path.length > 0) {
 					//Step
-					index = playerWalk(player,tilemap,index);
+					index = playerWalk(player, tilemap, index);
+					//player.turn = false;
 				}
-			}
-            
-        }
-        
 
-    });
+				else {
+					//Some other kind of interaction.
+				}
+
+			}
+			else if (no_more_other_turns) {
+				//Loop through all other actors.
+			}
+			else {
+				turns++;
+				console.log(turns)
+			}
+
+		}
+
+
+	});
 
 
 }
