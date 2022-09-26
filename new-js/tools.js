@@ -1,6 +1,6 @@
 //import {Tile} from './tile.js';
-class Tile{
-    constructor(row,col,rect) {
+class Tile {
+    constructor(row, col, rect) {
         this.row = row;
         this.col = col;
         this.parent = null;
@@ -12,9 +12,7 @@ class Tile{
         this.enemeyPosition = false;
     }
 
-    
 }
-
 
 function CalculateRowAndCol(position) {
     let row = Math.floor(position.x / 16);
@@ -82,7 +80,7 @@ function createGrid(collisionLayer, tiles) {
     return { 'grid': grid, 'nodes': nodes };
 }
 
-function printGrid(grid,id) {
+function printGrid(grid, id) {
     let height = grid.length;
     let width = grid[0].length;
     let html = '';
@@ -133,10 +131,72 @@ function printGrid(grid,id) {
     el.append('</table>')
 }
 
-function playerWalk(player,tilemap,index){
+function walk(player, tilemap, index) {
+
+    let node = player.path[index];
+    let walkY = node.row * tilemap.tileWidth;
+    let walkX = node.col * tilemap.tileHeight;
+    let walkSpeed = 2;
+
+    tilemap.updateCharPosition({ "col": Math.floor(player.sprite.y / 16), "row": Math.floor(player.sprite.x / 16) })
+    printGrid(tilemap.grid, 'grid')
+
+    if (player.sprite.y != walkY) {
+
+        if (walkY > player.sprite.y) {
+            player.changeAnimation(player.animations.up);
+            player.sprite.y += walkSpeed;;
+            player.y += walkSpeed;
+        }
+        else {
+            player.changeAnimation(player.animations.down);
+            player.sprite.y -= walkSpeed;
+            player.y -= walkSpeed;
+        }
+    }
+
+    else if (player.sprite.x != walkX) {
+
+            if (walkX > player.sprite.x) {
+                player.changeAnimation(player.animations.right);
+                player.sprite.x += walkSpeed;
+                player.x += walkSpeed;
+            }
+            else {
+                player.changeAnimation(player.animations.left);
+                player.sprite.x -= walkSpeed;
+                player.x -= walkSpeed;
+            }     
+    }
+
+    let x = player.sprite.x;
+    let y = player.sprite.y;
+    //console.log("x:" + x + ' and walkX:' + walkX);
+    //console.log("y:" + y + ' and walkY:' + walkY);
+    if (x != walkX || y != walkY) {
+        player.path[index].tile.clear()
+        //console.log('keepWalking')
+        return { 'index': index, 'keepWalking': true };
+    }
+    else {
+        //console.log('finished walking')
+        index++;
+        if (index >= player.path.length) {
+            player.walking = false;
+            player.path = [];
+            index = 0;
+            player.changeAnimation(player.animations.default)
+        }
+    }
+
+    return { 'index': index, "keepWalking": false };
+
+}
+//Archive
+function playerWalk(player, tilemap, index) {
     if (player.walking) {
         // if (index < tilemap.path.length) {
-            if (index < player.path.length) {
+        if (index < player.path.length) {
 
             // let node = tilemap.path[index];
             let node = player.path[index];
@@ -145,7 +205,7 @@ function playerWalk(player,tilemap,index){
             let walkSpeed = 2;
 
             tilemap.updateCharPosition({ "col": Math.floor(player.sprite.y / 16), "row": Math.floor(player.sprite.x / 16) })
-            printGrid(tilemap.grid,'grid')
+            printGrid(tilemap.grid, 'grid')
 
             if (player.sprite.y != walkY) {
 

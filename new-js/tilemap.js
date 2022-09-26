@@ -128,7 +128,9 @@ export class Tilemap {
             let { visited, endNode } = di.find_path(di.grid, di.startNode, di.endNode);
             
             let shortest_path = di.makePath(endNode);
-            
+            //console.log(shortest_path);
+            // shortest_path.shift();
+            // console.log(shortest_path);
             // this.path = shortest_path;
             // this.player.path = shortest_path;
             this.test = shortest_path;
@@ -159,7 +161,7 @@ export class Tilemap {
         rect.interactive = true;
 
         rect.on('click', (function (e) {
-            console.log(this.player)
+            //console.log(this.player)
             let endRow = Math.floor(e.data.global.x / 16);
             let endCol = Math.floor(e.data.global.y / 16);
             let grid = this.grid;
@@ -179,6 +181,7 @@ export class Tilemap {
                 // this.path = this.path.slice(index)
                 //this.player.path = this.player.path.slice(index)
                 this.player.path = [];
+                //this.test = [];
                 
 
             }
@@ -186,6 +189,8 @@ export class Tilemap {
 
                 if (!grid[endCol][endRow].wall) {
                     this.player.path = this.test;
+                    this.player.path[0].tile.clear();
+                    this.player.path.shift();
                     this.player.startWalking()
                 }
             }

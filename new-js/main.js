@@ -55,6 +55,7 @@ function start(e) {
 	let turns = 0;
 	let no_more_other_turns = false;
 	player.turn = true;
+	let keepWalking = false;
 	app.ticker.add((delta) => {
 		//modes: exploration, combat
 		if (mode.exploration) {
@@ -62,9 +63,16 @@ function start(e) {
 			if (player.turn) {
 
 				if (player.path.length > 0) {
+					
 					//Step
-					index = playerWalk(player, tilemap, index);
-					//player.turn = false;
+					 let obj = walk(player, tilemap, index);
+					 index = obj.index;
+					 keepWalking = obj.keepWalking;
+					
+					 if(!keepWalking){
+						player.turn = false;
+					 }
+					
 				}
 
 				else {
@@ -75,9 +83,10 @@ function start(e) {
 			else if (no_more_other_turns) {
 				//Loop through all other actors.
 			}
-			else {
+			else if(! keepWalking) {
+				player.turn = true;
 				turns++;
-				console.log(turns)
+				console.log('turns',turns)
 			}
 
 		}

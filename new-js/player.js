@@ -6,6 +6,7 @@ export class Player extends Entity {
   
       this.walking = false;
       this.stats = { str: 10, dex: 10, hp: 10, int: 10, mp: 10 };
+      this.nextNode = null;
     }
   
     /*
