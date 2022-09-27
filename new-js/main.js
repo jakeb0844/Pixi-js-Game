@@ -83,9 +83,7 @@ function start(e) {
 					console.log('player.turn')
 					// console.log('len',player.path.length)
 					//Step
-					let obj = walk(player, tilemap, index);
-					index = obj.index;
-					keepWalking = obj.keepWalking;
+					keepWalking = player.walk(tilemap,index);
 
 					if (!keepWalking) {
 						console.log('here')
@@ -110,10 +108,8 @@ function start(e) {
 						console.log('currentNode',char.currentNode)
 						if (char.path.length > 0 || char.currentNode != null) {
 							console.log(char.name + ' walk')
-							let obj = walk(char, tilemap, index);
-							index = obj.index;
-							keepWalking = obj.keepWalking;
-
+							keepWalking = char.walk(tilemap,index);
+							
 							if (!keepWalking) {
 								other_turn = false;
 								console.log('here2')

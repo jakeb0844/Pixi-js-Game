@@ -165,7 +165,6 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             //this.sprite = this.animations.default;
         }
 
-
         //this.sprite = animation;
         this.removeChildFromContainer();
         this.addChildToContainer()
@@ -173,4 +172,77 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
         this.sprite.position.set(this.x, this.y)
     }
 
+    walk(tilemap,index) {
+        console.log('entity', this.name);
+        //console.log('len',entity.path.length)
+        //let node = entity.path[index];
+        if(this.currentNode == null){
+            this.currentNode = this.path.shift()
+           // console.log('len',entity.path.length)
+        }
+        let node = this.currentNode;
+        let walkY = node.row * tilemap.tileWidth;
+        let walkX = node.col * tilemap.tileHeight;
+        let walkSpeed = 2;
+    
+        tilemap.updateCharPosition({ "col": Math.floor(this.sprite.y / 16), "row": Math.floor(this.sprite.x / 16) })
+        printGrid(tilemap.grid, 'grid')
+    
+        if (this.sprite.y != walkY) {
+    
+            if (walkY > this.sprite.y) {
+                this.changeAnimation(this.animations.up);
+                this.sprite.y += walkSpeed;;
+                this.y += walkSpeed;
+            }
+            else {
+                this.changeAnimation(this.animations.down);
+                this.sprite.y -= walkSpeed;
+                this.y -= walkSpeed;
+            }
+        }
+    
+        else if (this.sprite.x != walkX) {
+    
+                if (walkX > this.sprite.x) {
+                    this.changeAnimation(this.animations.right);
+                    this.sprite.x += walkSpeed;
+                    this.x += walkSpeed;
+                }
+                else {
+                    this.changeAnimation(this.animations.left);
+                    this.sprite.x -= walkSpeed;
+                    this.x -= walkSpeed;
+                }     
+        }
+    
+        let x = this.sprite.x;
+        let y = this.sprite.y;
+        //console.log("x:" + x + ' and walkX:' + walkX);
+        //console.log("y:" + y + ' and walkY:' + walkY);
+        if (x != walkX || y != walkY) {
+            //entity.path[index].tile.clear()
+            console.log('keepWalking')
+            return true;
+        }
+        else {
+            console.log('finished walking')
+            this.currentNode = this.path.shift();
+            //console.log('node',entity.currentNode)
+            index++;
+            //console.log('index',index)
+            //console.log('len2',entity.path.length)
+            
+            if (this.currentNode == undefined) {
+                this.walking = false;
+                this.path = [];
+                this.currentNode = null;
+                index = 0;
+                this.changeAnimation(this.animations.default)
+                
+            }
+        }
+    
+        return false;
+    }
 }

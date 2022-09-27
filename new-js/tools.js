@@ -14,8 +14,6 @@ class Tile {
 
 }
 
-
-
 function CalculateRowAndCol(position) {
     let row = Math.floor(position.x / 16);
     let col = Math.floor(position.y / 16);
@@ -146,8 +144,8 @@ function walk(entity, tilemap, index) {
     let walkX = node.col * tilemap.tileHeight;
     let walkSpeed = 2;
 
-    //tilemap.updateCharPosition({ "col": Math.floor(entity.sprite.y / 16), "row": Math.floor(entity.sprite.x / 16) })
-    //printGrid(tilemap.grid, 'grid')
+    tilemap.updateCharPosition({ "col": Math.floor(entity.sprite.y / 16), "row": Math.floor(entity.sprite.x / 16) })
+    printGrid(tilemap.grid, 'grid')
 
     if (entity.sprite.y != walkY) {
 
