@@ -3,6 +3,8 @@ import { PreLoader } from "./loader.js";
 import { Tilemap } from "./tilemap.js";
 import { Player } from "./player.js";
 import { Enemy } from "./enemy.js";
+import { CharacterList } from "./character-list.js";
+
 
 
 const app = new PIXI.Application({
@@ -15,6 +17,7 @@ const app = new PIXI.Application({
 
 $('.canvas').append(app.view);
 
+var characterList = new CharacterList();
 var loader;
 var player;
 var tilemap;
@@ -52,18 +55,22 @@ function start(e) {
 	console.log(loader)
 	player = new Player("Börg", app, loader, PlayerContainer, tilemap, { 'x': 240, 'y': 160 });
 	tilemap = new Tilemap(app, loader, MapContainer, TileContainer, { "x": player.x, 'y': player.y }, player);
-	enemy = new Enemy("Orc", app, loader, EnemyContainer, tilemap, {'x': 80, 'y': 160});
-	enemy2 = new Enemy("SwordsmanTemplate", app, loader, EnemyContainer, tilemap, {'x': 0, 'y': 160});
+	enemy = new Enemy("Orc", app, loader, EnemyContainer, tilemap, { 'x': 80, 'y': 160 });
+	enemy2 = new Enemy("SwordsmanTemplate", app, loader, EnemyContainer, tilemap, { 'x': 0, 'y': 160 });
+
+	characterList.add(enemy);
+	characterList.add(enemy2);
 
 	var index = 0;
 	let turns = 0;
-	let no_more_other_turns = false;
+	let other_turn = true;
 	player.turn = true;
 	let keepWalking = false;
-    //tilemap.getTile({'x':player.x, 'y': player.y})
-    enemy.moveRandomly();
-	enemy2.moveRandomly();
-    console.log(enemy.path)
+
+	//tilemap.getTile({'x':player.x, 'y': player.y})
+	enemy.moveRandomly();
+	//enemy2.moveRandomly();
+	console.log(enemy.path)
 	app.ticker.add((delta) => {
 		//modes: exploration, combat
 		if (mode.exploration) {
@@ -71,20 +78,20 @@ function start(e) {
 			// console.log('enemy Turn',enemy.turn);
 			// console.log('keepWalking',keepWalking)
 			if (player.turn) {
-				
+
 				if (player.path.length > 0 || player.currentNode != null) {
 					console.log('player.turn')
 					// console.log('len',player.path.length)
 					//Step
-					 let obj = walk(player, tilemap, index);
-					 index = obj.index;
-					 keepWalking = obj.keepWalking;
-					
-					 if(!keepWalking){
-                        console.log('here')
+					let obj = walk(player, tilemap, index);
+					index = obj.index;
+					keepWalking = obj.keepWalking;
+
+					if (!keepWalking) {
+						console.log('here')
 						player.turn = false;
-					 }
-					
+					}
+
 				}
 
 				else {
@@ -92,48 +99,88 @@ function start(e) {
 				}
 
 			}
-			else if (enemy.turn) {
-				console.log('enemy turn')
-				if(enemy.path.length > 0 || enemy.currentNode != null) {
-					console.log('enemy walk')
-                    let obj = walk(enemy, tilemap, index);
-					 index = obj.index;
-					 keepWalking = obj.keepWalking;
-					
-					 if(!keepWalking){
-                        console.log('here2')
-						enemy.turn = false;
-					 }
-                }
-				else{
-					enemy.turn = false;
-					enemy.moveRandomly();
+			else if (other_turn) {
+				//console.log('not player turn')
+				for (let i = 0; i < characterList.list.length; i++) {
+					let char = characterList.list[i];
+					if (char.turn) {
+						other_turn = true;
+						console.log(char.name + ' turn')
+						console.log('path len',char.path.length)
+						console.log('currentNode',char.currentNode)
+						if (char.path.length > 0 || char.currentNode != null) {
+							console.log(char.name + ' walk')
+							let obj = walk(char, tilemap, index);
+							index = obj.index;
+							keepWalking = obj.keepWalking;
+
+							if (!keepWalking) {
+								other_turn = false;
+								console.log('here2')
+								char.turn = false;
+							}
+						}
+						else {
+							console.log('moveRandomly')
+							other_turn = false;
+							char.turn = false;
+							char.moveRandomly();
+							console.log('after moveRandomly')
+							console.log('keepWalking',keepWalking)
+							console.log('other_turn',other_turn)
+							for (let i = 0; i < characterList.list.length; i++) {
+								console.log(characterList.list[i].name + ' turn:' + characterList.list[i].turn);
+							}
+						}
+					}
 				}
+
 			}
-			else if (enemy2.turn) {
-				console.log('enemy2 turn')
-				if(enemy2.path.length > 0 || enemy2.currentNode != null) {
-					console.log('enemy2 walk')
-                    let obj = walk(enemy2, tilemap, index);
-					 index = obj.index;
-					 keepWalking = obj.keepWalking;
-					
-					 if(!keepWalking){
-                        console.log('here2')
-						enemy2.turn = false;
-					 }
-                }
-				else{
-					enemy2.turn = false;
-					enemy2.moveRandomly();
-				}
-			}
-			else if(! keepWalking) {
+			// else if (enemy.turn) {
+			// 	console.log('enemy turn')
+			// 	if(enemy.path.length > 0 || enemy.currentNode != null) {
+			// 		console.log('enemy walk')
+			//         let obj = walk(enemy, tilemap, index);
+			// 		 index = obj.index;
+			// 		 keepWalking = obj.keepWalking;
+
+			// 		 if(!keepWalking){
+			//             console.log('here2')
+			// 			enemy.turn = false;
+			// 		 }
+			//     }
+			// 	else{
+			// 		enemy.turn = false;
+			// 		enemy.moveRandomly();
+			// 	}
+			// }
+			// else if (enemy2.turn) {
+			// 	console.log('enemy2 turn')
+			// 	if(enemy2.path.length > 0 || enemy2.currentNode != null) {
+			// 		console.log('enemy2 walk')
+			//         let obj = walk(enemy2, tilemap, index);
+			// 		 index = obj.index;
+			// 		 keepWalking = obj.keepWalking;
+
+			// 		 if(!keepWalking){
+			//             console.log('here2')
+			// 			enemy2.turn = false;
+			// 		 }
+			//     }
+			// 	else{
+			// 		enemy2.turn = false;
+			// 		enemy2.moveRandomly();
+			// 	}
+			// }
+			else if (!keepWalking) {
 				player.turn = true;
-				enemy.turn = true;
-				enemy2.turn = true;
+				for(let i =0; i < characterList.list.length; i++) {
+					let character = characterList.list[i];
+                    character.turn = true;
+				}
+				other_turn = true;
 				turns++;
-				console.log('turns',turns)
+				console.log('turns', turns)
 			}
 
 		}
