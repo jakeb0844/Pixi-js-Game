@@ -12,6 +12,7 @@ export class Entity {
         this.path = [];
         this.turn = true;
         this.currentNode = null;
+        this.containerIndex;
 
         this.animations = {
             "default": null,
@@ -43,15 +44,34 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
     init() {
 
-        // this.loadAnimations();
-
         this.createSprites();
 
         this.sprite = this.animations.default;
-        this.container.addChild(this.sprite)
+        this.addChildToContainer();
+        //this.container.addChild(this.sprite)
+
         this.sprite.position.set(this.x, this.y)
 
 
+    }
+
+    addChildToContainer() {
+
+        if (this.containerIndex == null) {
+            let len = this.container.children.length;
+            this.containerIndex = len;
+            this.container.addChildAt(this.sprite, len);
+        }
+        else{
+            this.container.addChildAt(this.sprite,this.containerIndex);
+        }
+
+
+
+    }
+
+    removeChildFromContainer() {
+        this.container.removeChildAt(this.containerIndex)
     }
 
     createSprites() {
@@ -74,7 +94,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             asset = this.loader.getAsset(this.name + '.png');
             //console.log(asset)
             //Get the first image of the sprite sheet
-            let texture = new PIXI.Texture(asset.resource.texture, new PIXI.Rectangle(0,0,16,16));
+            let texture = new PIXI.Texture(asset.resource.texture, new PIXI.Rectangle(0, 0, 16, 16));
 
             let sprite = new PIXI.Sprite(texture)
             this.animations.default = sprite;
@@ -125,13 +145,31 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
     }
 
-
+    doesAnimationExist(animation) {
+        if (animation != undefined || animation != null) {
+            console.log('animation exists')
+            return true;
+        }
+        console.log('animation does not exist')
+        return false;
+    }
 
     changeAnimation(animation) {
 
-        this.sprite = animation;
-        this.container.removeChildren();
-        this.container.addChild(this.sprite);
+        console.log('animation', animation);
+
+        if (this.doesAnimationExist(animation)) {
+            this.sprite = animation;
+        }
+        else {
+            //this.sprite = this.animations.default;
+        }
+
+
+        //this.sprite = animation;
+        this.removeChildFromContainer();
+        this.addChildToContainer()
+        //this.container.addChild(this.sprite);
         this.sprite.position.set(this.x, this.y)
     }
 

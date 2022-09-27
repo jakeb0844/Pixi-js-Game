@@ -14,6 +14,8 @@ class Tile {
 
 }
 
+
+
 function CalculateRowAndCol(position) {
     let row = Math.floor(position.x / 16);
     let col = Math.floor(position.y / 16);
@@ -150,12 +152,12 @@ function walk(entity, tilemap, index) {
     if (entity.sprite.y != walkY) {
 
         if (walkY > entity.sprite.y) {
-            //entity.changeAnimation(entity.animations.up);
+            entity.changeAnimation(entity.animations.up);
             entity.sprite.y += walkSpeed;;
             entity.y += walkSpeed;
         }
         else {
-            //entity.changeAnimation(entity.animations.down);
+            entity.changeAnimation(entity.animations.down);
             entity.sprite.y -= walkSpeed;
             entity.y -= walkSpeed;
         }
@@ -164,12 +166,12 @@ function walk(entity, tilemap, index) {
     else if (entity.sprite.x != walkX) {
 
             if (walkX > entity.sprite.x) {
-                //entity.changeAnimation(entity.animations.right);
+                entity.changeAnimation(entity.animations.right);
                 entity.sprite.x += walkSpeed;
                 entity.x += walkSpeed;
             }
             else {
-                //entity.changeAnimation(entity.animations.left);
+                entity.changeAnimation(entity.animations.left);
                 entity.sprite.x -= walkSpeed;
                 entity.x -= walkSpeed;
             }     
@@ -191,12 +193,14 @@ function walk(entity, tilemap, index) {
         index++;
         //console.log('index',index)
         //console.log('len2',entity.path.length)
+        
         if (entity.currentNode == undefined) {
             entity.walking = false;
             entity.path = [];
             entity.currentNode = null;
             index = 0;
-            //entity.changeAnimation(entity.animations.default)
+            entity.changeAnimation(entity.animations.default)
+            
         }
     }
 

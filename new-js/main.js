@@ -99,7 +99,7 @@ function start(e) {
 				}
 
 			}
-			else if (other_turn) {
+			else if (other_turn || keepWalking) {
 				//console.log('not player turn')
 				for (let i = 0; i < characterList.list.length; i++) {
 					let char = characterList.list[i];

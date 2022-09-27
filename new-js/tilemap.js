@@ -286,6 +286,14 @@ export class Tilemap {
     getTile(position){
         //console.log(position);
         let {row,col} = CalculateRowAndCol(position)
+        if(col == this.grid.length){
+            col--;
+        }
+
+        if(row == this.grid[0].length){
+            row--;
+        }
+        console.log('row: ' + row + ' col: ' + col);
         return this.grid[col][row];
         
     }
