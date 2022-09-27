@@ -132,19 +132,20 @@ function printGrid(grid, id) {
 }
 
 function walk(entity, tilemap, index) {
-    console.log('len',entity.path.length)
+    console.log('entity', entity.name);
+    //console.log('len',entity.path.length)
     //let node = entity.path[index];
     if(entity.currentNode == null){
         entity.currentNode = entity.path.shift()
-        console.log('len',entity.path.length)
+       // console.log('len',entity.path.length)
     }
     let node = entity.currentNode;
     let walkY = node.row * tilemap.tileWidth;
     let walkX = node.col * tilemap.tileHeight;
     let walkSpeed = 2;
 
-    tilemap.updateCharPosition({ "col": Math.floor(entity.sprite.y / 16), "row": Math.floor(entity.sprite.x / 16) })
-    printGrid(tilemap.grid, 'grid')
+    //tilemap.updateCharPosition({ "col": Math.floor(entity.sprite.y / 16), "row": Math.floor(entity.sprite.x / 16) })
+    //printGrid(tilemap.grid, 'grid')
 
     if (entity.sprite.y != walkY) {
 
@@ -176,8 +177,8 @@ function walk(entity, tilemap, index) {
 
     let x = entity.sprite.x;
     let y = entity.sprite.y;
-    console.log("x:" + x + ' and walkX:' + walkX);
-    console.log("y:" + y + ' and walkY:' + walkY);
+    //console.log("x:" + x + ' and walkX:' + walkX);
+    //console.log("y:" + y + ' and walkY:' + walkY);
     if (x != walkX || y != walkY) {
         //entity.path[index].tile.clear()
         console.log('keepWalking')
@@ -186,10 +187,10 @@ function walk(entity, tilemap, index) {
     else {
         console.log('finished walking')
         entity.currentNode = entity.path.shift();
-        console.log('node',entity.currentNode)
+        //console.log('node',entity.currentNode)
         index++;
-        console.log('index',index)
-        console.log('len2',entity.path.length)
+        //console.log('index',index)
+        //console.log('len2',entity.path.length)
         if (entity.currentNode == undefined) {
             entity.walking = false;
             entity.path = [];

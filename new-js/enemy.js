@@ -38,6 +38,11 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
     let di = new Pathfinding(this.tilemap.grid, start, end);
     let { visited, endNode } = di.find_path(di.grid, di.startNode, di.endNode);
 
+    // endNode.tile.clear()
+    // .lineStyle({ color: 0xaaaa, width: 1, native: true })
+    // .drawShape({ "x": endNode.col * 16, "y": endNode.row * 16, "width": 16, "height": 16, "type": 1 });
+
+
     let shortest_path = di.makePath(endNode);
     shortest_path.shift();
     this.path = shortest_path;
