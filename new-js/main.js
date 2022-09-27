@@ -2,7 +2,7 @@ import { PreLoader } from "./loader.js";
 //import { Entity } from "./entity.js";
 import { Tilemap } from "./tilemap.js";
 import { Player } from "./player.js";
-// import { Enemy } from "./enemy.js";
+import { Enemy } from "./enemy.js";
 
 
 const app = new PIXI.Application({
@@ -18,7 +18,7 @@ $('.canvas').append(app.view);
 var loader;
 var player;
 var tilemap;
-var index = 0;
+var enemy;
 let mode = { 'exploration': true, 'combat': false };
 
 const MapContainer = new PIXI.Container();
@@ -30,6 +30,8 @@ const Container = new PIXI.Container();
 app.stage.addChild(MapContainer);
 app.stage.addChild(TileContainer);
 app.stage.addChild(PlayerContainer);
+app.stage.addChild(EnemyContainer);
+app.stage.addChild(Container);
 
 // Load Assets
 loader = new PreLoader(app);
@@ -49,27 +51,31 @@ function start(e) {
 	console.log(loader)
 	player = new Player("Börg", app, loader, PlayerContainer, tilemap, { 'x': 240, 'y': 160 });
 	tilemap = new Tilemap(app, loader, MapContainer, TileContainer, { "x": player.x, 'y': player.y }, player);
-	// let walkX = null;
-	// let walkY = null;
+	enemy = new Enemy("Orc", app, loader, EnemyContainer, tilemap, {'x': 80, 'y': 160});
+
 	var index = 0;
 	let turns = 0;
 	let no_more_other_turns = false;
-	player.turn = true;
+	player.turn = false;
 	let keepWalking = false;
+    //tilemap.getTile({'x':player.x, 'y': player.y})
+    enemy.moveRandomly();
+    console.log(enemy.path)
 	app.ticker.add((delta) => {
 		//modes: exploration, combat
 		if (mode.exploration) {
 
 			if (player.turn) {
 
-				if (player.path.length > 0) {
-					
+				if (player.path.length > 0 || player.currentNode != null) {
+					// console.log('len',player.path.length)
 					//Step
 					 let obj = walk(player, tilemap, index);
 					 index = obj.index;
 					 keepWalking = obj.keepWalking;
 					
 					 if(!keepWalking){
+                        console.log('here')
 						player.turn = false;
 					 }
 					
@@ -80,8 +86,17 @@ function start(e) {
 				}
 
 			}
-			else if (no_more_other_turns) {
-				//Loop through all other actors.
+			else if (enemy.turn) {
+				if(enemy.path.length > 0 || enemy.currentNode != null) {
+                    let obj = walk(enemy, tilemap, index);
+					 index = obj.index;
+					 keepWalking = obj.keepWalking;
+					
+					 if(!keepWalking){
+                        console.log('here')
+						enemy.turn = false;
+					 }
+                }
 			}
 			else if(! keepWalking) {
 				player.turn = true;

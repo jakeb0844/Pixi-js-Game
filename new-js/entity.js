@@ -9,8 +9,9 @@ export class Entity {
         this.x = startPosition.x;
         this.y = startPosition.y;
         this.spriteCreated = false;
-        this.path =[];
-        this.turn = false;
+        this.path = [];
+        this.turn = true;
+        this.currentNode = null;
 
         this.animations = {
             "default": null,
@@ -46,21 +47,45 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
         this.createSprites();
 
-            this.sprite = this.animations.default;
-            this.container.addChild(this.sprite)
-            this.sprite.position.set(this.x, this.y)
+        this.sprite = this.animations.default;
+        this.container.addChild(this.sprite)
+        this.sprite.position.set(this.x, this.y)
 
 
     }
 
     createSprites() {
-        
-        let asset = this.loader.getAsset(this.name + '.json');
-        this.animations.default = this.createSprite(this.name + '-walk-forward', asset);
-        this.animations.down = this.createSprite(this.name + '-walk-backward', asset);
-        this.animations.left = this.createSprite(this.name + '-walk-left', asset);
-        this.animations.right = this.createSprite(this.name + '-walk-right', asset);
-        this.animations.up = this.createSprite(this.name + '-walk-forward', asset);
+        console.log(this.name)
+        let json = this.loader.getAsset(this.name + '.json');
+        let png = this.loader.getAsset(this.name + '.png');
+        let asset = '';
+        //console.log(json)
+        if (json) {
+            console.log('json')
+            asset = this.loader.getAsset(this.name + '.json');
+            this.animations.default = this.createSprite(this.name + '-walk-forward', asset);
+            this.animations.down = this.createSprite(this.name + '-walk-backward', asset);
+            this.animations.left = this.createSprite(this.name + '-walk-left', asset);
+            this.animations.right = this.createSprite(this.name + '-walk-right', asset);
+            this.animations.up = this.createSprite(this.name + '-walk-forward', asset);
+        }
+        else {
+            console.log('no json')
+            asset = this.loader.getAsset(this.name + '.png');
+            //console.log(asset)
+            //Get the first image of the sprite sheet
+            let texture = new PIXI.Texture(asset.resource.texture, new PIXI.Rectangle(0,0,16,16));
+
+            let sprite = new PIXI.Sprite(texture)
+            this.animations.default = sprite;
+        }
+
+        // let asset = this.loader.getAsset(this.name + '.json');
+        // this.animations.default = this.createSprite(this.name + '-walk-forward', asset);
+        // this.animations.down = this.createSprite(this.name + '-walk-backward', asset);
+        // this.animations.left = this.createSprite(this.name + '-walk-left', asset);
+        // this.animations.right = this.createSprite(this.name + '-walk-right', asset);
+        // this.animations.up = this.createSprite(this.name + '-walk-forward', asset);
 
     }
 

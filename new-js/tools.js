@@ -131,61 +131,71 @@ function printGrid(grid, id) {
     el.append('</table>')
 }
 
-function walk(player, tilemap, index) {
-
-    let node = player.path[index];
+function walk(entity, tilemap, index) {
+    console.log('len',entity.path.length)
+    //let node = entity.path[index];
+    if(entity.currentNode == null){
+        entity.currentNode = entity.path.shift()
+        console.log('len',entity.path.length)
+    }
+    let node = entity.currentNode;
     let walkY = node.row * tilemap.tileWidth;
     let walkX = node.col * tilemap.tileHeight;
     let walkSpeed = 2;
 
-    tilemap.updateCharPosition({ "col": Math.floor(player.sprite.y / 16), "row": Math.floor(player.sprite.x / 16) })
+    tilemap.updateCharPosition({ "col": Math.floor(entity.sprite.y / 16), "row": Math.floor(entity.sprite.x / 16) })
     printGrid(tilemap.grid, 'grid')
 
-    if (player.sprite.y != walkY) {
+    if (entity.sprite.y != walkY) {
 
-        if (walkY > player.sprite.y) {
-            player.changeAnimation(player.animations.up);
-            player.sprite.y += walkSpeed;;
-            player.y += walkSpeed;
+        if (walkY > entity.sprite.y) {
+            //entity.changeAnimation(entity.animations.up);
+            entity.sprite.y += walkSpeed;;
+            entity.y += walkSpeed;
         }
         else {
-            player.changeAnimation(player.animations.down);
-            player.sprite.y -= walkSpeed;
-            player.y -= walkSpeed;
+            //entity.changeAnimation(entity.animations.down);
+            entity.sprite.y -= walkSpeed;
+            entity.y -= walkSpeed;
         }
     }
 
-    else if (player.sprite.x != walkX) {
+    else if (entity.sprite.x != walkX) {
 
-            if (walkX > player.sprite.x) {
-                player.changeAnimation(player.animations.right);
-                player.sprite.x += walkSpeed;
-                player.x += walkSpeed;
+            if (walkX > entity.sprite.x) {
+                //entity.changeAnimation(entity.animations.right);
+                entity.sprite.x += walkSpeed;
+                entity.x += walkSpeed;
             }
             else {
-                player.changeAnimation(player.animations.left);
-                player.sprite.x -= walkSpeed;
-                player.x -= walkSpeed;
+                //entity.changeAnimation(entity.animations.left);
+                entity.sprite.x -= walkSpeed;
+                entity.x -= walkSpeed;
             }     
     }
 
-    let x = player.sprite.x;
-    let y = player.sprite.y;
-    //console.log("x:" + x + ' and walkX:' + walkX);
-    //console.log("y:" + y + ' and walkY:' + walkY);
+    let x = entity.sprite.x;
+    let y = entity.sprite.y;
+    console.log("x:" + x + ' and walkX:' + walkX);
+    console.log("y:" + y + ' and walkY:' + walkY);
     if (x != walkX || y != walkY) {
-        player.path[index].tile.clear()
-        //console.log('keepWalking')
+        //entity.path[index].tile.clear()
+        console.log('keepWalking')
         return { 'index': index, 'keepWalking': true };
     }
     else {
-        //console.log('finished walking')
+        console.log('finished walking')
+        entity.currentNode = entity.path.shift();
+        console.log('node',entity.currentNode)
         index++;
-        if (index >= player.path.length) {
-            player.walking = false;
-            player.path = [];
+        console.log('index',index)
+        console.log('len2',entity.path.length)
+        if (entity.currentNode == undefined) {
+            entity.walking = false;
+            entity.path = [];
+            entity.currentNode = null;
             index = 0;
-            player.changeAnimation(player.animations.default)
+            //entity.changeAnimation(entity.animations.default)
         }
     }
 

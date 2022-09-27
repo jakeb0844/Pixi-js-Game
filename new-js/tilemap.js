@@ -283,21 +283,10 @@ export class Tilemap {
         this.playerPosition = { "col": position.col, "row": position.row }
     }
 
-    async getJsonFile(callback) {
-        let file = await fetch(this.mapJson)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("HTTP error " + response.status);
-                }
-                return response.json();
-            })
-            .then(json => {
-                return json;
-            })
-            .catch(function () {
-                console.log('error')
-            })
-
-        return file;
+    getTile(position){
+        //console.log(position);
+        let {row,col} = CalculateRowAndCol(position)
+        return this.grid[col][row];
+        
     }
 };

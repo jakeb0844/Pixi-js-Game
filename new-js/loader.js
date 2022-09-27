@@ -13,6 +13,7 @@ export class PreLoader {
         loader.add("Börg.json")
             .add('mapJson',baseUrl + "maps/map.json")
             .add('map', baseUrl + "maps/map.png")
+            .add('Orc.png', "/assets/sprites/Characters/Monsters/Orcs/Orc.png");
 
         loader.onProgress.add(this.progress);
         loader.onComplete.add(this.complete);
