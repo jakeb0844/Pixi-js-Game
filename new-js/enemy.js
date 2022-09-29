@@ -22,7 +22,6 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
     */
   moveRandomly() {
     let start = this.tilemap.getTile({ 'x': this.sprite.x, 'y': this.sprite.y });
-    //console.log(start)
 
     let min = Math.ceil(0)
     let maxY = Math.floor(480);
@@ -38,29 +37,26 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
     let di = new Pathfinding(this.tilemap.grid, start, end);
     let { visited, endNode } = di.find_path(di.grid, di.startNode, di.endNode);
 
-    // endNode.tile.clear()
-    // .lineStyle({ color: 0xaaaa, width: 1, native: true })
-    // .drawShape({ "x": endNode.col * 16, "y": endNode.row * 16, "width": 16, "height": 16, "type": 1 });
-
-
     let shortest_path = di.makePath(endNode);
     shortest_path.shift();
     this.path = shortest_path;
-    //console.log(shortest_path)
+    
+  }
 
-    // for (const node of shortest_path) {
-    //   let tile = node.tile;
-    //   tile.clear()
-    //     .lineStyle({ color: 0xaaaa, width: 1, native: true })
-    //     .drawShape({ "x": node.col * 16, "y": node.row * 16, "width": 16, "height": 16, "type": 1 });
-    //   //this.rectsToClear.push(tile);
-    // }
+  detectPlayer(){
+    //If player is 5 tiles away
+    let detected = false;
 
-    //console.log(this.tilemap.find_path(startingPosition, end));
+    //Get 5 tiles away in every direction;
 
+    let startNode = this.tilemap.getTile({ 'x': this.sprite.x, 'y': this.sprite.y });
+
+    console.log(startNode);
+    highLightRect(startNode);
 
 
   }
+
   startWalking() {
     this.walking = true;
   }

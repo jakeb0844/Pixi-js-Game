@@ -6,6 +6,9 @@ import { Enemy } from "./enemy.js";
 import { CharacterList } from "./character-list.js";
 
 
+//Hey, x == col and y == row;
+
+
 
 const app = new PIXI.Application({
 	width: 480,
@@ -56,10 +59,10 @@ function start(e) {
 	player = new Player("Börg", app, loader, PlayerContainer, tilemap, { 'x': 240, 'y': 160 });
 	tilemap = new Tilemap(app, loader, MapContainer, TileContainer, { "x": player.x, 'y': player.y }, player);
 	enemy = new Enemy("Orc", app, loader, EnemyContainer, tilemap, { 'x': 80, 'y': 160 });
-	enemy2 = new Enemy("SwordsmanTemplate", app, loader, EnemyContainer, tilemap, { 'x': 0, 'y': 160 });
+	//enemy2 = new Enemy("SwordsmanTemplate", app, loader, EnemyContainer, tilemap, { 'x': 0, 'y': 160 });
 
 	characterList.add(enemy);
-	characterList.add(enemy2);
+	//characterList.add(enemy2);
 
 	var index = 0;
 	let turns = 0;
@@ -68,9 +71,10 @@ function start(e) {
 	let keepWalking = false;
 
 	//tilemap.getTile({'x':player.x, 'y': player.y})
-	enemy.moveRandomly();
+	//enemy.moveRandomly();
 	//enemy2.moveRandomly();
-	console.log(enemy.path)
+	//console.log(enemy.path)
+	enemy.detectPlayer();
 	app.ticker.add((delta) => {
 		//modes: exploration, combat
 		if (mode.exploration) {

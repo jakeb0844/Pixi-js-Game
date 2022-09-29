@@ -135,9 +135,9 @@ function walk(entity, tilemap, index) {
     console.log('entity', entity.name);
     //console.log('len',entity.path.length)
     //let node = entity.path[index];
-    if(entity.currentNode == null){
+    if (entity.currentNode == null) {
         entity.currentNode = entity.path.shift()
-       // console.log('len',entity.path.length)
+        // console.log('len',entity.path.length)
     }
     let node = entity.currentNode;
     let walkY = node.row * tilemap.tileWidth;
@@ -163,16 +163,16 @@ function walk(entity, tilemap, index) {
 
     else if (entity.sprite.x != walkX) {
 
-            if (walkX > entity.sprite.x) {
-                entity.changeAnimation(entity.animations.right);
-                entity.sprite.x += walkSpeed;
-                entity.x += walkSpeed;
-            }
-            else {
-                entity.changeAnimation(entity.animations.left);
-                entity.sprite.x -= walkSpeed;
-                entity.x -= walkSpeed;
-            }     
+        if (walkX > entity.sprite.x) {
+            entity.changeAnimation(entity.animations.right);
+            entity.sprite.x += walkSpeed;
+            entity.x += walkSpeed;
+        }
+        else {
+            entity.changeAnimation(entity.animations.left);
+            entity.sprite.x -= walkSpeed;
+            entity.x -= walkSpeed;
+        }
     }
 
     let x = entity.sprite.x;
@@ -180,99 +180,51 @@ function walk(entity, tilemap, index) {
     //console.log("x:" + x + ' and walkX:' + walkX);
     //console.log("y:" + y + ' and walkY:' + walkY);
     if (x != walkX || y != walkY) {
-        
+
         console.log('keepWalking')
         return { 'index': index, 'keepWalking': true };
     }
     else {
-        
+
         console.log('finished walking')
         entity.currentNode = entity.path.shift();
         //console.log('node',entity.currentNode)
         index++;
         //console.log('index',index)
         //console.log('len2',entity.path.length)
-        
+
         if (entity.currentNode == undefined) {
             entity.walking = false;
             entity.path = [];
             entity.currentNode = null;
             index = 0;
             entity.changeAnimation(entity.animations.default)
-            
+
         }
     }
 
     return { 'index': index, "keepWalking": false };
 
 }
-//Archive
-function playerWalk(player, tilemap, index) {
-    if (player.walking) {
-        // if (index < tilemap.path.length) {
-        if (index < player.path.length) {
 
-            // let node = tilemap.path[index];
-            let node = player.path[index];
-            let walkY = node.row * tilemap.tileWidth;
-            let walkX = node.col * tilemap.tileHeight;
-            let walkSpeed = 2;
+function highLightRect(node,color="red") {
+    let x = color;
+    let colors ={
+        'red' : 0xfc0202,
+        'green' : 0x00ff00,
+        'yellow' : 0xffff00,
+        'blue' : 0x0000ff,
+        'black' : 0x000000,
+        'purple' : 0xa020f0,
+        'orange' : 0xffa500,
+    };
+    console.log('color',colors)
+    console.log('color',colors[color])
+    let r = node.tile;
+    let tileWidth = 16;
+    let tileHeight = 16;
+    r.clear();
+    r.lineStyle({ color: colors[color], width: 1, native: true })
+    r.drawShape({ "x": node.col * tileHeight, "y": node.row * tileWidth, "width": tileWidth, "height": tileHeight, "type": 1 })
 
-            tilemap.updateCharPosition({ "col": Math.floor(player.sprite.y / 16), "row": Math.floor(player.sprite.x / 16) })
-            printGrid(tilemap.grid, 'grid')
-
-            if (player.sprite.y != walkY) {
-
-                if (walkY > player.sprite.y) {
-                    player.changeAnimation(player.animations.up);
-                    player.sprite.y += walkSpeed;;
-                    player.y += walkSpeed;
-                }
-                else {
-                    player.changeAnimation(player.animations.down);
-                    player.sprite.y -= walkSpeed;
-                    player.y -= walkSpeed;
-                }
-            }
-
-            else if (player.sprite.x != walkX) {
-
-                if (player.sprite.x != walkX) {
-
-                    if (walkX > player.sprite.x) {
-                        player.changeAnimation(player.animations.right);
-                        player.sprite.x += walkSpeed;
-                        player.x += walkSpeed;
-                    }
-                    else {
-                        player.changeAnimation(player.animations.left);
-                        player.sprite.x -= walkSpeed;
-                        player.x -= walkSpeed;
-                    }
-
-                }
-                else {
-                    walkX = null;
-                }
-            }
-            else {
-                player.changeAnimation(player.animations.default)
-                // tilemap.path[index].tile.clear()
-                player.path[index].tile.clear()
-                index++
-
-            }
-
-        }
-        else {
-            player.walking = false
-            // tilemap.path = [];
-            player.path = [];
-        }
-
-    }
-    else {
-        index = 0;
-    }
-    return index;
 }
