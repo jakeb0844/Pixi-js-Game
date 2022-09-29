@@ -185,8 +185,8 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
         let walkX = node.col * tilemap.tileHeight;
         let walkSpeed = 2;
     
-        tilemap.updateCharPosition({ "col": Math.floor(this.sprite.y / 16), "row": Math.floor(this.sprite.x / 16) })
-        printGrid(tilemap.grid, 'grid')
+        //tilemap.updateCharPosition({ "col": Math.floor(this.sprite.y / 16), "row": Math.floor(this.sprite.x / 16) })
+        //printGrid(tilemap.grid, 'grid')
     
         if (this.sprite.y != walkY) {
     
@@ -226,6 +226,11 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             return true;
         }
         else {
+            if(this.constructor.name == 'Player'){
+                this.currentNode.tile.clear()
+                //console.log(this.currentNode)
+            }
+            
             console.log('finished walking')
             this.currentNode = this.path.shift();
             //console.log('node',entity.currentNode)

@@ -180,11 +180,12 @@ function walk(entity, tilemap, index) {
     //console.log("x:" + x + ' and walkX:' + walkX);
     //console.log("y:" + y + ' and walkY:' + walkY);
     if (x != walkX || y != walkY) {
-        //entity.path[index].tile.clear()
+        
         console.log('keepWalking')
         return { 'index': index, 'keepWalking': true };
     }
     else {
+        
         console.log('finished walking')
         entity.currentNode = entity.path.shift();
         //console.log('node',entity.currentNode)
