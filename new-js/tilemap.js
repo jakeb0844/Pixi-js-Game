@@ -292,18 +292,28 @@ export class Tilemap {
         this.playerPosition = { "col": position.col, "row": position.row }
     }
 
-    updateEnemyPosition(position) {
+    updateEnemyPosition(enemy,position) {
         let grid = this.grid;
         if(this.enemyPosition == undefined){
             this.enemyPosition = { "col": position.col, "row": position.row };
             grid[this.enemyPosition.col][this.enemyPosition.row].enemyPosition = true;
+            grid[this.enemyPosition.col][this.enemyPosition.row].enemy = enemy;
         }
         else{
             grid[this.enemyPosition.col][this.enemyPosition.row].enemyPosition = false;
+            grid[this.enemyPosition.col][this.enemyPosition.row].enemy = null;
             grid[position.col][position.row].enemyPosition = true;
+            grid[position.col][position.row].enemy = enemy;
             this.enemyPosition = { "col": position.col, "row": position.row }
         }
         
+    }
+
+    removeEnemy(position){
+        let grid = this.grid;
+
+        grid[position.col][position.row].enemyPosition = false;
+        grid[position.col][position.row].enemy = null;
     }
 
     getTile(position) {

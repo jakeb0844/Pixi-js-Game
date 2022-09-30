@@ -31,9 +31,9 @@ export class Player extends Entity {
     }
   
     //attack
-    attack(enemy) {
-      let damage = this.stats.str * (100 / (100 + enemy.stats.hp));
+    // attack(enemy) {
+    //   let damage = this.stats.str * (100 / (100 + enemy.stats.hp));
   
-      return damage;
-    }
+    //   return damage;
+    // }
   }

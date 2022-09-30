@@ -10,6 +10,7 @@ class Tile {
         this.rect = rect;
         this.playerPosition = false;
         this.enemyPosition = false;
+        this.enemy = null;
     }
 
 }
@@ -298,6 +299,9 @@ function explorationPhase(player, turns, other_turn, keepWalking, characterList,
     }
     else if (other_turn || keepWalking) {
         //console.log('not player turn')
+        if(characterList.list.length > 0){
+
+        
         for (let i = 0; i < characterList.list.length; i++) {
             let char = characterList.list[i];
             if (char.turn) {
@@ -338,6 +342,10 @@ function explorationPhase(player, turns, other_turn, keepWalking, characterList,
                 }
             }
         }
+    }
+    else{
+        other_turn = false;
+    }
 
     }
     else if (!keepWalking) {

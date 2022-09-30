@@ -133,6 +133,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
     }
 
     attack(enemy){
+        console.log(enemy);
         let damage = this.stats.str - enemy.stats.def;
 
         return damage;
@@ -191,7 +192,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
     walk(tilemap) {
         console.log('entity', this.name);
-        //console.log('len',entity.path.length)
+        console.log('len',this.path.length)
         //let node = entity.path[index];
         if (this.currentNode == null) {
             this.currentNode = this.path.shift()
@@ -250,7 +251,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
                 //console.log(this.currentNode)
             }
             else {
-                this.tilemap.updateEnemyPosition({ "col": Math.floor(this.sprite.y / 16), "row": Math.floor(this.sprite.x / 16) })
+                this.tilemap.updateEnemyPosition(this,{ "col": Math.floor(this.sprite.y / 16), "row": Math.floor(this.sprite.x / 16) })
 
                 printGrid(this.tilemap.grid, 'grid')
             }

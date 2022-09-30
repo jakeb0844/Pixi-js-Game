@@ -81,9 +81,9 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
   }
 
   //attack
-  attack(enemy) {
-    let damage = this.stats.str * (100 / (100 + enemy.stats.hp));
+  // attack(enemy) {
+  //   let damage = this.stats.str * (100 / (100 + enemy.stats.hp));
 
-    return damage;
-  }
+  //   return damage;
+  // }
 }

@@ -7,6 +7,14 @@ import { CharacterList } from "./character-list.js";
 
 
 //Hey, x == col and y == row;
+let res;
+
+if(navigator.platform == "MacIntel"){
+	res = 1.2;
+}
+else{
+	res = 1.5;
+}
 
 
 
@@ -15,7 +23,7 @@ const app = new PIXI.Application({
 	height: 320,
 	transparent: false,
 	antialis: true,
-	resolution: 1.5
+	resolution: res
 });
 
 $('.canvas').append(app.view);
@@ -80,7 +88,7 @@ function start(e) {
 	let keepWalking = false;
 	let choice = "";
 	let nodesToClear = [];
-	tilemap.updateEnemyPosition(CalculateRowAndCol({'x': enemy.sprite.x, 'y': enemy.sprite.y}));
+	tilemap.updateEnemyPosition(enemy,CalculateRowAndCol({'x': enemy.sprite.x, 'y': enemy.sprite.y}));
 	//tilemap.getTile({'x':player.x, 'y': player.y})
 	enemy.moveRandomly();
 	//enemy2.moveRandomly();
@@ -125,8 +133,14 @@ function start(e) {
 				}
 				else if(choice == 'attack'){
 					let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
-					let neighbors = getNeighbors(startNode,2,tilemap.grid);
-
+					let neighbors = getNeighbors(startNode,5,tilemap.grid);
+					player.currentNode = null;
+								player.path = [];
+								player.stopWalking()
+								// player.changeAnimation(player.animations.default)
+								player.turn = true;
+								other_turn = true;
+								keepWalking = false;
 					// let nodes = copyNodes(neighbors);
 					// throw 500
 			
@@ -140,7 +154,24 @@ function start(e) {
 						
 						if(player.attackNode.enemyPosition){
 							console.log('Attacking enemy!')
+							console.log(player.attackNode)
+							let enemy = player.attackNode.enemy;
+							let damage = player.attack(enemy);
+							//player.stats.health -= damage;
+							enemy.stats.health -= damage;
+
+							$('#e-health').text(enemy.stats.health)
+
+							if(enemy.stats.health <= 0){
+								tilemap.removeEnemy(CalculateRowAndCol({'x':enemy.sprite.x,'y':enemy.sprite.y}))
+								enemy.removeChildFromContainer();
+								enemy = null;
+								characterList.list = []
+								app.mode = 'exploration';
+							}
+							
 							player.attackNode = null;
+							
 						}
 						else{
 							console.log("can't attack there, no enemy in that tile.")

@@ -1,80 +1,91 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+  <head>
+    <script src="https://pixijs.download/release/pixi.min.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.min.js"
+      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+      crossorigin="anonymous"
+    ></script>
+  </head>
 
-<head>
-  <script src="https://pixijs.download/release/pixi.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.1.min.js"
-    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <style>
+    table,
+    th,
+    td {
+      border: 1px solid black;
+      padding: 5px;
+    }
 
-</head>
+    .select {
+      background-color: red;
+    }
 
-<style>
-  table,
-  th,
-  td {
-    border: 1px solid black;
-    padding: 5px;
-  }
+    ul li p{
+  display: inline;
+}
+  </style>
 
-  .select {
-    background-color: red;
-  }
-</style>
+  <!-- Tools -->
 
-<!-- Tools -->
+  <!-- Sprite sheet -->
+  <!-- https://merchant-shade.itch.io/16x16-mini-world-sprites -->
 
-<!-- Sprite sheet -->
-<!-- https://merchant-shade.itch.io/16x16-mini-world-sprites -->
+  <!-- Texture Packer | Split sprite sheet -->
+  <!-- https://free-tex-packer.com/app/ -->
 
-<!-- Texture Packer | Split sprite sheet -->
-<!-- https://free-tex-packer.com/app/ -->
+  <!-- Sprite Sheet Packer | package sprites and download json -->
+  <!-- https://www.codeandweb.com/free-sprite-sheet-packer -->
 
-<!-- Sprite Sheet Packer | package sprites and download json -->
-<!-- https://www.codeandweb.com/free-sprite-sheet-packer -->
+  <!-- How to print tilemap -->
+  <!-- https://www.html5gamedevs.com/topic/33866-using-tileset-with-json/ -->
 
-<!-- How to print tilemap -->
-<!-- https://www.html5gamedevs.com/topic/33866-using-tileset-with-json/ -->
+  <!-- Container Example -->
+  <!-- https://pixijs.io/examples/#/demos-basic/container.js -->
 
-<!-- Container Example -->
-<!-- https://pixijs.io/examples/#/demos-basic/container.js -->
+  <!-- That Phaser tutorial with Morgan Page -->
+  <!-- https://www.youtube.com/watch?v=fdXcD9X4NrQ&t=3277s -->
 
-<!-- That Phaser tutorial with Morgan Page -->
-<!-- https://www.youtube.com/watch?v=fdXcD9X4NrQ&t=3277s -->
+  <!-- Pixi Pan and Zoom on Container -->
+  <!-- https://www.html5gamedevs.com/topic/31519-pixijs-pan-zoom-canvas/ -->
 
-<!-- Pixi Pan and Zoom on Container -->
-<!-- https://www.html5gamedevs.com/topic/31519-pixijs-pan-zoom-canvas/ -->
+  <!-- Possible Keybord framework -->
+  <!-- https://github.com/c-ridgway/pixi.js-keyboard -->
 
-<!-- Possible Keybord framework -->
-<!-- https://github.com/c-ridgway/pixi.js-keyboard -->
+  <!-- Tile utilites -->
+  <!-- https://github.com/kittykatattack/tileUtilities -->
 
-<!-- Tile utilites -->
-<!-- https://github.com/kittykatattack/tileUtilities -->
+  <!-- Shortest path example -->
+  <!-- https://www.youtube.com/watch?v=NlccuV2tMmw -->
 
-<!-- Shortest path example -->
-<!-- https://www.youtube.com/watch?v=NlccuV2tMmw -->
+  <!-- Dijkstra grid code -->
+  <!-- https://github.com/jl-gosewisch/dijkstra-grid -->
 
-<!-- Dijkstra grid code -->
-<!-- https://github.com/jl-gosewisch/dijkstra-grid -->
-
-
-
-<body>
-  <div class="canvas"></div>
-  <div style="margin:1rem"><button id="attack">Attack</button><button id="walk" style="margin:10px">Walk</button></div>
-  <div>
-    <p id="text" style="padding:1rem"></p>
-  </div>
-  <div>
-    <div>
-      <p>Player's health:</p>
-      <p id='p-health'></p>
+  <body>
+    <div class="canvas"></div>
+    <div style="margin: 1rem">
+      <button id="attack">Attack</button
+      ><button id="walk" style="margin: 10px">Walk</button>
     </div>
     <div>
-      <p>Enemy's health:</p>
-      <p id='e-health'></p>
+      <p id="text" style="padding: 1rem"></p>
     </div>
-  </div>
-  <!-- <script src="js/player.js"></script>
+    <div>
+      <div>
+        <ul>
+          <li>
+            <p>Player's health:</p>
+            <p id="p-health"></p>
+          </li>
+          <li>
+            <p>Enemy's health:</p>
+            <p id="e-health"></p>
+          </li>
+        </ul>
+      </div>
+      <div></div>
+    </div>
+    <!-- <script src="js/player.js"></script>
   <script src="js/tilemap.js"></script>
   <script src="js/grid.js"></script>
   <script src="js/node.js"></script>
@@ -82,21 +93,14 @@
   
   <script src="js/event.js"></script>
   <script src="js/main.js"></script> -->
-  <script type="module" src="new-js/main.js"></script>
-  <script src="new-js/tools.js"></script>
+    <script type="module" src="new-js/main.js"></script>
+    <script src="new-js/tools.js"></script>
 
-
-
-  <script>
-    function toggle(el) {
-      $(el).toggleClass('select')
-    }
-
-
-
-
-  </script>
-  <div id="grid"></div>
-</body>
-
+    <script>
+      function toggle(el) {
+        $(el).toggleClass("select");
+      }
+    </script>
+    <div id="grid"></div>
+  </body>
 </html>
