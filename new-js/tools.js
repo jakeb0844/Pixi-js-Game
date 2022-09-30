@@ -208,7 +208,6 @@ function walk(entity, tilemap, index) {
 }
 
 function highLightRect(node,color="red") {
-    let x = color;
     let colors ={
         'red' : 0xfc0202,
         'green' : 0x00ff00,
@@ -218,8 +217,8 @@ function highLightRect(node,color="red") {
         'purple' : 0xa020f0,
         'orange' : 0xffa500,
     };
-    console.log('color',colors)
-    console.log('color',colors[color])
+    //console.log('color',colors)
+    //console.log('color',colors[color])
     let r = node.tile;
     let tileWidth = 16;
     let tileHeight = 16;
