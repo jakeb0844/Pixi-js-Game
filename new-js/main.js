@@ -65,6 +65,11 @@ function start(e) {
 	enemy = new Enemy("Orc", app, loader, EnemyContainer, tilemap, { 'x': 160, 'y': 160 });
 	//enemy2 = new Enemy("SwordsmanTemplate", app, loader, EnemyContainer, tilemap, { 'x': 0, 'y': 160 });
 
+	$('#p-health').text(player.stats.health)
+	$('#e-health').text(enemy.stats.health)
+
+	
+
 	characterList.add(enemy);
 	//characterList.add(enemy2);
 

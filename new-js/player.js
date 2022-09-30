@@ -5,7 +5,7 @@ export class Player extends Entity {
       super(name, app, loader, container, tilemap, position);
   
       this.walking = false;
-      this.stats = { str: 10, dex: 10, hp: 10, int: 10, mp: 10 };
+      //this.stats = { str: 10, dex: 10, hp: 10, int: 10, mp: 10 };
       this.nextNode = null;
       this.attackNode = null;
     }

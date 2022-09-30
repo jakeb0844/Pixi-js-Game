@@ -1,5 +1,5 @@
 export class Entity {
-    constructor(name = "", app, loader, container, tilemap, startPosition = { "x": 240, "y": 160 }, type, stats) {
+    constructor(name = "", app, loader, container, tilemap, startPosition = { "x": 240, "y": 160 }, type, stats={'str':5,'def':3,'health':10}) {
         this.name = name;
         this.loader = loader;
         this.game = app;
@@ -13,6 +13,7 @@ export class Entity {
         this.turn = true;
         this.currentNode = null;
         this.containerIndex;
+        this.stats = stats;
 
         this.animations = {
             "default": null,
@@ -129,6 +130,12 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
         return null;
 
+    }
+
+    attack(enemy){
+        let damage = this.stats.str - enemy.stats.def;
+
+        return damage;
     }
 
     centerEntityInTile() {

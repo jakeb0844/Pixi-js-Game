@@ -3,19 +3,23 @@
 
 <head>
   <script src="https://pixijs.download/release/pixi.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-  
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
 </head>
 
 <style>
-  table, th, td {
-    border:1px solid black;
+  table,
+  th,
+  td {
+    border: 1px solid black;
     padding: 5px;
   }
-  .select{
+
+  .select {
     background-color: red;
   }
-  </style>
+</style>
 
 <!-- Tools -->
 
@@ -56,8 +60,20 @@
 
 <body>
   <div class="canvas"></div>
-  <div style="margin:1rem"><button id="attack">Attack</button><button id="walk"style="margin:10px">Walk</button></div>
-  <div><p id="text" style="padding:1rem"></p></div>
+  <div style="margin:1rem"><button id="attack">Attack</button><button id="walk" style="margin:10px">Walk</button></div>
+  <div>
+    <p id="text" style="padding:1rem"></p>
+  </div>
+  <div>
+    <div>
+      <p>Player's health:</p>
+      <p id='p-health'></p>
+    </div>
+    <div>
+      <p>Enemy's health:</p>
+      <p id='e-health'></p>
+    </div>
+  </div>
   <!-- <script src="js/player.js"></script>
   <script src="js/tilemap.js"></script>
   <script src="js/grid.js"></script>
@@ -68,19 +84,19 @@
   <script src="js/main.js"></script> -->
   <script type="module" src="new-js/main.js"></script>
   <script src="new-js/tools.js"></script>
-  
- 
+
+
 
   <script>
-    function toggle(el){
+    function toggle(el) {
       $(el).toggleClass('select')
     }
 
-    
+
 
 
   </script>
-     <div id="grid"></div>
+  <div id="grid"></div>
 </body>
 
 </html>
