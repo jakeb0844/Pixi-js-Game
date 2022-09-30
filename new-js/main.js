@@ -15,7 +15,7 @@ const app = new PIXI.Application({
 	height: 320,
 	transparent: false,
 	antialis: true,
-	resolution: 1
+	resolution: 1.5
 });
 
 $('.canvas').append(app.view);
@@ -75,12 +75,14 @@ function start(e) {
 	let keepWalking = false;
 	let choice = "";
 	let nodesToClear = [];
-
+	tilemap.updateEnemyPosition(CalculateRowAndCol({'x': enemy.sprite.x, 'y': enemy.sprite.y}));
 	//tilemap.getTile({'x':player.x, 'y': player.y})
 	enemy.moveRandomly();
 	//enemy2.moveRandomly();
 	//console.log(enemy.path)
 	//enemy.detectPlayer();
+	//console.log(tilemap.grid);
+
 	app.ticker.add((delta) => {
 		//modes: exploration, combat
 		if (app.mode == 'exploration') {
@@ -94,6 +96,8 @@ function start(e) {
 
 		}
 		else{
+			player.centerEntityInTile();
+			enemy.centerEntityInTile();
 			//Mortal Combbbbatttt!
 			$('#text').text('Combat')
 			if(choice != ''){
@@ -118,13 +122,28 @@ function start(e) {
 					let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
 					let neighbors = getNeighbors(startNode,2,tilemap.grid);
 
-					//let nodes = copyNodes(neighbors);
+					// let nodes = copyNodes(neighbors);
+					// throw 500
 			
 					for(let i = 0; i < neighbors.length; i++){
 						highLightRect(neighbors[i]);
 						nodesToClear.push(neighbors[i]);
 					}
-					//console.log(tilemap.test)
+					if(player.attackNode != null){
+						highLightRect(player.attackNode,'blue')
+						//console.log(player.attackNode);
+						
+						if(player.attackNode.enemyPosition){
+							console.log('Attacking enemy!')
+							player.attackNode = null;
+						}
+						else{
+							console.log("can't attack there, no enemy in that tile.")
+							player.attackNode = null;
+						}
+
+						//throw 500
+					}
 				}
 
 			}

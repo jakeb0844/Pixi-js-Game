@@ -15,6 +15,7 @@ export class Tilemap {
         this.tileContainer = TileContainer;
         this.player = player;
         this.playerPosition = playerPosition;
+        this.enemeyPosition;
         //this.mapJson = mapJson;
         this.rects = [];
         this.tileHeight = tileDimensions.height;
@@ -113,6 +114,7 @@ export class Tilemap {
         let col = Math.floor(playerPosition.y / 16);
         this.playerPosition = { "row": row, "col": col };
         this.grid[col][row].playerPosition = true;
+        console.log(this.grid[col][row])
         setTimeout(function () {
             printGrid(grid, 'grid')
         }, 1000);
@@ -197,7 +199,7 @@ export class Tilemap {
                 }
             }
             else{
-                
+                this.player.attackNode = this.getTile(rect.getBounds());
             }
 
 
@@ -288,6 +290,20 @@ export class Tilemap {
         grid[this.playerPosition.col][this.playerPosition.row].playerPosition = false;
         grid[position.col][position.row].playerPosition = true;
         this.playerPosition = { "col": position.col, "row": position.row }
+    }
+
+    updateEnemyPosition(position) {
+        let grid = this.grid;
+        if(this.enemyPosition == undefined){
+            this.enemyPosition = { "col": position.col, "row": position.row };
+            grid[this.enemyPosition.col][this.enemyPosition.row].enemyPosition = true;
+        }
+        else{
+            grid[this.enemyPosition.col][this.enemyPosition.row].enemyPosition = false;
+            grid[position.col][position.row].enemyPosition = true;
+            this.enemyPosition = { "col": position.col, "row": position.row }
+        }
+        
     }
 
     getTile(position) {

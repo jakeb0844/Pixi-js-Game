@@ -9,7 +9,7 @@ class Tile {
         this.wall = false;
         this.rect = rect;
         this.playerPosition = false;
-        this.enemeyPosition = false;
+        this.enemyPosition = false;
     }
 
 }
@@ -106,7 +106,7 @@ function printGrid(grid, id) {
                 html += "<td style='background:green'>";
                 html += "a";
             }
-            else if (grid[col][row].enemeyPosition) {
+            else if (grid[col][row].enemyPosition) {
                 html += "<td style='background:pink'>";
                 html += "E";
             }
@@ -207,15 +207,15 @@ function walk(entity, tilemap, index) {
 
 }
 
-function highLightRect(node,color="red") {
-    let colors ={
-        'red' : 0xfc0202,
-        'green' : 0x00ff00,
-        'yellow' : 0xffff00,
-        'blue' : 0x0000ff,
-        'black' : 0x000000,
-        'purple' : 0xa020f0,
-        'orange' : 0xffa500,
+function highLightRect(node, color = "red") {
+    let colors = {
+        'red': 0xfc0202,
+        'green': 0x00ff00,
+        'yellow': 0xffff00,
+        'blue': 0x0000ff,
+        'black': 0x000000,
+        'purple': 0xa020f0,
+        'orange': 0xffa500,
     };
     //console.log('color',colors)
     //console.log('color',colors[color])
@@ -228,52 +228,52 @@ function highLightRect(node,color="red") {
 
 }
 
-function getNeighbors(node,length,grid){
+function getNeighbors(node, length, grid) {
     let neighbors = [];
     let row = node.row;
     let col = node.col;
 
     for (let i = 0; i < length; i++) {
 
-      //previous
-      if (row !== 0){ 
-        if(row - (i + 1) >= 0){
-          neighbors.push(grid[row - (i + 1)][col])
+        //previous
+        if (row !== 0) {
+            if (row - (i + 1) >= 0) {
+                neighbors.push(grid[row - (i + 1)][col])
+            }
         }
-      }
-        
-      //Get next
-      if (row !== grid.length - 1){
-        if(row + (i + 1) <= grid.length - 1){
-          neighbors.push(grid[row + (i + 1)][col])
-      } 
-    }
-      //get up
-      if (col !== 0){
-        if(col - (i + 1) >= 0){
-          neighbors.push(grid[row][col - (i + 1)])
+
+        //Get next
+        if (row !== grid.length - 1) {
+            if (row + (i + 1) <= grid.length - 1) {
+                neighbors.push(grid[row + (i + 1)][col])
+            }
         }
-      }
-         
-      //get down
-      if (col !== grid[0].length - 1){
-        if(col + (i + 1) <= grid[0].length-1){
-          neighbors.push(grid[row][col + (i + 1)])
+        //get up
+        if (col !== 0) {
+            if (col - (i + 1) >= 0) {
+                neighbors.push(grid[row][col - (i + 1)])
+            }
         }
-      } 
+
+        //get down
+        if (col !== grid[0].length - 1) {
+            if (col + (i + 1) <= grid[0].length - 1) {
+                neighbors.push(grid[row][col + (i + 1)])
+            }
+        }
 
     }
 
-    if(neighbors.length > 0){
+    if (neighbors.length > 0) {
         return neighbors;
     }
-    else{
+    else {
         return null;
     }
 }
 
 
-function explorationPhase(player,turns,other_turn,keepWalking,characterList,tilemap,mode){
+function explorationPhase(player, turns, other_turn, keepWalking, characterList, tilemap, mode) {
     // console.log('player',player.turn)
     // console.log('other_turn',other_turn)
     if (player.turn) {
@@ -301,23 +301,23 @@ function explorationPhase(player,turns,other_turn,keepWalking,characterList,tile
         for (let i = 0; i < characterList.list.length; i++) {
             let char = characterList.list[i];
             if (char.turn) {
-                
-                if(char.detectPlayer()){
+
+                if (char.detectPlayer()) {
                     console.log('here')
                     console.log('Detected player!')
                     mode = "combat";
                 }
-                else{
+                else {
                     console.log('else')
                 }
                 other_turn = true;
                 console.log(char.name + ' turn')
-                console.log('path len',char.path.length)
-                console.log('currentNode',char.currentNode)
+                console.log('path len', char.path.length)
+                console.log('currentNode', char.currentNode)
                 if (char.path.length > 0 || char.currentNode != null) {
                     console.log(char.name + ' walk')
                     keepWalking = char.walk(tilemap);
-                    
+
                     if (!keepWalking) {
                         other_turn = false;
                         console.log('here2')
@@ -330,8 +330,8 @@ function explorationPhase(player,turns,other_turn,keepWalking,characterList,tile
                     char.turn = false;
                     char.moveRandomly();
                     console.log('after moveRandomly')
-                    console.log('keepWalking',keepWalking)
-                    console.log('other_turn',other_turn)
+                    console.log('keepWalking', keepWalking)
+                    console.log('other_turn', other_turn)
                     for (let i = 0; i < characterList.list.length; i++) {
                         console.log(characterList.list[i].name + ' turn:' + characterList.list[i].turn);
                     }
@@ -342,7 +342,7 @@ function explorationPhase(player,turns,other_turn,keepWalking,characterList,tile
     }
     else if (!keepWalking) {
         player.turn = true;
-        for(let i =0; i < characterList.list.length; i++) {
+        for (let i = 0; i < characterList.list.length; i++) {
             let character = characterList.list[i];
             character.turn = true;
         }
@@ -351,9 +351,25 @@ function explorationPhase(player,turns,other_turn,keepWalking,characterList,tile
         console.log('turns', turns)
     }
 
-    return {"turns": turns, "other_turn": other_turn,"keepWalking": keepWalking,"mode": mode}
+    return { "turns": turns, "other_turn": other_turn, "keepWalking": keepWalking, "mode": mode }
 }
 
-function copyNodes(nodes){
+function createRect(x, y) {
+    let rect = new PIXI.Graphics()
+        .lineStyle({ color: 1, width: 1, native: true })
+        .drawShape({ "x": x, "y": y, "width": 16, "height": 16, "type": 1 });
+
+    rect.hitArea = rect.getBounds();
+    rect.interactive = true;
+}
+
+function copyNodes(nodes) {
     let temp = [];
+
+    for (let i = 0; i < nodes.length; i++) {
+        let node = nodes[i];
+        temp.push(new Tile(node.row, node.col, node.tile));
+    }
+
+    console.log(temp)
 }

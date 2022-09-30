@@ -62,8 +62,8 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             this.containerIndex = len;
             this.container.addChildAt(this.sprite, len);
         }
-        else{
-            this.container.addChildAt(this.sprite,this.containerIndex);
+        else {
+            this.container.addChildAt(this.sprite, this.containerIndex);
         }
 
 
@@ -131,6 +131,16 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
     }
 
+    centerEntityInTile() {
+        let playerX = Math.floor(this.sprite.x / 16) * 16;
+        let playerY = Math.floor(this.sprite.y / 16) * 16;
+
+        this.sprite.x = playerX;
+        this.sprite.y = playerY;
+        this.x = playerX;
+        this.y = playerY;
+    }
+
     updatePosition(position) {
         if (position.x) {
             this.sprite.x = position.x;
@@ -176,20 +186,20 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
         console.log('entity', this.name);
         //console.log('len',entity.path.length)
         //let node = entity.path[index];
-        if(this.currentNode == null){
+        if (this.currentNode == null) {
             this.currentNode = this.path.shift()
-           // console.log('len',entity.path.length)
+            // console.log('len',entity.path.length)
         }
         let node = this.currentNode;
         let walkY = node.row * tilemap.tileWidth;
         let walkX = node.col * tilemap.tileHeight;
         let walkSpeed = 2;
-    
+
         //tilemap.updateCharPosition({ "col": Math.floor(this.sprite.y / 16), "row": Math.floor(this.sprite.x / 16) })
         //printGrid(tilemap.grid, 'grid')
-    
+
         if (this.sprite.y != walkY) {
-    
+
             if (walkY > this.sprite.y) {
                 this.changeAnimation(this.animations.up);
                 this.sprite.y += walkSpeed;;
@@ -201,21 +211,21 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
                 this.y -= walkSpeed;
             }
         }
-    
+
         else if (this.sprite.x != walkX) {
-    
-                if (walkX > this.sprite.x) {
-                    this.changeAnimation(this.animations.right);
-                    this.sprite.x += walkSpeed;
-                    this.x += walkSpeed;
-                }
-                else {
-                    this.changeAnimation(this.animations.left);
-                    this.sprite.x -= walkSpeed;
-                    this.x -= walkSpeed;
-                }     
+
+            if (walkX > this.sprite.x) {
+                this.changeAnimation(this.animations.right);
+                this.sprite.x += walkSpeed;
+                this.x += walkSpeed;
+            }
+            else {
+                this.changeAnimation(this.animations.left);
+                this.sprite.x -= walkSpeed;
+                this.x -= walkSpeed;
+            }
         }
-    
+
         let x = this.sprite.x;
         let y = this.sprite.y;
         //console.log("x:" + x + ' and walkX:' + walkX);
@@ -226,30 +236,35 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             return true;
         }
         else {
-            if(this.constructor.name == 'Player'){
+            if (this.constructor.name == 'Player') {
                 this.currentNode.tile.clear()
                 this.tilemap.updateCharPosition({ "col": Math.floor(this.sprite.y / 16), "row": Math.floor(this.sprite.x / 16) })
                 printGrid(this.tilemap.grid, 'grid')
                 //console.log(this.currentNode)
             }
-            
+            else {
+                this.tilemap.updateEnemyPosition({ "col": Math.floor(this.sprite.y / 16), "row": Math.floor(this.sprite.x / 16) })
+
+                printGrid(this.tilemap.grid, 'grid')
+            }
+
             console.log('finished walking')
             this.currentNode = this.path.shift();
             //console.log('node',entity.currentNode)
             //index++;
             //console.log('index',index)
             //console.log('len2',entity.path.length)
-            
+
             if (this.currentNode == undefined) {
                 this.walking = false;
                 this.path = [];
                 this.currentNode = null;
                 //index = 0;
                 this.changeAnimation(this.animations.default)
-                
+
             }
         }
-    
+
         return false;
     }
 }

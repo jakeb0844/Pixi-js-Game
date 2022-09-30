@@ -22,6 +22,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
     */
   moveRandomly() {
     let start = this.tilemap.getTile({ 'x': this.sprite.x, 'y': this.sprite.y });
+    //this.tilemap.grid[start.col][start.row].enemyPosition = true;
 
     let min = Math.ceil(0)
     let maxY = Math.floor(480);
