@@ -22,14 +22,14 @@ export class Tilemap {
 
         //this.player = player;
         this.rectsToClear = [];
- 
+
         var tileset = this.loader.getAsset('map').resource.texture;
-     
-        this._createMap(tileset,this.playerPosition);
+
+        this._createMap(tileset, this.playerPosition);
 
     }
 
-    addChild(entity){
+    addChild(entity) {
         let row = Math.floor(entity.x / 16);
         let col = Math.floor(entity.y / 16);
 
@@ -38,7 +38,7 @@ export class Tilemap {
         this.grid[col][row].enemeyPosition = true;
     }
 
-    async _createMap(tileset,playerPosition) {
+    async _createMap(tileset, playerPosition) {
 
         // load json
         // var level = await this.getJsonFile(function (data) {
@@ -46,7 +46,7 @@ export class Tilemap {
         // });
 
         let level = this.loader.getAsset('mapJson').resource;
-        
+
 
         var layers = level.data.layers;
         var height = level.data.height;
@@ -67,7 +67,7 @@ export class Tilemap {
 
         for (let row = 0; row < height; row++) {
             for (let col = 0; col < width; col++) {
-              
+
                 if (col % (width - 1) == 0) {
                     if (col > 0) {
                         var y = levelHeight;
@@ -104,29 +104,29 @@ export class Tilemap {
 
         }
 
-        let {grid,nodes} = this.createGrid(this.collisionLayer);
+        let { grid, nodes } = this.createGrid(this.collisionLayer);
 
         this.grid = grid;
         this.nodes = nodes;
 
         let row = Math.floor(playerPosition.x / 16);
-        let col = Math.floor(playerPosition. y / 16);
-        this.playerPosition = {"row": row, "col": col};
+        let col = Math.floor(playerPosition.y / 16);
+        this.playerPosition = { "row": row, "col": col };
         this.grid[col][row].playerPosition = true;
-        setTimeout(function() {
-            printGrid(grid,'grid')
+        setTimeout(function () {
+            printGrid(grid, 'grid')
         }, 1000);
-        
-        
+
+
     }
 
     find_path(start, end) {
-        
+
         if ((!end.wall)) {
 
             let di = new Pathfinding(this.grid, start, end);
             let { visited, endNode } = di.find_path(di.grid, di.startNode, di.endNode);
-            
+
             let shortest_path = di.makePath(endNode);
             //console.log(shortest_path);
             // shortest_path.shift();
@@ -138,17 +138,17 @@ export class Tilemap {
             for (const node of shortest_path) {
                 let tile = node.tile;
                 tile.clear()
-                .lineStyle({ color: 0xaaaa, width: 1, native: true })
-                .drawShape({ "x": node.col * 16, "y": node.row * 16, "width": 16, "height": 16, "type": 1 });
+                    .lineStyle({ color: 0xaaaa, width: 1, native: true })
+                    .drawShape({ "x": node.col * 16, "y": node.row * 16, "width": 16, "height": 16, "type": 1 });
                 this.rectsToClear.push(tile);
             }
 
         }
-        else{
+        else {
             // this.path = [];
             this.player.path = [];
         }
-        
+
 
     }
 
@@ -168,32 +168,39 @@ export class Tilemap {
             let playerX = Math.floor(this.player.sprite.x / 16) * 16;
             let playerY = Math.floor(this.player.sprite.y / 16) * 16;
 
-            // If the player is following the path, stop walking, set the player to the nearest tile,
-            // and remove the already walked portion;
-            if (this.player.walking) {
-                this.player.stopWalking()
-                this.player.changeAnimation(this.player.animations.default)
-                this.player.sprite.x = playerX;
-                this.player.sprite.y = playerY;
-                this.player.x = playerX;
-                this.player.y = playerY;
+            if (this.game.mode == 'exploration') {
+                // If the player is following the path, stop walking, set the player to the nearest tile,
+                // and remove the already walked portion;
+                if (this.player.walking) {
+                    this.player.stopWalking()
+                    this.player.changeAnimation(this.player.animations.default)
+                    this.player.sprite.x = playerX;
+                    this.player.sprite.y = playerY;
+                    this.player.x = playerX;
+                    this.player.y = playerY;
 
-                // this.path = this.path.slice(index)
-                //this.player.path = this.player.path.slice(index)
-                this.player.path = [];
-                //this.test = [];
-                
+                    // this.path = this.path.slice(index)
+                    //this.player.path = this.player.path.slice(index)
+                    this.player.path = [];
+                    //this.test = [];
 
-            }
-            else {
 
-                if (!grid[endCol][endRow].wall) {
-                    this.player.path = this.test;
-                    this.player.path[0].tile.clear();
-                    this.player.path.shift();
-                    this.player.startWalking()
+                }
+                else {
+
+                    if (!grid[endCol][endRow].wall) {
+                        this.player.path = this.test;
+                        this.player.path[0].tile.clear();
+                        this.player.path.shift();
+                        this.player.startWalking()
+                    }
                 }
             }
+            else{
+                
+            }
+
+
 
         }).bind(this))
 
@@ -208,9 +215,9 @@ export class Tilemap {
             r.clear();
             r.lineStyle({ color: 0xfc0202, width: 1, native: true })
             r.drawShape({ "x": endRow * this.tileHeight, "y": endCol * this.tileWidth, "width": this.tileWidth, "height": this.tileHeight, "type": 1 })
-            
+
             this.rectsToClear.push(r);
-            
+
             if (!this.player.walking) {
                 this.find_path(grid[playerCol][playerRow], grid[endCol][endRow])
             }
@@ -224,7 +231,7 @@ export class Tilemap {
             }
 
             this.rectsToClear = [];
-            
+
         }).bind(this))
 
         rect.clear()
@@ -233,7 +240,7 @@ export class Tilemap {
 
     createGrid() {
 
-       return createGrid(this.collisionLayer,this.rects);
+        return createGrid(this.collisionLayer, this.rects);
 
     }
 
@@ -241,7 +248,7 @@ export class Tilemap {
         for (let col = 0; col < this.collisionLayer.height; col++) {
             for (let row = 0; row < this.collisionLayer.width; row++) {
                 if (this.grid[col][row].playerPosition) {
-                   
+
                     return { "col": col, "row": row };
                 }
             }
@@ -283,18 +290,18 @@ export class Tilemap {
         this.playerPosition = { "col": position.col, "row": position.row }
     }
 
-    getTile(position){
+    getTile(position) {
         //console.log(position);
-        let {row,col} = CalculateRowAndCol(position)
-        if(col == this.grid.length){
+        let { row, col } = CalculateRowAndCol(position)
+        if (col == this.grid.length) {
             col--;
         }
 
-        if(row == this.grid[0].length){
+        if (row == this.grid[0].length) {
             row--;
         }
-        console.log('row: ' + row + ' col: ' + col);
+        //console.log('row: ' + row + ' col: ' + col);
         return this.grid[col][row];
-        
+
     }
 };

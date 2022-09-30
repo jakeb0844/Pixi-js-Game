@@ -227,3 +227,133 @@ function highLightRect(node,color="red") {
     r.drawShape({ "x": node.col * tileHeight, "y": node.row * tileWidth, "width": tileWidth, "height": tileHeight, "type": 1 })
 
 }
+
+function getNeighbors(node,length,grid){
+    let neighbors = [];
+    let row = node.row;
+    let col = node.col;
+
+    for (let i = 0; i < length; i++) {
+
+      //previous
+      if (row !== 0){ 
+        if(row - (i + 1) >= 0){
+          neighbors.push(grid[row - (i + 1)][col])
+        }
+      }
+        
+      //Get next
+      if (row !== grid.length - 1){
+        if(row + (i + 1) <= grid.length - 1){
+          neighbors.push(grid[row + (i + 1)][col])
+      } 
+    }
+      //get up
+      if (col !== 0){
+        if(col - (i + 1) >= 0){
+          neighbors.push(grid[row][col - (i + 1)])
+        }
+      }
+         
+      //get down
+      if (col !== grid[0].length - 1){
+        if(col + (i + 1) <= grid[0].length-1){
+          neighbors.push(grid[row][col + (i + 1)])
+        }
+      } 
+
+    }
+
+    if(neighbors.length > 0){
+        return neighbors;
+    }
+    else{
+        return null;
+    }
+}
+
+
+function explorationPhase(player,turns,other_turn,keepWalking,characterList,tilemap,mode){
+    // console.log('player',player.turn)
+    // console.log('other_turn',other_turn)
+    if (player.turn) {
+
+        if (player.path.length > 0 || player.currentNode != null) {
+            console.log('player.turn')
+            // console.log('len',player.path.length)
+            //Step
+            keepWalking = player.walk(tilemap);
+
+            if (!keepWalking) {
+                console.log('here')
+                player.turn = false;
+            }
+
+        }
+
+        else {
+            //Some other kind of interaction.
+        }
+
+    }
+    else if (other_turn || keepWalking) {
+        //console.log('not player turn')
+        for (let i = 0; i < characterList.list.length; i++) {
+            let char = characterList.list[i];
+            if (char.turn) {
+                
+                if(char.detectPlayer()){
+                    console.log('here')
+                    console.log('Detected player!')
+                    mode = "combat";
+                }
+                else{
+                    console.log('else')
+                }
+                other_turn = true;
+                console.log(char.name + ' turn')
+                console.log('path len',char.path.length)
+                console.log('currentNode',char.currentNode)
+                if (char.path.length > 0 || char.currentNode != null) {
+                    console.log(char.name + ' walk')
+                    keepWalking = char.walk(tilemap);
+                    
+                    if (!keepWalking) {
+                        other_turn = false;
+                        console.log('here2')
+                        char.turn = false;
+                    }
+                }
+                else {
+                    console.log('moveRandomly')
+                    other_turn = false;
+                    char.turn = false;
+                    char.moveRandomly();
+                    console.log('after moveRandomly')
+                    console.log('keepWalking',keepWalking)
+                    console.log('other_turn',other_turn)
+                    for (let i = 0; i < characterList.list.length; i++) {
+                        console.log(characterList.list[i].name + ' turn:' + characterList.list[i].turn);
+                    }
+                }
+            }
+        }
+
+    }
+    else if (!keepWalking) {
+        player.turn = true;
+        for(let i =0; i < characterList.list.length; i++) {
+            let character = characterList.list[i];
+            character.turn = true;
+        }
+        other_turn = true;
+        turns++;
+        console.log('turns', turns)
+    }
+
+    return {"turns": turns, "other_turn": other_turn,"keepWalking": keepWalking,"mode": mode}
+}
+
+function copyNodes(nodes){
+    let temp = [];
+}

@@ -51,35 +51,18 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
     let startNode = this.tilemap.getTile({ 'x': this.sprite.x, 'y': this.sprite.y });
 
-    console.log(startNode);
-    highLightRect(startNode);
+    //console.log(startNode);
+    //highLightRect(startNode);
 
     //north
     //south
     //east
     //west
-    let neighbors = [];
-    let grid = this.tilemap.grid;
-    let row = startNode.row;
-    let col = startNode.col;
-
-    for (let i = 0; i < 3; i++) {
-
-
-      //previous
-      if (row !== 0) neighbors.push(grid[row - (i + 1)][col])
-      //Get next
-      if (row !== grid.length - 1) neighbors.push(grid[row + (i + 1)][col])
-      //get up
-      if (col !== 0) neighbors.push(grid[row][col - (i + 1)])
-      //get down
-      if (col !== grid[0].length - 1) neighbors.push(grid[row][col + (i + 1)])
-
-    }
+    let neighbors = getNeighbors(startNode,3,this.tilemap.grid);
 
     for(let i = 0; i < neighbors.length; i++){
       let node = neighbors[i];
-      highLightRect(node);
+      //highLightRect(node);
 
       if(node.playerPosition){
         return true;

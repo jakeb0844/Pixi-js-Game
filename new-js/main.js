@@ -26,7 +26,10 @@ var player;
 var tilemap;
 var enemy;
 var enemy2;
-let mode = { 'exploration': true, 'combat': false };
+//exploration
+//combat
+app.mode = 'exploration';
+let mode = 'exploration';
 
 const MapContainer = new PIXI.Container();
 const TileContainer = new PIXI.Container();
@@ -59,7 +62,7 @@ function start(e) {
 	player = new Player("Börg", app, loader, PlayerContainer, tilemap, { 'x': 240, 'y': 160 });
 	tilemap = new Tilemap(app, loader, MapContainer, TileContainer, { "x": player.x, 'y': player.y }, player);
 	player.tilemap = tilemap;
-	enemy = new Enemy("Orc", app, loader, EnemyContainer, tilemap, { 'x': 80, 'y': 160 });
+	enemy = new Enemy("Orc", app, loader, EnemyContainer, tilemap, { 'x': 160, 'y': 160 });
 	//enemy2 = new Enemy("SwordsmanTemplate", app, loader, EnemyContainer, tilemap, { 'x': 0, 'y': 160 });
 
 	characterList.add(enemy);
@@ -70,97 +73,72 @@ function start(e) {
 	let other_turn = true;
 	player.turn = true;
 	let keepWalking = false;
+	let choice = "";
+	let nodesToClear = [];
 
 	//tilemap.getTile({'x':player.x, 'y': player.y})
 	enemy.moveRandomly();
 	//enemy2.moveRandomly();
 	//console.log(enemy.path)
-	enemy.detectPlayer();
+	//enemy.detectPlayer();
 	app.ticker.add((delta) => {
 		//modes: exploration, combat
-		if (mode.exploration) {
-			// console.log('player Turn',player.turn);
-			// console.log('enemy Turn',enemy.turn);
-			// console.log('keepWalking',keepWalking)
-			if (player.turn) {
+		if (app.mode == 'exploration') {
+			
+			let obj = explorationPhase(player,turns,other_turn,keepWalking,characterList,tilemap,app.mode)
+			turns = obj.turns;
+			other_turn = obj.other_turn;
+			keepWalking = obj.keepWalking;
+			app.mode = obj.mode;
 
-				if (player.path.length > 0 || player.currentNode != null) {
-					console.log('player.turn')
-					// console.log('len',player.path.length)
-					//Step
-					keepWalking = player.walk(tilemap,index);
 
-					if (!keepWalking) {
-						console.log('here')
-						player.turn = false;
+		}
+		else{
+			//Mortal Combbbbatttt!
+			$('#text').text('Combat')
+			if(choice != ''){
+				$('#text').text(choice)
+				if(nodesToClear.length > 0) { 
+					for(let i = 0; i < nodesToClear.length; i++){
+						nodesToClear[i].tile.clear();
 					}
-
+					nodesToClear = [];
 				}
-
-				else {
-					//Some other kind of interaction.
-				}
-
-			}
-			else if (other_turn || keepWalking) {
-				//console.log('not player turn')
-				for (let i = 0; i < characterList.list.length; i++) {
-					let char = characterList.list[i];
-					if (char.turn) {
-						let temp = char.detectPlayer();
-						if(temp){
-							console.log('here')
-							console.log('Detected player!')
-							mode.exploration = false;
-							mode.combat = true;
-						}
-						else{
-							console.log('else')
-						}
-						other_turn = true;
-						console.log(char.name + ' turn')
-						console.log('path len',char.path.length)
-						console.log('currentNode',char.currentNode)
-						if (char.path.length > 0 || char.currentNode != null) {
-							console.log(char.name + ' walk')
-							keepWalking = char.walk(tilemap,index);
-							
-							if (!keepWalking) {
-								other_turn = false;
-								console.log('here2')
-								char.turn = false;
-							}
-						}
-						else {
-							console.log('moveRandomly')
-							other_turn = false;
-							char.turn = false;
-							char.moveRandomly();
-							console.log('after moveRandomly')
-							console.log('keepWalking',keepWalking)
-							console.log('other_turn',other_turn)
-							for (let i = 0; i < characterList.list.length; i++) {
-								console.log(characterList.list[i].name + ' turn:' + characterList.list[i].turn);
-							}
-						}
+				if(choice == "walk"){
+					//Show tiles you can walk to;
+					let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
+					let neighbors = getNeighbors(startNode,1,tilemap.grid);
+			
+					for(let i = 0; i < neighbors.length; i++){
+						highLightRect(neighbors[i]);
+						nodesToClear.push(neighbors[i]);
 					}
 				}
+				else if(choice == 'attack'){
+					let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
+					let neighbors = getNeighbors(startNode,2,tilemap.grid);
 
-			}
-			else if (!keepWalking) {
-				player.turn = true;
-				for(let i =0; i < characterList.list.length; i++) {
-					let character = characterList.list[i];
-                    character.turn = true;
+					//let nodes = copyNodes(neighbors);
+			
+					for(let i = 0; i < neighbors.length; i++){
+						highLightRect(neighbors[i]);
+						nodesToClear.push(neighbors[i]);
+					}
+					//console.log(tilemap.test)
 				}
-				other_turn = true;
-				turns++;
-				console.log('turns', turns)
-			}
 
+			}
 		}
 
 
+	});
+
+	$('#attack').click(function(){
+		choice = 'attack';
+	});
+
+	$('#walk').click(function(){
+		choice = 'walk';
 	});
 
 

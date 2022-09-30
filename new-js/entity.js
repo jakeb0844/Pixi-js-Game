@@ -172,7 +172,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
         this.sprite.position.set(this.x, this.y)
     }
 
-    walk(tilemap,index) {
+    walk(tilemap) {
         console.log('entity', this.name);
         //console.log('len',entity.path.length)
         //let node = entity.path[index];
@@ -236,7 +236,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             console.log('finished walking')
             this.currentNode = this.path.shift();
             //console.log('node',entity.currentNode)
-            index++;
+            //index++;
             //console.log('index',index)
             //console.log('len2',entity.path.length)
             
@@ -244,7 +244,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
                 this.walking = false;
                 this.path = [];
                 this.currentNode = null;
-                index = 0;
+                //index = 0;
                 this.changeAnimation(this.animations.default)
                 
             }

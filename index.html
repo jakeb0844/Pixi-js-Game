@@ -3,7 +3,6 @@
 
 <head>
   <script src="https://pixijs.download/release/pixi.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@pixi/tilemap@latest/dist/pixi-tilemap.umd.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
   
 </head>
@@ -57,6 +56,8 @@
 
 <body>
   <div class="canvas"></div>
+  <div style="margin:1rem"><button id="attack">Attack</button><button id="walk"style="margin:10px">Walk</button></div>
+  <div><p id="text" style="padding:1rem"></p></div>
   <!-- <script src="js/player.js"></script>
   <script src="js/tilemap.js"></script>
   <script src="js/grid.js"></script>
@@ -74,6 +75,10 @@
     function toggle(el){
       $(el).toggleClass('select')
     }
+
+    
+
+
   </script>
      <div id="grid"></div>
 </body>
