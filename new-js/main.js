@@ -58,7 +58,8 @@ function start(e) {
 	console.log(loader)
 	player = new Player("Börg", app, loader, PlayerContainer, tilemap, { 'x': 240, 'y': 160 });
 	tilemap = new Tilemap(app, loader, MapContainer, TileContainer, { "x": player.x, 'y': player.y }, player);
-	enemy = new Enemy("Orc", app, loader, EnemyContainer, tilemap, { 'x': 192, 'y': 160 });
+	player.tilemap = tilemap;
+	enemy = new Enemy("Orc", app, loader, EnemyContainer, tilemap, { 'x': 80, 'y': 160 });
 	//enemy2 = new Enemy("SwordsmanTemplate", app, loader, EnemyContainer, tilemap, { 'x': 0, 'y': 160 });
 
 	characterList.add(enemy);
@@ -110,7 +111,8 @@ function start(e) {
 						if(temp){
 							console.log('here')
 							console.log('Detected player!')
-							throw 500;
+							mode.exploration = false;
+							mode.combat = true;
 						}
 						else{
 							console.log('else')

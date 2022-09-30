@@ -77,15 +77,14 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
     }
 
-    neighbors.forEach(function (node) {
-      console.log(node.playerPosition)
+    for(let i = 0; i < neighbors.length; i++){
+      let node = neighbors[i];
+      highLightRect(node);
+
       if(node.playerPosition){
         return true;
       }
-      highLightRect(node)
-    });
-
-    console.log(neighbors)
+    }
 
     return false;
   }
