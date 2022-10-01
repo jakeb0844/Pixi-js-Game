@@ -9,13 +9,12 @@ import { CharacterList } from "./character-list.js";
 //Hey, x == col and y == row;
 let res;
 
-if(navigator.platform == "MacIntel"){
+if (navigator.platform == "MacIntel") {
 	res = 1.2;
 }
-else{
+else {
 	res = 1.5;
 }
-
 
 
 const app = new PIXI.Application({
@@ -29,15 +28,19 @@ const app = new PIXI.Application({
 $('.canvas').append(app.view);
 
 var characterList = new CharacterList();
+app.characterList = characterList;
+
 var loader;
 var player;
 var tilemap;
 var enemy;
 var enemy2;
-//exploration
-//combat
-app.mode = 'exploration';
-let mode = 'exploration';
+
+//app.mode = 'exploration';
+
+app.game = { 'mode': 'exploration', 'combatChoice': '' }
+
+//app.mode.combatChoice = '';
 
 const MapContainer = new PIXI.Container();
 const TileContainer = new PIXI.Container();
@@ -76,89 +79,84 @@ function start(e) {
 	$('#p-health').text(player.stats.health)
 	$('#e-health').text(enemy.stats.health)
 
-	
 
-	characterList.add(enemy);
+	console.log(app.characterList)
+	//characterList.add(enemy);
 	//characterList.add(enemy2);
 
-	var index = 0;
 	let turns = 0;
 	let other_turn = true;
 	player.turn = true;
 	let keepWalking = false;
 	let choice = "";
 	let nodesToClear = [];
-	//tilemap.updateEnemyPosition(enemy,CalculateRowAndCol({'x': enemy.sprite.x, 'y': enemy.sprite.y}));
-	//tilemap.getTile({'x':player.x, 'y': player.y})
-	enemy.moveRandomly();
-	//enemy2.moveRandomly();
-	//console.log(enemy.path)
-	//enemy.detectPlayer();
-	//console.log(tilemap.grid);
 
 	app.ticker.add((delta) => {
 		//modes: exploration, combat
-		if(nodesToClear.length > 0) { 
-			for(let i = 0; i < nodesToClear.length; i++){
+
+		if (nodesToClear.length > 0) {
+			for (let i = 0; i < nodesToClear.length; i++) {
 				nodesToClear[i].tile.clear();
 			}
 			nodesToClear = [];
 		}
-		if (app.mode == 'exploration') {
-			
-			let obj = explorationPhase(player,turns,other_turn,keepWalking,characterList,tilemap,app.mode)
+
+		if (app.game.mode == 'exploration') {
+
+			let obj = explorationPhase(player, turns, other_turn, keepWalking, characterList, tilemap, app.game.mode)
 			turns = obj.turns;
 			other_turn = obj.other_turn;
 			keepWalking = obj.keepWalking;
-			app.mode = obj.mode;
+			app.game.mode = obj.mode;
 
 
 		}
-		else{
+		else {
 			player.centerEntityInTile();
 			enemy.centerEntityInTile();
+
 			//Mortal Combbbbatttt!
 			$('#text').text('Combat')
-			if(choice != ''){
-				$('#text').text(choice)
-				// if(nodesToClear.length > 0) { 
-				// 	for(let i = 0; i < nodesToClear.length; i++){
-				// 		nodesToClear[i].tile.clear();
-				// 	}
-				// 	nodesToClear = [];
-				// }
-				if(choice == "walk"){
+			if (app.game.combatChoice != '') {
+				$('#text').text(app.game.combatChoice)
+				player.currentNode = null;
+				player.path = [];
+				player.stopWalking()
+				player.turn = true;
+				other_turn = true;
+				keepWalking = false;
+				if (app.game.combatChoice == "walk") {
 					//Show tiles you can walk to;
 					let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
-					let neighbors = getNeighbors(startNode,1,tilemap.grid);
-			
-					for(let i = 0; i < neighbors.length; i++){
+					let neighbors = getNeighbors(startNode, 1, tilemap.grid);
+					//console.log(player.path.length)
+					if(player.combatPath != null){
+						console.log('here')
+						player.walk(tilemap,player.combatPath);
+						player.combatPath = null;
+					}
+					
+
+					for (let i = 0; i < neighbors.length; i++) {
 						highLightRect(neighbors[i]);
 						nodesToClear.push(neighbors[i]);
 					}
 				}
-				else if(choice == 'attack'){
+				else if (app.game.combatChoice == 'attack') {
 					let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
-					let neighbors = getNeighbors(startNode,5,tilemap.grid);
-					player.currentNode = null;
-								player.path = [];
-								player.stopWalking()
-								// player.changeAnimation(player.animations.default)
-								player.turn = true;
-								other_turn = true;
-								keepWalking = false;
-					// let nodes = copyNodes(neighbors);
-					// throw 500
-			
-					for(let i = 0; i < neighbors.length; i++){
+					let neighbors = getNeighbors(startNode, 5, tilemap.grid);
+
+
+
+					for (let i = 0; i < neighbors.length; i++) {
 						highLightRect(neighbors[i]);
 						nodesToClear.push(neighbors[i]);
 					}
-					if(player.attackNode != null){
-						highLightRect(player.attackNode,'blue')
+					if (player.attackNode != null) {
+						highLightRect(player.attackNode, 'blue')
 						//console.log(player.attackNode);
-						
-						if(player.attackNode.enemyPosition){
+
+						if (player.attackNode.enemyPosition) {
 							console.log('Attacking enemy!')
 							console.log(player.attackNode)
 							let enemy = player.attackNode.enemy;
@@ -168,23 +166,21 @@ function start(e) {
 
 							$('#e-health').text(enemy.stats.health)
 
-							if(enemy.stats.health <= 0){
-								tilemap.removeEnemy(CalculateRowAndCol({'x':enemy.sprite.x,'y':enemy.sprite.y}))
-								enemy.removeChildFromContainer();
+							if (enemy.stats.health <= 0) {
+								enemy.destroy();
 								enemy = null;
-								characterList.list = []
-								app.mode = 'exploration';
+								app.game.mode = 'exploration';
+								app.game.combatChoice = '';
 							}
-							
+
 							player.attackNode = null;
-							
+
 						}
-						else{
+						else {
 							console.log("can't attack there, no enemy in that tile.")
 							player.attackNode = null;
 						}
 
-						//throw 500
 					}
 				}
 
@@ -194,13 +190,14 @@ function start(e) {
 
 	});
 
-	$('#attack').click(function(){
-		choice = 'attack';
+	$('#attack').click(function () {
+		app.game.combatChoice = 'attack';
 	});
 
-	$('#walk').click(function(){
-		choice = 'walk';
+	$('#walk').click(function () {
+		app.game.combatChoice = 'walk';
 	});
 
 
 }
+

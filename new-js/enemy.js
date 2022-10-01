@@ -6,6 +6,7 @@ export class Enemy extends Entity {
     super(name, app, loader, container, tilemap, position);
     this.tilemap.updateEnemyPosition(this,CalculateRowAndCol({'x': this.sprite.x, 'y': this.sprite.y}));
     this.walking = false;
+    this.moveRandomly();
     //this.stats = { str: 10, dex: 10, hp: 10, int: 10, mp: 10 };
   }
 

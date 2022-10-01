@@ -2,13 +2,12 @@ export class Entity {
     constructor(name = "", app, loader, container, tilemap, startPosition = { "x": 240, "y": 160 }, type, stats={'str':5,'def':3,'health':10}) {
         this.name = name;
         this.loader = loader;
-        this.game = app;
+        this.app = app;
         this.tilemap = tilemap;
         this.sprite;
         this.container = container;
         this.x = startPosition.x;
         this.y = startPosition.y;
-        this.spriteCreated = false;
         this.path = [];
         this.turn = true;
         this.currentNode = null;
@@ -28,7 +27,7 @@ export class Entity {
         }
 
         this.init();
-
+        console.log(this.containerIndex)
     }
 
     /*
@@ -49,10 +48,11 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
         this.sprite = this.animations.default;
         this.addChildToContainer();
-        //this.container.addChild(this.sprite)
-
+        if(this.constructor.name != 'Player'){
+            this.app.characterList.add(this);
+        }
+        
         this.sprite.position.set(this.x, this.y)
-
 
     }
 
@@ -67,8 +67,16 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             this.container.addChildAt(this.sprite, this.containerIndex);
         }
 
+    }
 
-
+    destroy(){
+        this.app.characterList.remove(this);
+        this.removeChildFromContainer();
+        
+        if(this.constructor.name == 'Enemy'){
+            this.tilemap.removeEnemy(CalculateRowAndCol({ 'x': this.sprite.x, 'y': this.sprite.y }))
+        }
+        
     }
 
     removeChildFromContainer() {
@@ -159,8 +167,6 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             this.sprite.y = position.y;
             this.y = position.y;
         }
-
-
     }
 
     doesAnimationExist(animation) {
@@ -190,14 +196,20 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
         this.sprite.position.set(this.x, this.y)
     }
 
-    walk(tilemap) {
+    walk(tilemap,path=null) {
         console.log('entity', this.name);
         console.log('len',this.path.length)
         //let node = entity.path[index];
-        if (this.currentNode == null) {
-            this.currentNode = this.path.shift()
-            // console.log('len',entity.path.length)
+        if(path == null){
+            if (this.currentNode == null) {
+                this.currentNode = this.path.shift()
+                // console.log('len',entity.path.length)
+            }
         }
+        else{
+            this.currentNode = path;
+        }
+        
         let node = this.currentNode;
         let walkY = node.row * tilemap.tileWidth;
         let walkX = node.col * tilemap.tileHeight;

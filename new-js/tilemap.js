@@ -3,9 +3,9 @@
 import { Pathfinding } from "./pathfinding.js";
 
 export class Tilemap {
-    constructor(game, loader, container, TileContainer, playerPosition, player, tileDimensions = { "height": 16, "width": 16 }) {
+    constructor(app, loader, container, TileContainer, playerPosition, player, tileDimensions = { "height": 16, "width": 16 }) {
 
-        this.game = game;
+        this.app = app;
         this.loader = loader;
         this.width;
         this.height;
@@ -170,7 +170,7 @@ export class Tilemap {
             let playerX = Math.floor(this.player.sprite.x / 16) * 16;
             let playerY = Math.floor(this.player.sprite.y / 16) * 16;
 
-            if (this.game.mode == 'exploration') {
+            if (this.app.game.mode == 'exploration') {
                 // If the player is following the path, stop walking, set the player to the nearest tile,
                 // and remove the already walked portion;
                 if (this.player.walking) {
@@ -199,7 +199,14 @@ export class Tilemap {
                 }
             }
             else{
-                this.player.attackNode = this.getTile(rect.getBounds());
+                console.log(this.app.game)
+                if(this.app.game.combatChoice == 'attack'){
+                    this.player.attackNode = this.getTile(rect.getBounds());
+                }
+                else{
+                    this.player.combatPath = [this.getTile(rect.getBounds())];
+                }
+                
             }
 
 
