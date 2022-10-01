@@ -4,7 +4,7 @@ import { Pathfinding } from "./pathfinding.js";
 export class Enemy extends Entity {
   constructor(name = "", app, loader, container, tilemap, position) {
     super(name, app, loader, container, tilemap, position);
-
+    this.tilemap.updateEnemyPosition(this,CalculateRowAndCol({'x': this.sprite.x, 'y': this.sprite.y}));
     this.walking = false;
     //this.stats = { str: 10, dex: 10, hp: 10, int: 10, mp: 10 };
   }

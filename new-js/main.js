@@ -88,7 +88,7 @@ function start(e) {
 	let keepWalking = false;
 	let choice = "";
 	let nodesToClear = [];
-	tilemap.updateEnemyPosition(enemy,CalculateRowAndCol({'x': enemy.sprite.x, 'y': enemy.sprite.y}));
+	//tilemap.updateEnemyPosition(enemy,CalculateRowAndCol({'x': enemy.sprite.x, 'y': enemy.sprite.y}));
 	//tilemap.getTile({'x':player.x, 'y': player.y})
 	enemy.moveRandomly();
 	//enemy2.moveRandomly();
@@ -98,6 +98,12 @@ function start(e) {
 
 	app.ticker.add((delta) => {
 		//modes: exploration, combat
+		if(nodesToClear.length > 0) { 
+			for(let i = 0; i < nodesToClear.length; i++){
+				nodesToClear[i].tile.clear();
+			}
+			nodesToClear = [];
+		}
 		if (app.mode == 'exploration') {
 			
 			let obj = explorationPhase(player,turns,other_turn,keepWalking,characterList,tilemap,app.mode)
@@ -115,12 +121,12 @@ function start(e) {
 			$('#text').text('Combat')
 			if(choice != ''){
 				$('#text').text(choice)
-				if(nodesToClear.length > 0) { 
-					for(let i = 0; i < nodesToClear.length; i++){
-						nodesToClear[i].tile.clear();
-					}
-					nodesToClear = [];
-				}
+				// if(nodesToClear.length > 0) { 
+				// 	for(let i = 0; i < nodesToClear.length; i++){
+				// 		nodesToClear[i].tile.clear();
+				// 	}
+				// 	nodesToClear = [];
+				// }
 				if(choice == "walk"){
 					//Show tiles you can walk to;
 					let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
