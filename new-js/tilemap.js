@@ -199,12 +199,18 @@ export class Tilemap {
                 }
             }
             else{
-                console.log(this.app.game)
-                if(this.app.game.combatChoice == 'attack'){
-                    this.player.attackNode = this.getTile(rect.getBounds());
-                }
-                else{
-                    this.player.combatPath = [this.getTile(rect.getBounds())];
+                let tile = this.getTile(rect.getBounds());
+                
+                for(let i =0; i < this.player.neighbors.length; i++) {
+                    let neighbor = this.player.neighbors[i];
+                    if(tile.row == neighbor.row && tile.col == neighbor.col){
+                        if(this.app.game.combatChoice == 'attack'){
+                            this.player.attackNode = tile
+                        }
+                        else{
+                            this.player.combatPath = [tile];
+                        }
+                    }
                 }
                 
             }

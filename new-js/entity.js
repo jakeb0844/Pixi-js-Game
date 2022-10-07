@@ -207,12 +207,13 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             }
         }
         else{
-            this.currentNode = path;
+            this.currentNode = path[0];
         }
         
         let node = this.currentNode;
         let walkY = node.row * tilemap.tileWidth;
         let walkX = node.col * tilemap.tileHeight;
+        console.log('walkY: ' + walkY + ' and walkX: ' + walkX)
         let walkSpeed = 2;
 
         //tilemap.updateCharPosition({ "col": Math.floor(this.sprite.y / 16), "row": Math.floor(this.sprite.x / 16) })

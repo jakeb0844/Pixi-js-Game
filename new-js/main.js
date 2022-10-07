@@ -90,6 +90,7 @@ function start(e) {
 	let keepWalking = false;
 	let choice = "";
 	let nodesToClear = [];
+	let temp = false;
 
 	app.ticker.add((delta) => {
 		//modes: exploration, combat
@@ -109,81 +110,127 @@ function start(e) {
 			keepWalking = obj.keepWalking;
 			app.game.mode = obj.mode;
 
+			if (app.game.mode != 'exploration') {
+				temp = true;
+			}
+
 
 		}
 		else {
-			player.centerEntityInTile();
-			enemy.centerEntityInTile();
+			
+			//console.log(player.turn)
 
-			//Mortal Combbbbatttt!
-			$('#text').text('Combat')
-			if (app.game.combatChoice != '') {
-				$('#text').text(app.game.combatChoice)
+			if (temp) {
+				player.centerEntityInTile();
+			enemy.centerEntityInTile();
 				player.currentNode = null;
 				player.path = [];
 				player.stopWalking()
 				player.turn = true;
 				other_turn = true;
 				keepWalking = false;
-				if (app.game.combatChoice == "walk") {
-					//Show tiles you can walk to;
-					let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
-					let neighbors = getNeighbors(startNode, 1, tilemap.grid);
-					//console.log(player.path.length)
-					if(player.combatPath != null){
-						console.log('here')
-						player.walk(tilemap,player.combatPath);
-						player.combatPath = null;
+				temp = false;
+			}
+
+			if (player.turn) {
+				//console.log('Attack Player turn');
+
+				//Mortal Combbbbatttt!
+				$('#text').text('Combat')
+				if (app.game.combatChoice != '') {
+					$('#text').text(app.game.combatChoice)
+					// player.currentNode = null;
+					// player.path = [];
+					// player.stopWalking()
+					// player.turn = true;
+					// other_turn = true;
+					// keepWalking = false;
+					if (app.game.combatChoice == "walk") {
+						//Show tiles you can walk to;
+							
+						let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
+						let neighbors = getNeighbors(startNode, 1, tilemap.grid);
+						player.neighbors = neighbors;
+						
+						//console.log(player.path.length)
+						if (player.combatPath != null) {
+							console.log(player.combatPath)
+							keepWalking = player.walk(tilemap, player.combatPath);
+							if(!keepWalking){
+								player.combatPath = null;
+								player.turn = false;
+							}
+							
+						}
+
+
+						for (let i = 0; i < neighbors.length; i++) {
+							highLightRect(neighbors[i]);
+							nodesToClear.push(neighbors[i]);
+						}
+						//app.game.combatChoice = '';
+						
 					}
+					else if (app.game.combatChoice == 'attack') {
+						console.log('attacking')
+						// let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
+						// let neighbors = getNeighbors(startNode, 2, tilemap.grid);
+						// player.neighbors = neighbors;
+
+
+						// for (let i = 0; i < neighbors.length; i++) {
+						// 	highLightRect(neighbors[i]);
+						// 	nodesToClear.push(neighbors[i]);
+						// }
+						// if (player.attackNode != null) {
+						// 	highLightRect(player.attackNode, 'blue')
+						// 	//console.log(player.attackNode);
+
+						// 	if (player.attackNode.enemyPosition) {
+						// 		console.log('Attacking enemy!')
+						// 		console.log(player.attackNode)
+						// 		let enemy = player.attackNode.enemy;
+						// 		let damage = player.attack(enemy);
+						// 		//player.stats.health -= damage;
+						// 		enemy.stats.health -= damage;
+
+						// 		$('#e-health').text(enemy.stats.health)
+
+						// 		if (enemy.stats.health <= 0) {
+						// 			enemy.destroy();
+						// 			enemy = null;
+						// 			app.game.mode = 'exploration';
+						// 			app.game.combatChoice = '';
+						// 		}
+
+						// 		player.attackNode = null;
+
+						// 	}
+						// 	else {
+						// 		console.log("can't attack there, no enemy in that tile.")
+						// 		player.attackNode = null;
+						// 	}
+
+						// }
+						//app.game.combatChoice = '';
+					}
+
 					
 
-					for (let i = 0; i < neighbors.length; i++) {
-						highLightRect(neighbors[i]);
-						nodesToClear.push(neighbors[i]);
-					}
 				}
-				else if (app.game.combatChoice == 'attack') {
-					let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
-					let neighbors = getNeighbors(startNode, 5, tilemap.grid);
-
-
-
-					for (let i = 0; i < neighbors.length; i++) {
-						highLightRect(neighbors[i]);
-						nodesToClear.push(neighbors[i]);
-					}
-					if (player.attackNode != null) {
-						highLightRect(player.attackNode, 'blue')
-						//console.log(player.attackNode);
-
-						if (player.attackNode.enemyPosition) {
-							console.log('Attacking enemy!')
-							console.log(player.attackNode)
-							let enemy = player.attackNode.enemy;
-							let damage = player.attack(enemy);
-							//player.stats.health -= damage;
-							enemy.stats.health -= damage;
-
-							$('#e-health').text(enemy.stats.health)
-
-							if (enemy.stats.health <= 0) {
-								enemy.destroy();
-								enemy = null;
-								app.game.mode = 'exploration';
-								app.game.combatChoice = '';
-							}
-
-							player.attackNode = null;
-
-						}
-						else {
-							console.log("can't attack there, no enemy in that tile.")
-							player.attackNode = null;
-						}
-
-					}
+			}
+			else if( other_turn ){
+				//for(let i = 0; i < )
+			}
+			else if(!keepWalking) {
+				player.turn = true;
+				for (let i = 0; i < characterList.list.length; i++) {
+					let character = characterList.list[i];
+					character.turn = true;
 				}
-
+				other_turn = true;
+				turns++;
+				console.log('turns', turns)
 			}
 		}
 

@@ -239,27 +239,37 @@ function getNeighbors(node, length, grid) {
         //previous
         if (row !== 0) {
             if (row - (i + 1) >= 0) {
-                neighbors.push(grid[row - (i + 1)][col])
+                if(!grid[row - (i + 1)][col].wall){
+                    neighbors.push(grid[row - (i + 1)][col])
+                }
+                
             }
         }
 
         //Get next
         if (row !== grid.length - 1) {
             if (row + (i + 1) <= grid.length - 1) {
-                neighbors.push(grid[row + (i + 1)][col])
+                if(!grid[row + (i + 1)][col].wall){
+                    neighbors.push(grid[row + (i + 1)][col])
+                }
+                
             }
         }
         //get up
         if (col !== 0) {
             if (col - (i + 1) >= 0) {
-                neighbors.push(grid[row][col - (i + 1)])
+                if(!grid[row][col - (i + 1)].wall){
+                    neighbors.push(grid[row][col - (i + 1)])
+                }
             }
         }
 
         //get down
         if (col !== grid[0].length - 1) {
             if (col + (i + 1) <= grid[0].length - 1) {
-                neighbors.push(grid[row][col + (i + 1)])
+                if(!grid[row][col + (i+1)].wall){
+                    neighbors.push(grid[row][col + (i + 1)])
+                }
             }
         }
 
