@@ -227,7 +227,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
         //tilemap.updateCharPosition({ "col": Math.floor(this.sprite.y / 16), "row": Math.floor(this.sprite.x / 16) })
         //printGrid(tilemap.grid, 'grid')
-        if((!node.wall) && node.enemy == null && (!node.playPosition)){
+        //if((!node.wall) && node.enemy == null && (!node.playPosition)){
             console.log('walk',node)
 
         
@@ -259,7 +259,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
                 //this.x -= walkSpeed;
             }
         }
-    }
+    //}
         let x = this.sprite.x;
         let y = this.sprite.y;
         //console.log("x:" + x + ' and walkX:' + walkX);
