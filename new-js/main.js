@@ -4,6 +4,7 @@ import { Tilemap } from "./tilemap.js";
 import { Player } from "./player.js";
 import { Enemy } from "./enemy.js";
 import { CharacterList } from "./character-list.js";
+import { Pathfinding } from "./pathfinding.js";
 
 
 //Hey, x == col and y == row;
@@ -27,8 +28,8 @@ const app = new PIXI.Application({
 
 $('.canvas').append(app.view);
 
-var characterList = new CharacterList();
-app.characterList = characterList;
+//let characterList = new CharacterList();
+app.characterList = new CharacterList();
 
 var loader;
 var player;
@@ -74,8 +75,8 @@ function start(e) {
 	tilemap = new Tilemap(app, loader, MapContainer, TileContainer, { "x": player.x, 'y': player.y }, player);
 	player.tilemap = tilemap;
 	enemy = new Enemy("Orc", app, loader, EnemyContainer, tilemap, { 'x': 160, 'y': 160 });
-	//enemy2 = new Enemy("SwordsmanTemplate", app, loader, EnemyContainer, tilemap, { 'x': 0, 'y': 160 });
-
+	enemy2 = new Enemy("SwordsmanTemplate", app, loader, EnemyContainer, tilemap, { 'x': 0, 'y': 160 });
+	console.log(player.sprite.position)
 	$('#p-health').text(player.stats.health)
 	$('#e-health').text(enemy.stats.health)
 
@@ -104,7 +105,7 @@ function start(e) {
 
 		if (app.game.mode == 'exploration') {
 
-			let obj = explorationPhase(player, turns, other_turn, keepWalking, characterList, tilemap, app.game.mode)
+			let obj = explorationPhase(player, turns, other_turn, keepWalking, app.characterList, tilemap, app.game.mode)
 			turns = obj.turns;
 			other_turn = obj.other_turn;
 			keepWalking = obj.keepWalking;
@@ -117,12 +118,12 @@ function start(e) {
 
 		}
 		else {
-			
+
 			//console.log(player.turn)
 
 			if (temp) {
 				player.centerEntityInTile();
-			enemy.centerEntityInTile();
+				enemy.centerEntityInTile();
 				player.currentNode = null;
 				player.path = [];
 				player.stopWalking()
@@ -130,6 +131,7 @@ function start(e) {
 				other_turn = true;
 				keepWalking = false;
 				temp = false;
+				enemy.path = [];
 			}
 
 			if (player.turn) {
@@ -147,85 +149,159 @@ function start(e) {
 					// keepWalking = false;
 					if (app.game.combatChoice == "walk") {
 						//Show tiles you can walk to;
-							
+
 						let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
 						let neighbors = getNeighbors(startNode, 1, tilemap.grid);
 						player.neighbors = neighbors;
-						
-						//console.log(player.path.length)
-						if (player.combatPath != null) {
-							console.log(player.combatPath)
-							keepWalking = player.walk(tilemap, player.combatPath);
-							if(!keepWalking){
-								player.combatPath = null;
-								player.turn = false;
+
+						for (let i = 0; i < neighbors.length; i++) {
+							if(!neighbors[i].enemyPosition){
+								highLightRect(neighbors[i]);
+							nodesToClear.push(neighbors[i]);
 							}
 							
 						}
+
+						//console.log(player.path.length)
+						if (player.combatPath != null) {
+							if(!player.combatPath.enemyPosition){
+								console.log(player.combatPath)
+								keepWalking = player.walk(tilemap, player.combatPath);
+							if (!keepWalking) {
+								player.combatPath = null;
+								player.turn = false;
+							}
+							}
+							
+						}
+
+
+						
+						//app.game.combatChoice = '';
+
+					}
+					else if (app.game.combatChoice == 'attack') {
+						$('#text').text(app.game.combatChoice)
+						console.log('attacking')
+						let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
+						let neighbors = getNeighbors(startNode, 2, tilemap.grid);
+						player.neighbors = neighbors;
 
 
 						for (let i = 0; i < neighbors.length; i++) {
 							highLightRect(neighbors[i]);
 							nodesToClear.push(neighbors[i]);
 						}
-						//app.game.combatChoice = '';
+						if (player.attackNode != null) {
+							highLightRect(player.attackNode, 'blue')
+							//console.log(player.attackNode);
+
+							if (player.attackNode.enemyPosition) {
+								console.log('Attacking enemy!')
+								console.log(player.attackNode)
+								let enemy = player.attackNode.enemy;
+								let damage = player.attack(enemy);
+								//player.stats.health -= damage;
+								enemy.stats.health -= damage;
+
+								$('#e-health').text(enemy.stats.health)
+
+								if (enemy.stats.health <= 0) {
+									enemy.destroy();
+									enemy = null;
+									app.game.mode = 'exploration';
+									app.game.combatChoice = '';
+								}
+
+								player.attackNode = null;
+								player.turn = false;
+
+							}
+							else {
+								console.log("can't attack there, no enemy in that tile.")
+								player.attackNode = null;
+							}
+
+						}
 						
-					}
-					else if (app.game.combatChoice == 'attack') {
-						console.log('attacking')
-						// let startNode = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
-						// let neighbors = getNeighbors(startNode, 2, tilemap.grid);
-						// player.neighbors = neighbors;
-
-
-						// for (let i = 0; i < neighbors.length; i++) {
-						// 	highLightRect(neighbors[i]);
-						// 	nodesToClear.push(neighbors[i]);
-						// }
-						// if (player.attackNode != null) {
-						// 	highLightRect(player.attackNode, 'blue')
-						// 	//console.log(player.attackNode);
-
-						// 	if (player.attackNode.enemyPosition) {
-						// 		console.log('Attacking enemy!')
-						// 		console.log(player.attackNode)
-						// 		let enemy = player.attackNode.enemy;
-						// 		let damage = player.attack(enemy);
-						// 		//player.stats.health -= damage;
-						// 		enemy.stats.health -= damage;
-
-						// 		$('#e-health').text(enemy.stats.health)
-
-						// 		if (enemy.stats.health <= 0) {
-						// 			enemy.destroy();
-						// 			enemy = null;
-						// 			app.game.mode = 'exploration';
-						// 			app.game.combatChoice = '';
-						// 		}
-
-						// 		player.attackNode = null;
-
-						// 	}
-						// 	else {
-						// 		console.log("can't attack there, no enemy in that tile.")
-						// 		player.attackNode = null;
-						// 	}
-
-						// }
 						//app.game.combatChoice = '';
 					}
 
-					
+
 
 				}
 			}
-			else if( other_turn ){
+			else if (other_turn || keepWalking) {
+				//other_turn = false;
 				//for(let i = 0; i < )
+				for (const enemy of app.characterList.list) {
+					if (enemy.turn) {
+						let shortest_path = [];
+						//Find character.
+						if(!keepWalking){
+
+						console.log('finding shortest path')
+						let end = tilemap.getTile({ 'x': player.sprite.x, 'y': player.sprite.y });
+						let start = tilemap.getTile({ 'x': enemy.sprite.x, 'y': enemy.sprite.y });
+						let di = new Pathfinding(tilemap.grid, start, end);
+						let { visited, endNode } = di.find_path(di.grid, di.startNode, di.endNode);
+
+						shortest_path = di.makePath(endNode);
+						shortest_path.shift();
+
+						console.log(shortest_path)
+						if(shortest_path.length > 1){
+							enemy.path = [shortest_path[0]];
+						}
+						else{
+							enemy.path = [];
+						}
+						
+						console.log("enemy path",enemy.path)
+						console.log("enemy path length",enemy.path.length)
+						}
+
+
+						
+						if(shortest_path.length > 1 || enemy.path.length > 0){
+							console.log('walking')
+							keepWalking = enemy.walk(tilemap,[enemy.path[0]])
+							console.log('keepWalking', keepWalking)
+						}
+						else{
+							enemy.path = [];
+							//attack
+							let damage = enemy.attack(player);
+							player.stats.health -= damage;
+							$('#p-health').text(player.stats.health)
+							keepWalking = false;
+
+							if(player.stats.health <= 0){
+								//player died
+								app.ticker.stop();
+								alert('Game Over!')
+								
+							}
+
+						}
+
+						if(keepWalking){
+							enemy.turn = true;
+						}
+						else{
+							enemy.turn = false;
+						}
+					
+						
+
+					}
+				}
+				other_turn = false;
 			}
-			else if(!keepWalking) {
+			else if (!keepWalking) {
 				player.turn = true;
-				for (let i = 0; i < characterList.list.length; i++) {
-					let character = characterList.list[i];
+				for (let i = 0; i < app.characterList.list.length; i++) {
+					let character = app.characterList.list[i];
 					character.turn = true;
 				}
 				other_turn = true;

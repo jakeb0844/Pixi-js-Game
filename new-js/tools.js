@@ -9,7 +9,7 @@ class Tile {
         this.wall = false;
         this.rect = rect;
         this.playerPosition = false;
-        this.enemyPosition = false;
+        //this.enemyPosition = false;
         this.enemy = null;
     }
 
@@ -23,9 +23,11 @@ function CalculateRowAndCol(position) {
 }
 
 function CalculatePosition(row, col) {
-    let x = Math.floor(row / 16) * 16;
-    let y = Math.floor(col / 16) * 16;
-
+    
+    let x = row * 16;
+    let y = col * 16;
+    
+    
     return { "x": x, "y": y };
 }
 
@@ -107,7 +109,8 @@ function printGrid(grid, id) {
                 html += "<td style='background:green'>";
                 html += "a";
             }
-            else if (grid[col][row].enemyPosition) {
+            else if (grid[col][row].enemy != null) {
+                //console.log(grid[col][row])
                 html += "<td style='background:pink'>";
                 html += "E";
             }
@@ -243,6 +246,7 @@ function getNeighbors(node, length, grid) {
                     neighbors.push(grid[row - (i + 1)][col])
                 }
                 
+                
             }
         }
 
@@ -279,7 +283,7 @@ function getNeighbors(node, length, grid) {
         return neighbors;
     }
     else {
-        return null;
+        return [];
     }
 }
 

@@ -178,8 +178,8 @@ export class Tilemap {
                     this.player.changeAnimation(this.player.animations.default)
                     this.player.sprite.x = playerX;
                     this.player.sprite.y = playerY;
-                    this.player.x = playerX;
-                    this.player.y = playerY;
+                    this.player.sprite.x = playerX;
+                    this.player.sprite.y = playerY;
 
                     // this.path = this.path.slice(index)
                     //this.player.path = this.player.path.slice(index)
@@ -198,21 +198,27 @@ export class Tilemap {
                     }
                 }
             }
-            else{
+            else {
                 let tile = this.getTile(rect.getBounds());
-                
-                for(let i =0; i < this.player.neighbors.length; i++) {
-                    let neighbor = this.player.neighbors[i];
-                    if(tile.row == neighbor.row && tile.col == neighbor.col){
-                        if(this.app.game.combatChoice == 'attack'){
-                            this.player.attackNode = tile
-                        }
-                        else{
-                            this.player.combatPath = [tile];
+
+                if (this.player.neighbors.length > 0) {
+                    for (let i = 0; i < this.player.neighbors.length; i++) {
+                        let neighbor = this.player.neighbors[i];
+                        if (tile.row == neighbor.row && tile.col == neighbor.col) {
+                            if (this.app.game.combatChoice == 'attack') {
+                                this.player.attackNode = tile
+                            }
+                            else {
+                                if (!tile.enemyPosition) {
+                                    this.player.combatPath = [tile];
+                                }
+
+                            }
                         }
                     }
                 }
-                
+
+
             }
 
 
@@ -223,8 +229,8 @@ export class Tilemap {
             let endRow = Math.floor(e.data.global.x / 16);
             let endCol = Math.floor(e.data.global.y / 16);
             let grid = this.grid;
-            let playerRow = Math.floor(this.player.x / 16);
-            let playerCol = Math.floor(this.player.y / 16);
+            let playerRow = Math.floor(this.player.sprite.x / 16);
+            let playerCol = Math.floor(this.player.sprite.y / 16);
 
             let r = grid[endCol][endRow].tile;
             r.clear();
@@ -305,32 +311,31 @@ export class Tilemap {
         this.playerPosition = { "col": position.col, "row": position.row }
     }
 
-    updateEnemyPosition(enemy,position) {
+    updateEnemyPosition(enemy, position) {
         let grid = this.grid;
-        if(this.enemyPosition == undefined){
-            this.enemyPosition = { "col": position.col, "row": position.row };
-            grid[this.enemyPosition.col][this.enemyPosition.row].enemyPosition = true;
-            grid[this.enemyPosition.col][this.enemyPosition.row].enemy = enemy;
-        }
-        else{
-            grid[this.enemyPosition.col][this.enemyPosition.row].enemyPosition = false;
-            grid[this.enemyPosition.col][this.enemyPosition.row].enemy = null;
-            grid[position.col][position.row].enemyPosition = true;
+
+        if (enemy.tile == null) {
+            enemy.tile = this.grid[position.col][position.row];
             grid[position.col][position.row].enemy = enemy;
-            this.enemyPosition = { "col": position.col, "row": position.row }
         }
-        
+        else {
+            grid[enemy.tile.row][enemy.tile.col].enemy = null;
+            grid[position.col][position.row].enemy = enemy;
+            enemy.tile = this.grid[position.col][position.row];
+        }
+
     }
 
-    removeEnemy(position){
+    removeEnemy(enemy,position) {
         let grid = this.grid;
 
-        grid[position.col][position.row].enemyPosition = false;
+        enemy.tile = null;
         grid[position.col][position.row].enemy = null;
     }
 
     getTile(position) {
-        //console.log(position);
+        console.log(position);
+
         let { row, col } = CalculateRowAndCol(position)
         if (col == this.grid.length) {
             col--;

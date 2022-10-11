@@ -74,7 +74,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
         this.removeChildFromContainer();
         
         if(this.constructor.name == 'Enemy'){
-            this.tilemap.removeEnemy(CalculateRowAndCol({ 'x': this.sprite.x, 'y': this.sprite.y }))
+            this.tilemap.removeEnemy(this,CalculateRowAndCol({ 'x': this.sprite.x, 'y': this.sprite.y }))
         }
         
     }
@@ -84,13 +84,13 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
     }
 
     createSprites() {
-        console.log(this.name)
+        //console.log(this.name)
         let json = this.loader.getAsset(this.name + '.json');
         let png = this.loader.getAsset(this.name + '.png');
         let asset = '';
         //console.log(json)
         if (json) {
-            console.log('json')
+            //console.log('json')
             asset = this.loader.getAsset(this.name + '.json');
             this.animations.default = this.createSprite(this.name + '-walk-forward', asset);
             this.animations.down = this.createSprite(this.name + '-walk-backward', asset);
@@ -99,7 +99,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             this.animations.up = this.createSprite(this.name + '-walk-forward', asset);
         }
         else {
-            console.log('no json')
+            //console.log('no json')
             asset = this.loader.getAsset(this.name + '.png');
             //console.log(asset)
             //Get the first image of the sprite sheet
@@ -141,7 +141,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
     }
 
     attack(enemy){
-        console.log(enemy);
+        //console.log(enemy);
         let damage = this.stats.str - enemy.stats.def;
 
         return damage;
@@ -171,16 +171,18 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
 
     doesAnimationExist(animation) {
         if (animation != undefined || animation != null) {
-            console.log('animation exists')
+            //console.log('animation exists')
             return true;
         }
-        console.log('animation does not exist')
+        //console.log('animation does not exist')
         return false;
     }
 
     changeAnimation(animation) {
 
-        console.log('animation', animation);
+        //console.log('animation', animation);
+        let x = this.sprite.x;
+        let y = this.sprite.y;
 
         if (this.doesAnimationExist(animation)) {
             this.sprite = animation;
@@ -193,12 +195,13 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
         this.removeChildFromContainer();
         this.addChildToContainer()
         //this.container.addChild(this.sprite);
-        this.sprite.position.set(this.x, this.y)
+        this.sprite.position.set(x, y)
     }
 
     walk(tilemap,path=null) {
+        //console.log(path[0])
         console.log('entity', this.name);
-        console.log('len',this.path.length)
+        //console.log('len',this.path.length)
         //let node = entity.path[index];
         if(path == null){
             if (this.currentNode == null) {
@@ -207,29 +210,39 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             }
         }
         else{
+            console.log('here')
             this.currentNode = path[0];
         }
         
         let node = this.currentNode;
+        
+        let realNode = tilemap.grid[node.row][node.col];
+        node = realNode;
+        console.log('realNode',realNode)
+        console.log(node)
         let walkY = node.row * tilemap.tileWidth;
         let walkX = node.col * tilemap.tileHeight;
-        console.log('walkY: ' + walkY + ' and walkX: ' + walkX)
-        let walkSpeed = 2;
+        //console.log('walkY: ' + walkY + ' and walkX: ' + walkX)
+        let walkSpeed = 1;
 
         //tilemap.updateCharPosition({ "col": Math.floor(this.sprite.y / 16), "row": Math.floor(this.sprite.x / 16) })
         //printGrid(tilemap.grid, 'grid')
+        if((!node.wall) && node.enemy == null && (!node.playPosition)){
+            console.log('walk',node)
+
+        
 
         if (this.sprite.y != walkY) {
 
             if (walkY > this.sprite.y) {
                 this.changeAnimation(this.animations.up);
                 this.sprite.y += walkSpeed;;
-                this.y += walkSpeed;
+                //this.y += walkSpeed;
             }
             else {
                 this.changeAnimation(this.animations.down);
                 this.sprite.y -= walkSpeed;
-                this.y -= walkSpeed;
+                //this.y -= walkSpeed;
             }
         }
 
@@ -238,15 +251,15 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
             if (walkX > this.sprite.x) {
                 this.changeAnimation(this.animations.right);
                 this.sprite.x += walkSpeed;
-                this.x += walkSpeed;
+                //this.x += walkSpeed;
             }
             else {
                 this.changeAnimation(this.animations.left);
                 this.sprite.x -= walkSpeed;
-                this.x -= walkSpeed;
+                //this.x -= walkSpeed;
             }
         }
-
+    }
         let x = this.sprite.x;
         let y = this.sprite.y;
         //console.log("x:" + x + ' and walkX:' + walkX);
@@ -264,6 +277,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
                 //console.log(this.currentNode)
             }
             else {
+                console.log('updating enemy position')
                 this.tilemap.updateEnemyPosition(this,{ "col": Math.floor(this.sprite.y / 16), "row": Math.floor(this.sprite.x / 16) })
 
                 printGrid(this.tilemap.grid, 'grid')
@@ -282,7 +296,6 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
                 this.currentNode = null;
                 //index = 0;
                 this.changeAnimation(this.animations.default)
-
             }
         }
 

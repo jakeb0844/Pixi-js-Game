@@ -24,11 +24,11 @@ export class PreLoader {
     }
 
     progress(e) {
-        console.log(e)
+        //console.log(e)
     }
 
     complete(e) {
-        console.log(e)
+        //console.log(e)
     }
 
     error(e) {

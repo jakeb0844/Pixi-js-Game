@@ -4,9 +4,11 @@ import { Pathfinding } from "./pathfinding.js";
 export class Enemy extends Entity {
   constructor(name = "", app, loader, container, tilemap, position) {
     super(name, app, loader, container, tilemap, position);
-    this.tilemap.updateEnemyPosition(this,CalculateRowAndCol({'x': this.sprite.x, 'y': this.sprite.y}));
+    
     this.walking = false;
     this.moveRandomly();
+    this.tile = null;
+    this.tilemap.updateEnemyPosition(this,CalculateRowAndCol({'x': this.sprite.x, 'y': this.sprite.y}));
     //this.stats = { str: 10, dex: 10, hp: 10, int: 10, mp: 10 };
   }
 
@@ -29,12 +31,38 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
     let maxY = Math.floor(480);
     let maxX = Math.ceil(320);
     let end;
+    let resume = true;
 
     do {
       end = { "x": Math.floor(Math.random() * (maxY - min + 1)) + min, "y": Math.floor(Math.random() * (maxX - min + 1)) + min };
       end = this.tilemap.getTile({ 'x': end.x, "y": end.y });
+      console.log('end',end)
+
+      if(!end.wall){
+        if(end.enemy == null){
+          if(!end.playerPosition){
+            resume = false;
+          }
+          else{
+            resume = true;
+          }
+        }
+        else{
+          resume = true;
+        }
+      }
+      else{
+        resume = true;
+      }
+
+      // if(!end.wall && end.enemy == null && !end.playerPosition){
+      //   resume = false;
+      // }
+      // else{
+      //   resume = true;
+      // }
     }
-    while (end.wall)
+    while (resume)
 
     let di = new Pathfinding(this.tilemap.grid, start, end);
     let { visited, endNode } = di.find_path(di.grid, di.startNode, di.endNode);
@@ -60,7 +88,7 @@ https://www.wargamer.com/dnd/stats#:~:text=The%20six%20D%26D%20stats%20are,to%20
     //south
     //east
     //west
-    let neighbors = getNeighbors(startNode,3,this.tilemap.grid);
+    let neighbors = getNeighbors(startNode,0,this.tilemap.grid);
 
     for(let i = 0; i < neighbors.length; i++){
       let node = neighbors[i];

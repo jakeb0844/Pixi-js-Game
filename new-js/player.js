@@ -9,7 +9,7 @@ export class Player extends Entity {
       this.nextNode = null;
       this.attackNode = null;
       this.combatWalk = null;
-      this.neighbors = null;
+      this.neighbors = [];
     }
   
     /*
