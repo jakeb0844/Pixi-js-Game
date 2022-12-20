@@ -6,7 +6,6 @@ import { Enemy } from "./enemy.js";
 import { CharacterList } from "./character-list.js";
 import { Pathfinding } from "./pathfinding.js";
 
-
 //Hey, x == col and y == row;
 let res;
 
@@ -16,7 +15,6 @@ if (navigator.platform == "MacIntel") {
 else {
 	res = 1.5;
 }
-
 
 const app = new PIXI.Application({
 	width: 480,
@@ -28,7 +26,6 @@ const app = new PIXI.Application({
 
 $('.canvas').append(app.view);
 
-//let characterList = new CharacterList();
 app.characterList = new CharacterList();
 
 var loader;
@@ -37,11 +34,7 @@ var tilemap;
 var enemy;
 var enemy2;
 
-//app.mode = 'exploration';
-
 app.game = { 'mode': 'exploration', 'combatChoice': '' }
-
-//app.mode.combatChoice = '';
 
 const MapContainer = new PIXI.Container();
 const TileContainer = new PIXI.Container();
